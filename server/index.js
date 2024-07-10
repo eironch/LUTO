@@ -97,51 +97,65 @@ app.post('/create-account', (req, res) => {
     }
 })
 
-app.get('/sign-in', (req, res) => {
+app.get('/sign-in', async (req, res) => {
     const { username, password } = req.query
 
-    User.findOne({ username })
-        .then(user => {
-            if(!user) {
-                return res.status(202).json({ success: false, message: 'User not found.' })
+    try {
+        const user = await User.findOne({ username })
+
+        if(!user) {
+            return res.status(202).json({ success: false, message: 'User not found.' })
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password)
+
+        if (!isPasswordValid) {
+            return res.status(202).json({ success: false, message: 'Incorrect username or password.'})
+        }
+
+        res.cookie(
+            'accessToken',
+            generateAccessToken(user._id, user.username), 
+            {
+                httpOnly: true,
+                secure: true,
+                maxAge: 3600000,
             }
-            
-            bcrypt.compare(password, user.password)
-                .then(isPasswordValid => {
-                    if (!isPasswordValid) {
-                        return res.status(202).json({ success: false, message: 'Incorrect username or password.'})
-                    }
+        )
 
-                    res.cookie(
-                        'accessToken',
-                        generateAccessToken(user._id, user.username), 
-                        {
-                            httpOnly: true,
-                            secure: true,
-                            maxAge: 3600000,
-                        }
-                    )
-            
-                    res.cookie(
-                        'refreshToken',
-                        generateRefreshToken(user._id, user.username), 
-                        {
-                            httpOnly: true,
-                            secure: true,
-                            maxAge: 2592000000,
-                        }
-                    )
+        res.cookie(
+            'refreshToken',
+            generateRefreshToken(user._id, user.username), 
+            {
+                httpOnly: true,
+                secure: true,
+                maxAge: 2592000000,
+            }
+        )
+        
+        return res.status(200).json({ success: true, payload: { username: user.username, userId: user._id, accountType: user.accountType, profilePicture: user.profilePicture, bio: user.bio }, message: 'User signed in.' })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message:'Internal server error.', err})
+    }
+})
 
-                    return res.status(200).json({ success: true, payload: { username: user.username, userId: user._id, accountType: user.accountType, profilePicture: user.profilePicture, bio: user.bio }, message: 'User signed in.' })
-                })
-                .catch(err => {
-                    console.error('Password comparison error')
-                    return res.status(500).json({ message: 'Internal server error.', err })
-                })
-        })
-        .catch(err => {
-            return res.status(500).json({ message: 'Internal server error.', err })
-        })
+app.get('/check-username', async (req, res) => {
+    const { username } = req.query
+
+    try {
+        const user = User.findOne({ username })
+
+        if (user) {
+            return res.status(202).json({ message: 'Username already exists.' })
+        }
+
+        return res.status(200).json({ message: 'Username avaialble.' })
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message:'Internal server error.', err})
+    }
 })
 
 app.get('/check-auth', async (req, res) => {

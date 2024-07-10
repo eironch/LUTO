@@ -131,6 +131,7 @@ function Popular(p) {
                                 <>
                                     <RecipeSuspense />
                                     <RecipeSuspense />
+                                    <RecipeSuspense />
                                 </>
                             }
                         </div>

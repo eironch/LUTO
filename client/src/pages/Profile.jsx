@@ -180,6 +180,7 @@ function Profile(p) {
                             <>
                                 <RecipeSuspense />
                                 <RecipeSuspense />
+                                <RecipeSuspense />
                             </>
                         }
                     </div>

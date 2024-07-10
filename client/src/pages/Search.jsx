@@ -169,6 +169,7 @@ function Search(p) {
                             <div className="col-span-11 flex flex-col h-full rounded-3xl text-zinc-100">
                                 <RecipeSuspense />
                                 <RecipeSuspense />
+                                <RecipeSuspense />
                             </div>
                             :
                             <div className="col-span-11 flex flex-col h-full p-9 rounded-3xl text-zinc-100">

@@ -183,6 +183,7 @@ function Home(p) {
                                 <>
                                     <RecipeSuspense />
                                     <RecipeSuspense />
+                                    <RecipeSuspense />
                                 </>
                             }
                         </div>
