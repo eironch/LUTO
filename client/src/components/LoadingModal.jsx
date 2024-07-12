@@ -22,12 +22,16 @@ function LoadingModal(p) {
             <div className="flex flex-col gap-3 justify-center items-center w-5/12 overflow-hidden model-inner">
                 {
                     title &&
-                    <p className="px-6 text-xl font-semibold text-ellipsis line-clamp-1">{ title }</p>
+                    <p className="px-6 text-xl font-semibold text-ellipsis line-clamp-1">
+                        { title }
+                    </p>
                 }
                 <div className="flex flex-col w-full rounded-3xl bg-zinc-900 overflow-hidden">
                     <div className="flex flex-row items-center p-6 gap-6 shadow-md shadow-zinc-950">
                         <img className="w-10" src={ RemoveIcon } alt="" />
-                        <p className="text-2xl font-semibold">Confirm Recipe Removal</p>
+                        <p className="text-2xl font-semibold">
+                            Confirm Recipe Removal
+                        </p>
                     </div>
                     {/* feedback input */}
                     <div className="flex flex-row p-6 gap-3 items-center text-lg font-semibold text-red-600 text-center">

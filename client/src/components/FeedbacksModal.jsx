@@ -25,7 +25,9 @@ function FeedbacksModal(p) {
         >
             <div className="flex justify-center w-full h-full items-center">
                 <div className="flex flex-col gap-3 justify-center items-center w-5/12 overflow-hidden model-inner">
-                        <p className="px-6 text-2xl font-semibold text-ellipsis line-clamp-1">{ title }</p>
+                        <p className="px-6 text-2xl font-semibold text-ellipsis line-clamp-1">
+                            { title }
+                        </p>
                         <FeedbackSection 
                             user={ user } recipeId={ recipeId } 
                             feedbackCount={ feedbackCount } setFeedbackCount={ setFeedbackCount } 

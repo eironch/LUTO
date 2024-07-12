@@ -17,7 +17,7 @@ function Auth(p) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [passwordAgain, setPasswordAgain] = useState('')
-    const [isEmailVerifying, setIsEmailVerifying] = useState(true)
+    const [isEmailVerifying, setIsEmailVerifying] = useState(false)
     const [verifyInput0, setVerifyInput0] = useState('')
     const [verifyInput1, setVerifyInput1] = useState('')
     const [verifyInput2, setVerifyInput2] = useState('')
@@ -36,8 +36,9 @@ function Auth(p) {
         { ref: verifyInput2Ref, state: [verifyInput2, setVerifyInput2] },
         { ref: verifyInput3Ref, state: [verifyInput3, setVerifyInput3] },
         { ref: verifyInput4Ref, state: [verifyInput4, setVerifyInput4] },
-        { ref: verifyInput5Ref, state: [verifyInput5, setVerifyInput5] },
+        { ref: verifyInput5Ref, state: [verifyInput5, setVerifyInput5] }
     ]
+
     const emailRef = useRef(null)
     const passwordRef = useRef(null)
     const passswordAgainRef = useRef(null)
@@ -143,6 +144,16 @@ function Auth(p) {
     }
 
     function handleSignUp() {
+        if (!user.username || !password || !passwordAgain) {
+            setCredsCorrection({ 
+                message: 'Please provide all required details to create an account.', 
+                affected: [!user.username && 'username', !email && 'email', (!password || !passwordAgain) && 'password'] 
+            })
+
+            return
+
+        }
+         
         if (!validateUsername(user.username)) {
             setCredsCorrection({ 
                 message: 'Username must be 2-30 characters, starts with a letter or an underscore.', 
@@ -152,15 +163,7 @@ function Auth(p) {
             return
         }
 
-        if (!user.username || !password || !passwordAgain) {
-            setCredsCorrection({ 
-                message: 'Please provide all required details to create an account.', 
-                affected: [!user.username && 'username', !email && 'email', (!password || !passwordAgain) && 'password'] 
-            })
-
-            return
-
-        } else if (password !== passwordAgain) {
+        if (password !== passwordAgain) {
             setCredsCorrection({ 
                 message: 'Passwords do not match. Please re-enter your password.', 
                 affected: ['password'] 
@@ -193,6 +196,7 @@ function Auth(p) {
 
     function handleActionChange(action) {
         setUser({ username: '', userId: '' })
+        setEmail('')
         setPassword('')
         setPasswordAgain('')
         setCredsCorrection({ message: '', affected: [] })
@@ -205,7 +209,12 @@ function Auth(p) {
         return regex.test(username)
     }
 
-    function handleVerifyInputChange(e, setInput, nextInputRef, prevInputRef) {
+    function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        return emailRegex.test(email);
+      }
+
+    function handleVerifyInputChange(e, setInput, nextInputRef) {
         const value = e.target.value
 
         if (!/^[0-9]?$/.test(value)) {
@@ -239,6 +248,18 @@ function Auth(p) {
         prevInputRef.current.focus()
     }
 
+    function focusVerifyInput() {
+        verifyInputUses.some((use, index, arr) => { 
+            if (!use.state[0] || index === arr.length - 1) {
+                use.ref.current.focus()
+
+                return true
+            }
+
+            return false
+        })
+    }
+
     useEffect(() => {
         if (!user.username) {
             return
@@ -256,6 +277,32 @@ function Auth(p) {
         setCredsCorrection({ message: '', affected: [] })
     },[user])
 
+
+    useEffect(() => {
+        if (!email) {
+            return
+        }
+
+        if (!validateEmail(email)) {
+            setCredsCorrection({ 
+                message: 'Please enter a valid email address.', 
+                affected: ['email'] 
+            })
+            
+            return
+        }
+
+        setCredsCorrection({ message: '', affected: [] })
+    },[email])
+
+
+    useEffect(() => {
+        if (isEmailVerifying) {
+            focusVerifyInput()
+        }
+    }, [isEmailVerifying])
+
+
     return (
         <div className="grid grid-cols-2 p-3 h-svh bg-gradient-to-b from-orange-500 to-orange-400 gap-3 overflow-hidden">
             <div className="flex flex-col items-center justify-center">
@@ -267,13 +314,13 @@ function Auth(p) {
                     <h1 className="text-zinc-100 text-5xl font-bold">{ action }</h1>
                 </div>
                 <div className="flex flex-col mt-10 gap-3 items-center">
-                    <p className="flex w-10/12 -my-3 justify-center text-red-500">
-                        { credsCorrection.message }
-                    </p>
+                    <div className="flex w-10/12 -mt-6 -mb-3 justify-center text-center text-red-500">
+                        { credsCorrection.message || <>&nbsp;</> }
+                    </div>
                     <input 
                         className={`
-                            ${credsCorrection.affected.includes('username') ? "border-red-600" : "border-zinc-100" } 
-                            bg-transparent text-center border rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 my-3
+                            ${credsCorrection.affected.includes('username') ? "border-red-600" : "border-zinc-600" } 
+                            bg-transparent text-center border-2 rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 my-3
                         `} 
                         value={ user.username } onChange={ e => { setUser({ username: e.target.value}) } } 
                         type="text" placeholder="Username"
@@ -282,7 +329,10 @@ function Auth(p) {
                     {
                         action === "Sign Up" &&
                         <input 
-                            className={`${credsCorrection.affected.includes('email') ? "border-red-600" : "border-zinc-100" } bg-transparent text-center border rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 mb-3`} 
+                            className={`
+                                ${credsCorrection.affected.includes('email') ? "border-red-600" : "border-zinc-600" } 
+                                bg-transparent text-center border-2 rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 mb-3
+                            `} 
                             value={ email } onChange={ (e) => { setEmail(e.target.value) } } 
                             type="email" placeholder="Email"
                             onKeyDown={ e => { handleEnterKey(e, passwordRef) } } ref={ emailRef }
@@ -290,7 +340,10 @@ function Auth(p) {
                         />
                     }
                     <input 
-                        className={`${credsCorrection.affected.includes('password') ? "border-red-600" : "border-zinc-100" } bg-transparent text-center border rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 mb-3`} 
+                        className={`
+                            ${credsCorrection.affected.includes('password') ? "border-red-600" : "border-zinc-600" } 
+                            bg-transparent text-center border-2 rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 mb-3
+                        `} 
                         value={ password } onChange={ (e) => { setPassword(e.target.value) } } 
                         type="password" placeholder="Password"
                         onKeyDown={ e => { handleEnterKey(e, passswordAgainRef) } } ref={ passwordRef }
@@ -299,7 +352,10 @@ function Auth(p) {
                     {
                         action === "Sign Up" &&
                         <input 
-                            className={`${credsCorrection.affected.includes('password') ? "border-red-600" : "border-zinc-100" } bg-transparent text-center border rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 mb-3`} 
+                            className={`
+                                ${credsCorrection.affected.includes('password') ? "border-red-600" : "border-zinc-600" } 
+                                bg-transparent text-center border-2 rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 mb-3
+                            `} 
                             value={ passwordAgain } onChange={ (e) => { setPasswordAgain(e.target.value) } } 
                             type="password" placeholder="Password Again"
                             onKeyDown={ e => { handleEnterKey(e) } } ref={ passswordAgainRef }
@@ -307,7 +363,7 @@ function Auth(p) {
                     }
                     
                 </div>
-                <div className="flex flex-col items-center mt-5">
+                <div className="flex flex-col items-center mt-6">
                     <div className="grid items-center w-10/12 gap-3">
                         {
                             action === "Sign In"? 
@@ -326,14 +382,14 @@ function Auth(p) {
                         action === "Sign In" ? 
                         <div className="grid grid-cols-3 gap-6 text-zinc-100 w-10/12">
                             <p className="text-xl py-4 text-center overflow-hidden text-ellipsis line-clamp-2">Don't have an account?</p> 
-                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-700 col-span-2 text-xl font-semibold rounded-3xl text-zinc-100 bg-zinc-600 p-3 w-full" onClick={ () => { handleActionChange("Sign Up") } }> 
+                            <button className="shadow-md shadow-zinc-950 hover:border-zinc-700 col-span-2 text-xl font-semibold rounded-3xl text-zinc-100 bg-transparent border-2 border-zinc-600 p-3 w-full" onClick={ () => { handleActionChange("Sign Up") } }> 
                                 Sign Up
                             </button>
                         </div> 
                         :
                         <div className="grid grid-cols-3 gap-6 text-zinc-100 w-10/12">
                             <p className="text-xl py-4 text-center overflow-hidden text-ellipsis line-clamp-2">Already have an account?</p> 
-                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-700 col-span-2 text-xl font-semibold rounded-3xl text-center text-zinc-100 bg-zinc-600 p-3 w-full" onClick={ () => { handleActionChange("Sign In") } }> 
+                            <button className="shadow-md shadow-zinc-950 hover:border-zinc-700 col-span-2 text-xl font-semibold rounded-3xl text-center text-zinc-100 bg-transparent border-2 border-zinc-600 p-3 w-full" onClick={ () => { handleActionChange("Sign In") } }> 
                                 Sign In
                             </button>
                         </div>
@@ -342,39 +398,39 @@ function Auth(p) {
             </div>
             {
                     isEmailVerifying &&
-                    <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-y-scroll scrollable-div"
-                            onMouseDownCapture={e => { 
-                                const isOutsideModal = !e.target.closest('.model-inner')
-
-                                if (isOutsideModal) {
-                                    setIsEmailVerifying(false)
-                                }
-                            } 
-                        }
-                    >
+                    <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-y-scroll scrollable-div">
                         <div className="flex flex-col gap-3 justify-center items-center w-fit overflow-hidden model-inner">
-                            <div className="flex flex-col w-full py-20 mx-6 gap-12 items-center rounded-3xl bg-zinc-900 overflow-hidden">
-                                Verify Email
-                                <div className="flex gap-2">
+                            <div className="flex flex-col w-full py-20 mx-9 gap-9 items-center rounded-3xl bg-zinc-900 overflow-hidden">
+                                <p className="text-2xl mb-3 font-bold">
+                                    Verify Email
+                                </p>
+                                {
+                                    <div className="flex w-10/12 -mt-6 -mb-3 justify-center text-center text-red-500">
+                                        Incorrect Verification Code
+                                    </div>
+                                }
+                                <div className="flex gap-2 hover:cursor-text" onClick={ () => { focusVerifyInput() }}>
                                     {
                                         verifyInputUses.map((use, index, arr) =>
                                             <input 
-                                                className="bg-transparent text-center border rounded-3xl p-3 w-16 h-20 caret-zinc-100 text-4xl text-zinc-100" 
+                                                className="bg-transparent text-center border-2 border-zinc-600 rounded-3xl p-3 w-20 h-24 caret-transparent text-3xl font-bold text-zinc-100 pointer-events-none" 
                                                 type="text" maxLength="1" ref={ use.ref }
                                                 value={ use.state[0] } onChange={ e => { handleVerifyInputChange(e, use.state[1], index !== 5 && arr[index + 1].ref) } }
                                                 onKeyDown={ e => { handleVerifyInputKeyDown(e, index !== 0 && arr[index - 1].ref)  } }
-                                                onClick={ () => { 
-                                                    arr.some(uses => { 
-                                                        if (!uses.state[0]) {
-                                                            uses.ref.current.focus()
-
-                                                            return true
-                                                        }  
-                                                    }) 
-                                                }}
                                             />
                                         )
                                     }
+                                </div>
+                                <div className="flex">
+                                    <p className="text-zinc-400">
+                                        The verification code was sent to&nbsp;
+                                    </p>
+                                    <p className="font-semibold text-zinc-300">
+                                        { email }&nbsp;
+                                    </p>
+                                    <button className="text-blue-400 hover:underline" onClick={ () => { setIsEmailVerifying(false) } }>
+                                        change
+                                    </button>
                                 </div>
                             </div>
                         </div>

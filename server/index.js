@@ -6,7 +6,8 @@ import jwt from 'jsonwebtoken'
 import mongoose, { Types }  from 'mongoose'
 import multer from 'multer'
 import { bucket } from './firebaseAdmin.js'
-import { v4 as uuidv4 } from 'uuid' 
+import { v4 as uuidv4 } from 'uuid'
+import nodemailer from 'nodemailer'
 
 import User from './models/user.js'
 import Preference from './models/preference.js'
@@ -18,23 +19,25 @@ import Save from './models/save.js'
 import Flag from './models/flag.js'
 import Archive from './models/archive.js'
 import Follow from './models/follow.js'
+import Verification from './models/verification.js'
 
 const PORT = 8080
-
-// jwst secret key
 const secretKey = 'luto-app'
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: '@gmail.com',
+        pass: ''
+    }
+})
 
-// express app
 const app = express()
 const upload = multer({ storage: multer.memoryStorage() })
-
 app.use(express.json())
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true
 }))
-
-// cookie for logging in
 app.use(cookieParser())
 
 function generateAccessToken(userId, username) {
@@ -70,27 +73,31 @@ app.get('/', (req, res) => {
     res.json('good mourning.')
 })
 
-app.post('/create-account', (req, res) => {
+app.post('/create-account', async (req, res) => {
     const { username, password } = req.body
-    const user = new User({
-        username,
-        password
-    })
 
     try {
-        user.save()
-            .then(async (user) => {
-                const preference = new Preference({
-                    userId: user._id
-                })
+        const user = await user.findOne()
 
-                await preference.save()
+        if (!user) {
+            return res.status(202).json({ message: 'Username exists.' })
+        }
 
-                return res.status(201).json({ success: true, message: 'Account created.' })
-            })
-            .catch(() => {
-                return res.status(202).json({ success: false, message: 'Username exists.' })
-            })
+        const newUser = new User({
+            username,
+            password
+        })
+
+        const preference = new Preference({
+            userId: user._id
+        })
+
+        await newUser.save()
+        
+        await preference.save()
+
+        return res.status(201).json({ message: 'Account created.' })
+
     }  catch (err) {
         console.log(err)
         return res.status(500).json({ message:'Internal server error.', err})
@@ -104,13 +111,13 @@ app.get('/sign-in', async (req, res) => {
         const user = await User.findOne({ username })
 
         if(!user) {
-            return res.status(202).json({ success: false, message: 'User not found.' })
+            return res.status(202).json({ message: 'User not found.' })
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password)
 
         if (!isPasswordValid) {
-            return res.status(202).json({ success: false, message: 'Incorrect username or password.'})
+            return res.status(202).json({ message: 'Incorrect username or password.'})
         }
 
         res.cookie(
@@ -133,7 +140,7 @@ app.get('/sign-in', async (req, res) => {
             }
         )
         
-        return res.status(200).json({ success: true, payload: { username: user.username, userId: user._id, accountType: user.accountType, profilePicture: user.profilePicture, bio: user.bio }, message: 'User signed in.' })
+        return res.status(200).json({ payload: { username: user.username, userId: user._id, accountType: user.accountType, profilePicture: user.profilePicture, bio: user.bio }, message: 'User signed in.' })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message:'Internal server error.', err})
@@ -144,13 +151,13 @@ app.get('/check-username', async (req, res) => {
     const { username } = req.query
 
     try {
-        const user = User.findOne({ username })
-
+        const user = await User.findOne({ username })
+     
         if (user) {
             return res.status(202).json({ message: 'Username already exists.' })
         }
 
-        return res.status(200).json({ message: 'Username avaialble.' })
+        return res.status(200).json({ message: 'Username available.' })
 
     } catch (err) {
         console.log(err)
@@ -249,7 +256,7 @@ app.post('/publish-recipe', upload.any(), async (req, res) => {
         })        
         await recipeOverview.save()
 
-        return res.status(201).json({ success: true, message:'Recipe published.'})
+        return res.status(201).json({ message:'Recipe published.'})
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message:'File upload error.', err})
@@ -335,7 +342,7 @@ app.post('/give-point', async (req, res) => {
                 
                 const points = await Recipe.findById(recipeId).select('points')
                 
-                return res.status(203).json({ success: true, message:'Recipe point ungiven.', payload: { pointStatus, points } })
+                return res.status(203).json({ message:'Recipe point ungiven.', payload: { pointStatus, points } })
             }
 
             await Point.updateOne(
@@ -356,7 +363,7 @@ app.post('/give-point', async (req, res) => {
 
             const points = await Recipe.findById(recipeId).select('points')
 
-            return res.status(200).json({ success: true, message:'Recipe point status changed.', payload: { pointStatus, points } })
+            return res.status(200).json({ message:'Recipe point status changed.', payload: { pointStatus, points } })
         }
 
         const point = new Point({
@@ -375,10 +382,10 @@ app.post('/give-point', async (req, res) => {
   
         const points = await Recipe.findById(recipeId).select('points')
 
-        return res.status(201).json({ success: true, message:'Recipe point given.', payload: { pointStatus, points } })
+        return res.status(201).json({ message:'Recipe point given.', payload: { pointStatus, points } })
     } catch (err) {
         console.log(err)
-        return res.status(500).json({ success: true, message:'Internal server error.', err})
+        return res.status(500).json({ message:'Internal server error.', err})
     }
 })
 
@@ -444,7 +451,7 @@ app.get('/feed-recipes', async (req, res) => {
                     recipes.sort((a, b) => b.flagCount - a.flagCount)
                 }
 
-                return res.status(200).json({ success: true, payload: recipes })
+                return res.status(200).json({ payload: recipes })
             })
     } catch (err) {
         console.log(err)
@@ -521,7 +528,7 @@ app.get('/search-recipes', async (req, res) => {
                     recipes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                 }
                 
-                return res.status(200).json({ success: true, payload: recipes })
+                return res.status(200).json({ payload: recipes })
             })
     } catch (err) {
         console.log(err)
@@ -581,7 +588,7 @@ app.get('/saved-recipes', async (req, res) => {
                     return res.status(202).json({ status: false, message: 'No recipes found.' })
                 }
 
-                return res.status(200).json({ success: true, payload: recipes })
+                return res.status(200).json({ payload: recipes })
             })
     } catch (err) {
         console.log(err)
@@ -632,7 +639,7 @@ app.get('/popular-recipes', async (req, res) => {
         
         return Promise.all(pointPromises)
             .then(recipes => {
-                return res.status(200).json({ success: true, payload: recipes })
+                return res.status(200).json({ payload: recipes })
             })
     } catch (err) {
         console.log(err)
@@ -689,7 +696,7 @@ app.get('/user-recipes', async (req, res) => {
                     recipes.sort((a, b) => b.flagCount - a.flagCount)
                 }
   
-                return res.status(200).json({ success: true, payload: recipes })
+                return res.status(200).json({ payload: recipes })
             })
     } catch (err) {
         console.log(err)
@@ -725,7 +732,7 @@ app.get('/get-recipe', async (req, res) => {
             recipeStatus: { pointStatus: status && status.pointStatus, isSaved }
         }
 
-        return res.status(200).json({ success: true, payload: response })
+        return res.status(200).json({ payload: response })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: 'Internal server error.', err })
@@ -746,7 +753,7 @@ app.post('/submit-feedback', async (req, res) => {
         
         await Recipe.findByIdAndUpdate(recipeId, { $inc: { feedbackCount: 1 } })
         
-        return res.status(201).json({ success: true, message: 'Feedback created.' })
+        return res.status(201).json({ message: 'Feedback created.' })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: 'Internal server error.', err })
@@ -775,7 +782,7 @@ app.get('/get-feedbacks', async (req, res) => {
         console.log(feedbacks)
         const feedbackCount = await Recipe.findById(recipeId).select('feedbackCount')
 
-        return res.status(200).json({ success: true, payload: { feedbacks, feedbackCount } })
+        return res.status(200).json({ payload: { feedbacks, feedbackCount } })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: 'Internal server error.', err })
@@ -795,15 +802,15 @@ app.post('/save-recipe', async (req, res) => {
         if (isSaved) {
             await Save.deleteOne({ userId, recipeId })
 
-            return res.status(200).json({ success: true, message:'Recipe unsaved.', payload: { isSaved: false } })
+            return res.status(200).json({ message:'Recipe unsaved.', payload: { isSaved: false } })
         }
 
         await save.save()
             .then(() => {
-                return res.status(201).json({ success: true, message: 'Recipe saved.', payload: { isSaved: true }})
+                return res.status(201).json({ message: 'Recipe saved.', payload: { isSaved: true }})
             })
             .catch(() => {
-                return res.status(202).json({ success: false, message: 'Error saving recipe.' })
+                return res.status(202).json({ message: 'Error saving recipe.' })
             })
     } catch (err) {
         console.log(err)
@@ -829,7 +836,7 @@ app.post('/flag-recipe', async (req, res) => {
         
         await Recipe.findByIdAndUpdate(recipeId, { $inc: { flagCount: 1 } })
 
-        return res.status(200).json({ success: true, message: 'Recipe flagged.' })
+        return res.status(200).json({ message: 'Recipe flagged.' })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: 'Internal server error.', err })
@@ -859,7 +866,7 @@ app.post('/remove-recipe', async (req, res) => {
         
         await RecipeOverview.deleteOne({ recipeId })
 
-        return res.status(200).json({ success: true, message: 'Recipe removed.' })
+        return res.status(200).json({ message: 'Recipe removed.' })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: 'Internal server error.', err })
@@ -872,7 +879,7 @@ app.post('/allow-recipe', async (req, res) => {
     try {
         await Recipe.findByIdAndUpdate(recipeId, { $set: { flagCount: 0 } })
 
-        return res.status(200).json({ success: true, message: 'Recipe allowed.' })
+        return res.status(200).json({ message: 'Recipe allowed.' })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: 'Internal server error.', err })
@@ -885,7 +892,7 @@ app.get('/get-preferences', async (req, res) => {
     try {
         const preferences = await Preference.findOne({ userId })
 
-        return res.status(201).json({ success: true, message: 'User preference found.', payload: { preferences } })
+        return res.status(201).json({ message: 'User preference found.', payload: { preferences } })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message:'Internal server error.', err})
@@ -899,7 +906,7 @@ app.post('/save-filters', async (req, res) => {
     try {
         await Preference.findOneAndUpdate({ userId }, { $set: { filters } }, { upsert: true })
 
-        return res.status(201).json({ success: true, message: 'User filters updated.' })
+        return res.status(201).json({ message: 'User filters updated.' })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message:'Internal server error.', err})
@@ -913,7 +920,7 @@ app.get('/get-author-info', async (req, res) => {
         const user = await User.findOne({ username: authorName })
         
         if (!user) {
-            return res.status(400).json({ success: false, message: 'User not found.' })
+            return res.status(202).json({ message: 'User not found.' })
         }
 
         const isFollowed = await Follow.findOne({ userId, followedId: user._id }) !== null
@@ -945,7 +952,7 @@ app.post('/follow-user', async (req, res) => {
         const user = await User.findOne({ username: authorName })
         
         if (!user) {
-            return res.status(400).json({ success: false, message: 'User not found.' })
+            return res.status(202).json({ message: 'User not found.' })
         }
 
         const isFollowed = await Follow.findOne({ userId, followedId: user._id }) !== null
@@ -955,13 +962,16 @@ app.post('/follow-user', async (req, res) => {
 
             await User.findByIdAndUpdate(user._id, { $inc: { followCount: -1 } })
 
+            // followers
             const followerResults = await Follow.find({ followedId: user._id }).populate({            path: 'userId',
                 path: 'userId',
                 select: ['username', 'profilePicture']
             }).limit(10)
     
+            // reformat follower results
             const followers = followerResults.map(follower => { return { username: follower.userId.username, profilePicture: follower.userId.profilePicture } })
     
+            // follow count
             const follows = await User.findById(user._id).select('followCount')
 
             return res.status(200).json({ status: true, message: 'User unfollowed.', payload: { isFollowed: false, followCount: follows.followCount, followers } })
@@ -973,23 +983,24 @@ app.post('/follow-user', async (req, res) => {
         })
 
         await follow.save()
-            .then(async () => {
-                await User.findByIdAndUpdate(user._id, { $inc: { followCount: 1 } })
 
-                const followerResults = await Follow.find({ followedId: user._id }).populate({            path: 'userId',
-                    path: 'userId',
-                    select: ['username', 'profilePicture']
-                }).limit(10)
+        await User.findByIdAndUpdate(user._id, { $inc: { followCount: 1 } })
+
+        // followers
+        const followerResults = await Follow.find({ followedId: user._id }).populate({
+            path: 'userId',
+            path: 'userId',
+            select: ['username', 'profilePicture']
+        }).limit(10)
+
+        // reformat follower results
+        const followers = followerResults.map(follower => { return { username: follower.userId.username, profilePicture: follower.userId.userName } })
+
+        // follow count
+        const follows = await User.findById(user._id).select('followCount')
         
-                const followers = followerResults.map(follower => { return { username: follower.userId.username, profilePicture: follower.userId.userName } })
-       
-                const follows = await User.findById(user._id).select('followCount')
-                
-                return res.status(201).json({ success: true, message: 'User followed.', payload: { isFollowed: true, followCount: follows.followCount, followers }})
-            })
-            .catch(() => {
-                return res.status(202).json({ success: false, message: 'Error following user.' })
-            })
+        return res.status(201).json({ message: 'User followed.', payload: { isFollowed: true, followCount: follows.followCount, followers }})
+
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message:'Internal server error.', err})
@@ -1003,12 +1014,13 @@ app.post('/get-followers', async (req, res) => {
         const user = await User.findOne({ username: authorName })
         
         if (!user) {
-            return res.status(400).json({ success: false, message: 'User not found.' })
+            return res.status(202).json({ message: 'User not found.' })
         }
 
         const followers = await Follow.find({ followedId: user._id })
 
-        return res.status(200).json({ success: true, message: 'Got user followers.', payload: { followers }})
+        return res.status(200).json({ message: 'Got user followers.', payload: { followers }})
+
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message:'Internal server error.', err})
@@ -1022,14 +1034,15 @@ console.log("dasdasd;sa")
         const user = await User.findById(userId)
         
         if (!user) {
-            return res.status(400).json({ success: false, message: 'User not found.' })
+            return res.status(202).json({ message: 'User not found.' })
         }
 
         user.password = password
 
         await user.save()
 
-        return res.status(200).json({ success: true, message: 'Password changed.'})
+        return res.status(200).json({ message: 'Password changed.'})
+
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message:'Internal server error.', err})
@@ -1044,7 +1057,7 @@ app.post('/change-profile-picture', upload.any(), async (req, res) => {
         const user = await User.findById(userId)
 
         if (!user) {
-            return res.status(400).json({ success: false, message: 'User not found.' })
+            return res.status(202).json({ message: 'User not found.' })
         }
 
         const profilePictureLink = await uploadFileToStorage(profilePicture[0])
@@ -1053,7 +1066,8 @@ app.post('/change-profile-picture', upload.any(), async (req, res) => {
 
         await user.save()
         
-        return res.status(201).json({ success: true, message: 'Profile picture changed.'})
+        return res.status(201).json({ message: 'Profile picture changed.'})
+
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message:'Internal server error.', err})
@@ -1067,14 +1081,70 @@ app.post('/change-bio', async (req, res) => {
         const user = await User.findById(userId)
         
         if (!user) {
-            return res.status(400).json({ success: false, message: 'User not found.' })
+            return res.status(202).json({ message: 'User not found.' })
         }
 
         user.bio = bio
 
         await user.save()
 
-        return res.status(200).json({ success: true, message: 'Bio changed.'})
+        return res.status(200).json({ message: 'Bio changed.'})
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message:'Internal server error.', err})
+    }
+})
+
+app.post('/send-verification', async (req, res) => {
+    const { email } = req.body
+    const code = Math.floor(100000 + Math.random() * 900000).toString()
+    const expiresAt = new Date(Date.now() + 3600000)
+
+    try {
+        const verification = await Verification.findOne({ email })
+
+        if (verification) {
+            verification.code = code
+            verification.expiresAt = expiresAt
+
+            await verification.save()
+
+            return res.status(200).json({ message: 'New verification code resent.'})
+        }
+
+        const newVerification = new Verification({
+            email,
+            code,
+            expiresAt
+        })
+
+        await newVerification.save()
+    
+        return res.status(200).json({ message: 'New verification code sent.'})
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message:'Internal server error.', err})
+    }
+})
+
+app.get('/verify-code', async (req, res) => {
+    const { email, code } = req.query
+    
+    try {
+        const verification = await Verification.findOne({ email, code })
+
+        if (!verification) {
+            return res.status(400).json({ message: 'Invalid verification code.'})
+        }
+
+        if (verification.expiresAt < new Date()) {
+            return res.status(401).json({ message: 'Verification code expired.' })
+        }
+
+        return res.status(200).json({ message: 'Email verified successfully.' })
+
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message:'Internal server error.', err})
@@ -1085,5 +1155,5 @@ app.get('/log-out', (req, res) => {
     res.clearCookie('accessToken', { path: '/' })
     res.clearCookie('refreshToken', { path: '/' })
 
-    return res.status(200).json({ success: true, message: 'Logged Out' })
+    return res.status(200).json({ message: 'Logged Out' })
 })

@@ -20,4 +20,5 @@ const pointSchema = new Schema({
 }, { timestamps: true })
 
 const Point = mongoose.model('Point', pointSchema)
+
 export default Point

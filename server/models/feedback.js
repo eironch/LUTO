@@ -24,4 +24,5 @@ const feedbackSchema = new Schema({
 }, { timestamps: { createdAt: true, updatedAt: false } })
 
 const Feedback = mongoose.model('Feedback', feedbackSchema)
+
 export default Feedback

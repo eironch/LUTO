@@ -19,4 +19,5 @@ const preferenceSchema = new Schema({
 }, { timestamps: { createdAt: true, updatedAt: false } })
 
 const Preference = mongoose.model('Preference', preferenceSchema)
+
 export default Preference

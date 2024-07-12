@@ -16,4 +16,5 @@ const saveSchema = new Schema({
 }, { timestamps: { createdAt: true, updatedAt: false } })
 
 const Save = mongoose.model('Save', saveSchema)
+
 export default Save

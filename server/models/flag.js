@@ -16,4 +16,5 @@ const flagSchema = new Schema({
 }, { timestamps: { createdAt: true, updatedAt: false } })
 
 const Flag = mongoose.model('Flag', flagSchema)
+
 export default Flag

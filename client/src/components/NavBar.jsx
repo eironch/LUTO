@@ -93,7 +93,9 @@ function NavBar(p) {
                                                 `} 
                                                 onClick={ () => { publishRecipe() } } disabled={ !(title && recipeImage.size && summary && (ingredients.length > 1  || ingredients[0].value)) }
                                             >
-                                                <p className="flex text-zinc-100 text-lg w-full font-semibold">Publish</p>
+                                                <p className="flex text-zinc-100 text-lg w-full font-semibold">
+                                                    Publish
+                                                </p>
                                                 <img className="w-8" src={ CreateIcon } alt="" />
                                             </button>
                                         </button>
@@ -139,7 +141,8 @@ function NavBar(p) {
                             ) &&
                             <Link to={`/${ user.username }`} className={`${ user.accountType === "user" ? "bg-zinc-900 hover:bg-zinc-500" : "bg-orange-500 hover:bg-orange-400" }  col-span-2 flex items-center justify-end rounded-3xl pointer-events-auto`}>
                                 { 
-                                    currentTab!=="Profile" && <p className="text-zinc-100 text-end w-full ml-3 text-xl font-semibold overflow-hidden">
+                                    currentTab!=="Profile" && 
+                                    <p className="text-zinc-100 text-end w-full ml-3 text-xl font-semibold overflow-hidden">
                                         { user.username }
                                     </p> 
                                 }

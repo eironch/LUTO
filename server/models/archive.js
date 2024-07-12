@@ -62,4 +62,5 @@ const archiveSchema = new Schema({
 }, { timestamps: true })
 
 const Archive = mongoose.model('Archive', archiveSchema)
+
 export default Archive

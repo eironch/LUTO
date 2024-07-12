@@ -30,4 +30,5 @@ const recipeOverviewSchema = new Schema({
 }, { timestamps: true })
 
 const RecipeOverview = mongoose.model('RecipeOverview', recipeOverviewSchema)
+
 export default RecipeOverview

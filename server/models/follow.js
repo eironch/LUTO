@@ -16,4 +16,5 @@ const followSchema = new Schema({
 }, { timestamps: { createdAt: true, updatedAt: false } })
 
 const Follow = mongoose.model('Follow', followSchema)
+
 export default Follow
