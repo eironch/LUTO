@@ -139,7 +139,7 @@ function SidebarCreate(p) {
                             <input className="hidden" id="fileInput" type="file" accept="image/*" onChange={ e => handleFileChange(e) } />
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 p-3">
+                    <div className="flex p-3">
                         <div className="flex">
                             <div className="flex gap-3 px-4 py-2 items-center justify-start rounded-3xl">
                                 <div className="flex flex-row gap-3 items-center text-lg font-semibold">

@@ -11,41 +11,27 @@ import ProfileIcon from '../assets/profile-icon.png'
 import CreateIcon from '../assets/create-icon.png'
 import SaveIcon from '../assets/saved-icon.png'
 
-function NavBar(p) {
-    const user = p.user
-    const currentTab = p.currentTab
-    const setCurrentTab = p.setCurrentTab
-    const formatDate = p.formatDate
-    const setConfirmationShown = p.setConfirmationShown
-
-    const authorName = p.authorName
-    const profilePicture = p.profilePicture
-    const recipeId = p.recipeId
-    const recipeImage = p.recipeImage
-    const setRecipeImage = p.setRecipeImage 
-    const title = p.title
-    const summary = p.summary
-    const setSummary = p.setSummary
-    const ingredients = p.ingredients
-    const setIngredients = p.setIngredients
-    const tags = p.tags
-    const setTags = p.setTags
-    const points = p.points
-    const setPoints = p.setPoints
-    const pointStatus = p.pointStatus
-    const setPointStatus = p.setPointStatus
-    const feedbackCount = p.feedbackCount
-    const setFeedbackCount  = p.setFeedbackCount
-    const isRecipeSaved = p.isRecipeSaved
-    const publishRecipe = p.publishRecipe
-    const handleSaveRecipe = p.handleSaveRecipe
-    const handleGiveRecipePoint = p.handleGiveRecipePoint
-    const systemTags = p.systemTags
-    const filters  = p.filters
-    const setFilters = p.setFilters
+function NavBar({
+        user, currentTab,
+        setCurrentTab, formatDate,
+        setConfirmationShown, authorName,
+        profilePicture, recipeId,
+        recipeImage, setRecipeImage,
+        title, summary,
+        setSummary, ingredients,
+        setIngredients, tags,
+        setTags, points,
+        setPoints, pointStatus,
+        setPointStatus, feedbackCount,
+        setFeedbackCount, isRecipeSaved,
+        publishRecipe, handleSaveRecipe,
+        handleGiveRecipePoint, systemTags,
+        filters, setFilters,
+        handleFollowUser
+    }) {
 
     return (
-        <div>
+        <>
             <div className="fixed flex gap-3 flex-col w-full h-svh pointer-events-none">
                 {/* navbar */}
                 <div className="p-3 pb-0">
@@ -74,7 +60,7 @@ function NavBar(p) {
                                         <img className="px-4 w-48 " src={ Logo } alt="" />
                                     </Link>
                                 }
-                                <div className="col-span-2 flex items-center pointer-events-auto w-full h-full rounded-3xl overflow-hidden">
+                                <div className="col-span-2 pointer-events-auto">
                                     {
                                         currentTab === "Profile" &&
                                         <Link to="/create" className="flex items-center p-4 gap-4 w-full h-full bg-orange-500 hover:bg-orange-400 overflow-hidden">
@@ -86,18 +72,16 @@ function NavBar(p) {
                                     }
                                     {
                                         currentTab === "Create" &&
-                                        <button className="flex items-center w-full h-full bg-zinc-600 rounded-3xl overflow-hidden">
-                                            <button className={`
-                                                    ${ (title && recipeImage.size && summary && (ingredients.length > 1 || ingredients[0].value)) && "bg-orange-500 hover:bg-orange-400" } 
-                                                    rounded-3xl flex items-center p-4 gap-4 w-full h-full disabled:bg-zinc-900 disabled:cursor-not-allowed
-                                                `} 
-                                                onClick={ () => { publishRecipe() } } disabled={ !(title && recipeImage.size && summary && (ingredients.length > 1  || ingredients[0].value)) }
-                                            >
-                                                <p className="flex text-zinc-100 text-lg w-full font-semibold">
-                                                    Publish
-                                                </p>
-                                                <img className="w-8" src={ CreateIcon } alt="" />
-                                            </button>
+                                        <button className={`
+                                                ${ (title && recipeImage.size && summary && (ingredients.length > 1 || ingredients[0].value)) && "bg-orange-500 hover:bg-orange-400" } 
+                                                rounded-3xl flex items-center p-4 gap-4 w-full h-full disabled:bg-zinc-900 disabled:cursor-not-allowed
+                                            `} 
+                                            onClick={ () => { publishRecipe() } } disabled={ !(title && recipeImage.size && summary && (ingredients.length > 1  || ingredients[0].value)) }
+                                        >
+                                            <p className="flex text-zinc-100 text-lg w-full font-semibold">
+                                                Publish
+                                            </p>
+                                            <img className="w-8" src={ CreateIcon } alt="" />
                                         </button>
                                     }
                                     {
@@ -164,10 +148,13 @@ function NavBar(p) {
                         systemTags={ systemTags }
                     /> 
                 }
-                { 
+                {/* { 
                     currentTab === "Profile" && 
-                    <SidebarProfile user={ user } authorName={ authorName } />
-                }
+                    <SidebarProfile 
+                        user={ user } authorName={ authorName } 
+                        handleFollowUser={ handleFollowUser }
+                    />
+                } */}
                 { 
                     currentTab === "Create" &&
                     (
@@ -199,7 +186,7 @@ function NavBar(p) {
                     )
                 }                 
             </div>
-        </div>
+        </>
     )
 }
 

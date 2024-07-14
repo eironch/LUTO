@@ -1,15 +1,18 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 
 import RecipeOverview from '../components/RecipeOverview'
 import NavBar from '../components/NavBar'
+import SidebarProfile from '../components/SidebarProfile'
 import FeedbacksModal from '../components/FeedbacksModal'
 import ConfirmModal from '../components/ConfirmModal'
 import RecipeSuspense from '../components/RecipeSuspense'
 
 import RemoveIcon from '../assets/remove-icon.png'
 import AllowIcon from '../assets/allow-icon.png'
+import CreateIcon from '../assets/create-icon.png'
+import Logo from '../assets/luto-logo-gradient.png'
 
 function Profile(p) {
     const user = p.user
@@ -142,16 +145,40 @@ function Profile(p) {
     }
 
     return (
-       <div className="scrollable-div overflow-y-scroll" ref={ scrollDivRef }>
-            <NavBar
-                user={ user }authorName={ authorName } 
-                currentTab={ currentTab } setCurrentTab={ setCurrentTab }
-            />
-            <div className="flex flex-col p-3 pr-0 h-svh bg-zinc-950">
+       <div className="h-svh scrollable-div overflow-y-scroll" ref={ scrollDivRef }>
+            {/* navbar */}
+            <div className="hidden xl:block">
+                <div className="fixed flex gap-3 flex-col w-full h-svh pointer-events-none">
+                    <div className="p-3 pb-0">
+                        <div className="grid gap-3 w-full min-h-16 pointer-events-none" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+                            <Link to="/home" className="pointer-events-auto rounded-3xl flex col-span-2 items-center justify-center bg-zinc-900 hover:bg-zinc-500">
+                                <img className="px-4 w-48" src={ Logo } alt="" />
+                            </Link>
+                            <div className="col-span-2 pointer-events-auto">
+                                <Link to="/create" className="flex items-center p-4 gap-4 w-full h-full rounded-3xl bg-orange-500 hover:bg-orange-400 overflow-hidden">
+                                    <p className="flex text-zinc-100 text-lg w-full font-semibold">
+                                        Create
+                                    </p>
+                                    <img className="w-8" src={ CreateIcon } alt="" />
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                    <SidebarProfile 
+                        user={ user } authorName={ authorName }
+                    />
+                </div>
+            </div>
+            <div className="block xl:hidden">
+                <SidebarProfile 
+                    user={ user } authorName={ authorName }
+                />
+            </div>
+            <div className="flex flex-col p-3 pb-0 pr-0 bg-zinc-950">
                 {/* content */}
-                <div className="grid w-full gap-3 h-full" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
-                    <div className="col-span-4"></div>
-                    <div className="col-span-11 block">
+                <div className="flex xl:grid w-full h-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+                    <div className="hidden xl:block xl:col-span-4"></div>
+                    <div className="w-full xl:col-span-11 block">
                         { 
                             userRecipes &&
                             userRecipes.length > 0 &&
@@ -176,7 +203,7 @@ function Profile(p) {
                         }
                         {
                             userRecipes &&
-                            (isFetching || !isFetchedAll && (userRecipes.length > 10 || userRecipes.length === 0)) &&
+                            (isFetching || (!isFetchedAll && (userRecipes.length > 10 || userRecipes.length === 0))) &&
                             <>
                                 <RecipeSuspense />
                                 <RecipeSuspense />
