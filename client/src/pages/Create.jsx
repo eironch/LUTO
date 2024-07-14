@@ -23,9 +23,8 @@ function ElementsModal(p) {
 
     return (
         <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-y-scroll scrollable-div" 
-            onMouseDownCapture={ 
-                (event) => { 
-                    const isOutsideModal = !event.target.closest('.model-inner')
+            onMouseDownCapture={ e => { 
+                    const isOutsideModal = !e.target.closest('.model-inner')
 
                     if (isOutsideModal) {
                         setShowModal(false)
@@ -274,13 +273,13 @@ function Create(p) {
                             } 
                         }
                     >
-                        <div className="flex flex-col gap-3 justify-center items-center w-4/12 overflow-hidden model-inner">
+                        <div className="flex flex-col gap-3 justify-center items-center w-5/12 overflow-hidden model-inner">
                             <div className="flex flex-col w-full py-20 gap-12 items-center rounded-3xl bg-zinc-900 overflow-hidden">
                                 {
                                     publishState === "publishing" &&
                                     <>
                                         <p className="w-full text-center text-2xl font-semibold">
-                                            Publishing Recipe...
+                                            Publishing recipe...
                                         </p>
                                         <img className="animate-spin-continuous w-24" src={ LoadingIcon } alt="" />
                                     </>

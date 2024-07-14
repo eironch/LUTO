@@ -3,17 +3,16 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 import Logo from '../assets/luto-logo-white.png'
+import AllowIcon from '../assets/allow-icon.png'
 
 function Auth(p) {
     const user = p.user
     const setUser = p.setUser
-    const showModal = p.showModal
-    const setShowModal = p.setShowModal
-    const setModalMessage = p.setModalMessage
     const setIsAuthenticated = p.setIsAuthenticated
 
     const [action, setAction] = useState('Sign In')
     const [credsCorrection, setCredsCorrection] = useState({ message: '', affected: [] })
+    const [verification, setVerification] = useState({ message: '', status: false })
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [passwordAgain, setPasswordAgain] = useState('')
@@ -44,8 +43,8 @@ function Auth(p) {
     const passswordAgainRef = useRef(null)
     const navigate = useNavigate()
     
-    function createAccount() {
-        axios.post(`http://localhost:8080/create-account`, { username: user.username, password })
+    function signUp() {
+        axios.post(`http://localhost:8080/sign-up`, { username: user.username, password, email })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -53,16 +52,17 @@ function Auth(p) {
                 if (res.status === 202) {
                     setCredsCorrection({ message: 'Username already exists. Please choose a different username.', affected: ['username', 'password'] })
                 
-                } else if (res.status === 201) {
-                    setUser({ username: '', userId: '', accountType: '' })
-                    setPassword('')
-                    setShowModal(true)
-                    setModalMessage('Account Created!')
-                    setCredsCorrection({ message: '', affected: [] })
-                    setAction("Sign In")
                 }
+
+                setUser({ username: '', userId: '', accountType: '' })
+                setPassword('')
+                setCredsCorrection({ message: '', affected: [] })
+                setVerification({ message: '', status: true })
+                setAction("Sign In")
             })
             .catch(err => {
+                setVerification({ message: '', status: false })
+
                 console.log('Error Status:', err.response.status)
                 console.log('Error Data:', err.response.data)
             })
@@ -75,19 +75,18 @@ function Auth(p) {
                 console.log('Data:', res.data)
                 
                 if (res.status === 202) {
-                    setCredsCorrection({ message: 'Incorrect username or password. Please try again.', affected: ['username', 'password'] })
-
-                } else if (res.status === 200) {
-                    setUser({ 
-                        username: res.data.payload.username, 
-                        userId: res.data.payload.userId, 
-                        accountType: res.data.payload.accountType,
-                        profilePicture: res.data.payload.profilePicture,
-                        bio: res.data.payload.bio
-                    })
-                    setIsAuthenticated(true)
-                    navigate('/')
-                }
+                    return setCredsCorrection({ message: 'Incorrect username or password. Please try again.', affected: ['username', 'password'] })
+                } 
+                
+                setUser({ 
+                    username: res.data.payload.username, 
+                    userId: res.data.payload.userId, 
+                    accountType: res.data.payload.accountType,
+                    profilePicture: res.data.payload.profilePicture,
+                    bio: res.data.payload.bio
+                })
+                setIsAuthenticated(true)
+                navigate('/')
             })
             .catch(err => {
                 console.log('Error Status:', err.response.status)
@@ -95,21 +94,69 @@ function Auth(p) {
             })
     }
 
-    function checkUsernameAvailable() {
-        axios.get(`http://localhost:8080/check-username`, { params: { username: user.username } })
+    function checkAvailability() {
+        axios.get(`http://localhost:8080/check-availability`, { params: { username: user.username, email } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
-                
-                if (res.status === 202) {
+
+                if (res.status === 204) {
+                    setCredsCorrection({ message: 'Username and email address already exists. Please try a new one.', affected: ['username', 'email'] })
+                    
+                    return
+
+                } else if (res.status === 203) {
                     setCredsCorrection({ message: 'Username already exists. Please try a new one.', affected: ['username'] })
+                    
+                    return
+
+                } else if (res.status === 202) {
+                    setCredsCorrection({ message: 'Email address already exists. Please try a new one.', affected: ['email'] })
                     
                     return
                 }
 
                 setIsEmailVerifying(true)
+                sendVerificationCode()
+                setCredsCorrection({ message: '', affected: [] })
             })
             .catch(err => {
+                console.log('Error Status:', err.response.status)
+                console.log('Error Data:', err.response.data)
+            })
+    }
+
+    function sendVerificationCode() {
+        axios.post(`http://localhost:8080/send-verification`, { email: email })
+            .then(res => {
+                console.log('Status Code:' , res.status)
+                console.log('Data:', res.data)
+            })
+            .catch(err => {
+                console.log('Error Status:', err.response.status)
+                console.log('Error Data:', err.response.data)
+            })
+    }
+
+    function verifyCode() {
+        setVerification({ message: '', status: null })
+
+        axios.get(`http://localhost:8080/verify-code`, { params: { email: email, code: verifyInputUses.map(use => use.state[0]).join('') } })
+            .then(res => {
+                console.log('Status Code:' , res.status)
+                console.log('Data:', res.data)
+
+                if (res.status === 203) {
+                    return setVerification({ message: res.data.message, status: false })
+                } else if (res.status === 202) {
+                    return setVerification({ message: res.data.message, status: false })
+                }
+
+                signUp()
+            })
+            .catch(err => {
+                setVerification({ message: '', status: false })
+
                 console.log('Error Status:', err.response.status)
                 console.log('Error Data:', err.response.data)
             })
@@ -151,7 +198,6 @@ function Auth(p) {
             })
 
             return
-
         }
          
         if (!validateUsername(user.username)) {
@@ -172,7 +218,7 @@ function Auth(p) {
             return
         }
 
-        checkUsernameAvailable()
+        checkAvailability()
     }
 
     function handleSignIn() {
@@ -265,6 +311,10 @@ function Auth(p) {
             return
         }
 
+        if (action === 'Sign In') {
+            return
+        }
+ 
         if (!validateUsername(user.username)) {
             setCredsCorrection({ 
                 message: 'Username must be 2-30 characters, starts with a letter or an underscore.', 
@@ -297,11 +347,22 @@ function Auth(p) {
 
 
     useEffect(() => {
+        verifyInputUses.forEach(use => {
+            use.state[1]('')
+        })
+        setVerification({ message: '', status: false })
+
         if (isEmailVerifying) {
             focusVerifyInput()
         }
     }, [isEmailVerifying])
 
+    useEffect(() => {
+        if (verifyInput5) {
+            console.log(verifyInput5)
+            verifyCode()
+        }
+    },[verifyInput5])
 
     return (
         <div className="grid grid-cols-2 p-3 h-svh bg-gradient-to-b from-orange-500 to-orange-400 gap-3 overflow-hidden">
@@ -334,7 +395,7 @@ function Auth(p) {
                                 bg-transparent text-center border-2 rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 mb-3
                             `} 
                             value={ email } onChange={ (e) => { setEmail(e.target.value) } } 
-                            type="email" placeholder="Email"
+                            type="email" placeholder="Email Address"
                             onKeyDown={ e => { handleEnterKey(e, passwordRef) } } ref={ emailRef }
                             id="email"
                         />
@@ -367,11 +428,11 @@ function Auth(p) {
                     <div className="grid items-center w-10/12 gap-3">
                         {
                             action === "Sign In"? 
-                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-700 text-xl font-semibold rounded-3xl text-zinc-100 bg-zinc-600 p-3 w-full" onClick={ () => { handleSignIn() } }> 
+                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 text-xl font-semibold rounded-3xl text-zinc-100 bg-zinc-600 p-3 w-full" onClick={ () => { handleSignIn() } }> 
                                 Log In
                             </button>
                             : 
-                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-700 text-xl font-semibold rounded-3xl text-center text-zinc-100 bg-zinc-600 p-3 w-full" onClick={ () => { handleSignUp() }}> 
+                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 text-xl font-semibold rounded-3xl text-center text-zinc-100 bg-zinc-600 p-3 w-full" onClick={ () => { handleSignUp() }}> 
                                 Create Account
                             </button>
                         }
@@ -382,14 +443,14 @@ function Auth(p) {
                         action === "Sign In" ? 
                         <div className="grid grid-cols-3 gap-6 text-zinc-100 w-10/12">
                             <p className="text-xl py-4 text-center overflow-hidden text-ellipsis line-clamp-2">Don't have an account?</p> 
-                            <button className="shadow-md shadow-zinc-950 hover:border-zinc-700 col-span-2 text-xl font-semibold rounded-3xl text-zinc-100 bg-transparent border-2 border-zinc-600 p-3 w-full" onClick={ () => { handleActionChange("Sign Up") } }> 
+                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 hover:border-zinc-500 col-span-2 text-xl font-semibold rounded-3xl text-zinc-100 bg-transparent border-2 border-zinc-600 p-3 w-full" onClick={ () => { handleActionChange("Sign Up") } }> 
                                 Sign Up
                             </button>
                         </div> 
                         :
                         <div className="grid grid-cols-3 gap-6 text-zinc-100 w-10/12">
                             <p className="text-xl py-4 text-center overflow-hidden text-ellipsis line-clamp-2">Already have an account?</p> 
-                            <button className="shadow-md shadow-zinc-950 hover:border-zinc-700 col-span-2 text-xl font-semibold rounded-3xl text-center text-zinc-100 bg-transparent border-2 border-zinc-600 p-3 w-full" onClick={ () => { handleActionChange("Sign In") } }> 
+                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 hover:border-zinc-500 col-span-2 text-xl font-semibold rounded-3xl text-center text-zinc-100 bg-transparent border-2 border-zinc-600 p-3 w-full" onClick={ () => { handleActionChange("Sign In") } }> 
                                 Sign In
                             </button>
                         </div>
@@ -398,40 +459,83 @@ function Auth(p) {
             </div>
             {
                     isEmailVerifying &&
-                    <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-y-scroll scrollable-div">
-                        <div className="flex flex-col gap-3 justify-center items-center w-fit overflow-hidden model-inner">
-                            <div className="flex flex-col w-full py-20 mx-9 gap-9 items-center rounded-3xl bg-zinc-900 overflow-hidden">
-                                <p className="text-2xl mb-3 font-bold">
-                                    Verify Email
-                                </p>
-                                {
-                                    <div className="flex w-10/12 -mt-6 -mb-3 justify-center text-center text-red-500">
-                                        Incorrect Verification Code
-                                    </div>
+                    <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-hidden"
+                            onMouseDownCapture={ e => { 
+                                const isOutsideModal = !e.target.closest('.model-inner')
+                                
+                                if (isOutsideModal && verification.status) {
+                                    setIsEmailVerifying(false)
                                 }
-                                <div className="flex gap-2 hover:cursor-text" onClick={ () => { focusVerifyInput() }}>
-                                    {
-                                        verifyInputUses.map((use, index, arr) =>
-                                            <input 
-                                                className="bg-transparent text-center border-2 border-zinc-600 rounded-3xl p-3 w-20 h-24 caret-transparent text-3xl font-bold text-zinc-100 pointer-events-none" 
-                                                type="text" maxLength="1" ref={ use.ref }
-                                                value={ use.state[0] } onChange={ e => { handleVerifyInputChange(e, use.state[1], index !== 5 && arr[index + 1].ref) } }
-                                                onKeyDown={ e => { handleVerifyInputKeyDown(e, index !== 0 && arr[index - 1].ref)  } }
-                                            />
-                                        )
-                                    }
-                                </div>
-                                <div className="flex">
-                                    <p className="text-zinc-400">
-                                        The verification code was sent to&nbsp;
-                                    </p>
-                                    <p className="font-semibold text-zinc-300">
-                                        { email }&nbsp;
-                                    </p>
-                                    <button className="text-blue-400 hover:underline" onClick={ () => { setIsEmailVerifying(false) } }>
-                                        change
-                                    </button>
-                                </div>
+                            } 
+                        }
+                    >
+                        <div className={`${ verification.status ? "w-5/12" : "w-5/12 min-w-fit" } flex flex-col gap-3 justify-center items-center overflow-hidden model-inner`}>
+                            <div className="flex flex-col w-full py-20 mx-9 gap-9 items-center rounded-3xl bg-zinc-900 overflow-hidden">
+                                {
+                                    verification.status ?
+                                    <>
+                                        <p className="text-2xl mb-3 font-bold line-clamp-1">
+                                           Account created!
+                                        </p>
+                                        <img className="w-24" src={ AllowIcon } alt="" />
+                                    </>
+                                    :
+                                    <>
+                                        <p className="text-2xl mb-3 font-bold">
+                                            Verify Email Address
+                                        </p>
+                                        <div className="flex w-10/12 -mt-6 -mb-3 justify-center text-center text-red-500">
+                                            { verification.message || <>&nbsp;</> }
+                                        </div>
+                                        <div className="flex gap-2 hover:cursor-text" onClick={ () => { focusVerifyInput() }}>
+                                            {
+                                                verifyInputUses.map((use, index, arr) =>
+                                                    <input 
+                                                        className="bg-transparent text-center border-2 border-zinc-600 rounded-3xl p-3 w-20 h-24 caret-zinc-100 text-3xl font-bold text-zinc-100 pointer-events-none" 
+                                                        type="text" maxLength="1" ref={ use.ref }
+                                                        value={ use.state[0] } onChange={ e => { handleVerifyInputChange(e, use.state[1], index !== 5 && arr[index + 1].ref) } }
+                                                        onKeyDown={ e => { handleVerifyInputKeyDown(e, index !== 0 && arr[index - 1].ref)  } } key={ index }
+                                                        disabled={ verification.status === null }
+                                                    />
+                                                )
+                                            }
+                                        </div>
+                                        {
+                                            !verification.status &&
+                                            <div className="flex">
+                                                <p className="text-zinc-400">
+                                                    Resend verification code?&nbsp;
+                                                </p>
+                                                <button className="text-blue-400 hover:underline" onClick={ () => { 
+                                                        verifyInputUses.forEach(use => {
+                                                            use.state[1]('')
+                                                        })
+                                                        setVerification({ message: '', status: false })
+
+                                                        sendVerificationCode()
+                                                    }}
+                                                >
+                                                    send again
+                                                </button>
+                                            </div>
+                                        }
+                                        <div className="flex">
+                                            <p className="text-zinc-400">
+                                                The verification code was sent to&nbsp;
+                                            </p>
+                                            <p className="font-semibold text-zinc-300">
+                                                { email }&nbsp;
+                                            </p>
+                                            <button className="text-blue-400 hover:underline" onClick={ () => { 
+                                                    setIsEmailVerifying(false) 
+                                                    emailRef.current.focus()
+                                                }}
+                                            >
+                                                change
+                                            </button>
+                                        </div>
+                                    </>
+                                }
                             </div>
                         </div>
                     </div>

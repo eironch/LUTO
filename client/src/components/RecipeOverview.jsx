@@ -40,8 +40,8 @@ function RecipeOverview(p) {
     const buttonRef = useRef(null)
     
     useEffect(() => {
-        function handleClickOutside(event) {
-            if (modalRef.current && !modalRef.current.contains(event.target) && !buttonRef.current.contains(event.target)) {
+        function handleClickOutside(e) {
+            if (modalRef.current && !modalRef.current.contains(e.target) && !buttonRef.current.contains(e.target)) {
                 setMoreModalShown()
             }
         }

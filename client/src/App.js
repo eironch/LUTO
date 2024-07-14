@@ -278,7 +278,7 @@ function App() {
     }
 
     return 'just now'
-}
+  }
 
   return (
     <>
@@ -293,12 +293,12 @@ function App() {
                   <Home
                     setIsAuthenticated={ setIsAuthenticated } user={ user } 
                     currentTab={ currentTab } setCurrentTab={ setCurrentTab } 
-                    filters={ filters } setFilters={ setFilters } filtersRef={ filtersRef }
-                    handleGiveRecipePoint={ handleGiveRecipePoint } formatDate={ formatDate }
-                    searchQuery={ searchQuery } setSearchQuery={ setSearchQuery }
-                    handleFlagRecipe={ handleFlagRecipe } handleRemoveRecipe={ handleRemoveRecipe } 
-                    handleAllowRecipe={ handleAllowRecipe } handleLogOut={ handleLogOut }
-                    systemTags={ systemTags }
+                    filters={ filters } setFilters={ setFilters } 
+                    filtersRef={ filtersRef } handleGiveRecipePoint={ handleGiveRecipePoint } 
+                    formatDate={ formatDate } searchQuery={ searchQuery } 
+                    setSearchQuery={ setSearchQuery } handleFlagRecipe={ handleFlagRecipe } 
+                    handleRemoveRecipe={ handleRemoveRecipe } handleAllowRecipe={ handleAllowRecipe } 
+                    handleLogOut={ handleLogOut } systemTags={ systemTags }
                   />
                 }
               />
@@ -378,11 +378,14 @@ function App() {
         </>
         :
         <Auth 
-          isAuthenticated={ isAuthenticated } setIsAuthenticated={ setIsAuthenticated } user={ user } setUser={ setUser }
-          showModal={ showModal } setShowModal={ setShowModal } modalMessage={ modalMessage } setModalMessage={ setModalMessage }     
+          isAuthenticated={ isAuthenticated } setIsAuthenticated={ setIsAuthenticated } 
+          user={ user } setUser={ setUser }    
         />
       }
-      <Modal showModal={ showModal } setShowModal={ setShowModal } modalMessage={ modalMessage } setModalMessage={ setModalMessage } />
+      <Modal 
+        showModal={ showModal } setShowModal={ setShowModal } 
+        modalMessage={ modalMessage } setModalMessage={ setModalMessage } 
+      />
     </>
   )
 }

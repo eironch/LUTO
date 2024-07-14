@@ -11,9 +11,8 @@ function ConfirmModal(p) {
 
     return (
         <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-y-scroll scrollable-div" 
-            onMouseDownCapture={ 
-                (event) => { 
-                    const isOutsideModal = !event.target.closest('.model-inner')
+            onMouseDownCapture={ e => { 
+                    const isOutsideModal = !e.target.closest('.model-inner')
 
                     if (isOutsideModal) {
                         setShowModal(false)
@@ -21,7 +20,7 @@ function ConfirmModal(p) {
                 } 
             }
         >
-            <div className="flex flex-col gap-3 justify-center items-center w-4/12 overflow-hidden model-inner">
+            <div className="flex flex-col gap-3 justify-center items-center w-5/12 overflow-hidden model-inner">
                 {
                     title &&
                     <p className="px-6 text-2xl font-semibold text-ellipsis line-clamp-1">{ title }</p>

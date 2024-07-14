@@ -9,9 +9,8 @@ function LoadingModal(p) {
 
     return (
         <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-y-scroll scrollable-div" 
-            onMouseDownCapture={ 
-                (event) => { 
-                    const isOutsideModal = !event.target.closest('.model-inner')
+            onMouseDownCapture={ e => { 
+                    const isOutsideModal = !e.target.closest('.model-inner')
 
                     if (isOutsideModal) {
                         setShowModal(false)

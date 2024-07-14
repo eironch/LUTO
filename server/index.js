@@ -7,6 +7,7 @@ import mongoose, { Types }  from 'mongoose'
 import multer from 'multer'
 import { bucket } from './firebaseAdmin.js'
 import { v4 as uuidv4 } from 'uuid'
+import { google } from 'googleapis'
 import nodemailer from 'nodemailer'
 
 import User from './models/user.js'
@@ -23,16 +24,16 @@ import Verification from './models/verification.js'
 
 const PORT = 8080
 const secretKey = 'luto-app'
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: '@gmail.com',
-        pass: ''
-    }
-})
+const CLIENT_ID = '953893801198-ggldql2gttngqpulgup1k46g42cm08aa.apps.googleusercontent.com'
+const CLIENT_SECRET = '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'
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
+const REFRESH_TOKEN = '1//04toRPpwF8bX0CgYIARAAGAQSNwF-L9IrErFvAi6WVjePNI4cGDDceP9kTUdmua6ejp7dwegh2DwiJ7XlA-Adhtku6P9KBUKT6l0'
 
 const app = express()
 const upload = multer({ storage: multer.memoryStorage() })
+const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
+
 app.use(express.json())
 app.use(cors({
     origin: 'http://localhost:3000',
@@ -73,27 +74,28 @@ app.get('/', (req, res) => {
     res.json('good mourning.')
 })
 
-app.post('/create-account', async (req, res) => {
-    const { username, password } = req.body
+app.post('/sign-up', async (req, res) => {
+    const { username, password, email } = req.body
 
     try {
-        const user = await user.findOne()
-
-        if (!user) {
-            return res.status(202).json({ message: 'Username exists.' })
+        const user = await User.findOne({ username })
+        
+        if (user) {
+            return res.status(202).json({ message: 'Username already exists.' })
         }
 
         const newUser = new User({
             username,
-            password
-        })
-
-        const preference = new Preference({
-            userId: user._id
+            password,
+            email
         })
 
         await newUser.save()
-        
+
+        const preference = new Preference({
+            userId: newUser._id
+        })
+
         await preference.save()
 
         return res.status(201).json({ message: 'Account created.' })
@@ -147,14 +149,20 @@ app.get('/sign-in', async (req, res) => {
     }
 })
 
-app.get('/check-username', async (req, res) => {
-    const { username } = req.query
+app.get('/check-availability', async (req, res) => {
+    const { username, email } = req.query
 
     try {
-        const user = await User.findOne({ username })
-     
-        if (user) {
-            return res.status(202).json({ message: 'Username already exists.' })
+        const isUsernameExist = await User.findOne({ username })
+
+        const isEmailExist = await User.findOne({ email })
+
+        if (isUsernameExist && isEmailExist) {
+            return res.status(204).json({ message: 'Username and email address already exists.' })
+        } else if (isUsernameExist) {
+            return res.status(203).json({ message: 'Username already exists.' })
+        } else if (isEmailExist) {
+            return res.status(202).json({ message: 'Email address already exists.' })
         }
 
         return res.status(200).json({ message: 'Username available.' })
@@ -396,7 +404,7 @@ app.get('/feed-recipes', async (req, res) => {
 
     try {
         const isAdmin = await User.findById(userId).select('accountType')
-        console.log(isAdmin)
+
         const flagCountSelected = isAdmin.accountType === "admin" && 'flagCount'
 
         if (fetchedRecipeIds && fetchedRecipeIds.length > 0) {
@@ -649,7 +657,7 @@ app.get('/popular-recipes', async (req, res) => {
 
 app.get('/user-recipes', async (req, res) => {
     const { userId, authorName, sort, fetchedRecipeIds } = req.query
-    console.log(fetchedRecipeIds)
+
     try {
         const user = await User.find({ username: authorName })
 
@@ -703,8 +711,6 @@ app.get('/user-recipes', async (req, res) => {
         return res.status(500).json({ message: 'Internal server error.', err })
     }
 })
-
-
 
 app.get('/get-recipe', async (req, res) => {
     const { recipeId, userId } = req.query
@@ -779,7 +785,7 @@ app.get('/get-feedbacks', async (req, res) => {
             path: 'userId',
             select: ['username', 'profilePicture']
         })
-        console.log(feedbacks)
+  
         const feedbackCount = await Recipe.findById(recipeId).select('feedbackCount')
 
         return res.status(200).json({ payload: { feedbacks, feedbackCount } })
@@ -931,7 +937,7 @@ app.get('/get-author-info', async (req, res) => {
             path: 'userId',
             select: ['username', 'profilePicture']
         }).limit(10)
-        console.log(user)
+
         const followers = followerResults.map(follower => { return { username: follower.userId.username, profilePicture: follower.userId.profilePicture } })
        
         if (!isFollowed) {
@@ -1029,7 +1035,7 @@ app.post('/get-followers', async (req, res) => {
 
 app.post('/change-password', async (req, res) => {
     const { userId, password } = req.body
-console.log("dasdasd;sa")
+
     try {
         const user = await User.findById(userId)
         
@@ -1100,17 +1106,47 @@ app.post('/send-verification', async (req, res) => {
     const { email } = req.body
     const code = Math.floor(100000 + Math.random() * 900000).toString()
     const expiresAt = new Date(Date.now() + 3600000)
+    const mailOptions = {
+        from: 'LUTO <luto.vercel.app@gmail.com>',
+        to: email,
+        subject: 'LUTO Verification Code',
+        html: `
+            <h3>Verification code:</h3>
+            <h1><b>${ code }</b></h1>
+        `
+    }
 
     try {
         const verification = await Verification.findOne({ email })
+        const accessToken = await oAuth2Client.getAccessToken()
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                type: 'OAuth2',
+                user: 'luto.vercel.app@gmail.com',
+                clientId: CLIENT_ID,
+                clientSecret: CLIENT_SECRET,
+                refreshToken: REFRESH_TOKEN,
+                accesToken: accessToken
+            }
+        })
 
         if (verification) {
             verification.code = code
             verification.expiresAt = expiresAt
 
             await verification.save()
+        
+            transporter.sendMail(mailOptions, (error) => {
+                if (error) {
+                    throw error    
+                }
+    
+                return res.status(200).json({ message: 'New verification code resent.'})
+            })
 
-            return res.status(200).json({ message: 'New verification code resent.'})
+            return
         }
 
         const newVerification = new Verification({
@@ -1120,9 +1156,15 @@ app.post('/send-verification', async (req, res) => {
         })
 
         await newVerification.save()
-    
-        return res.status(200).json({ message: 'New verification code sent.'})
 
+        transporter.sendMail(mailOptions, (error) => {
+            if (error) {
+                throw error    
+            }
+
+            return res.status(200).json({ message: 'New verification code sent.'})
+        })
+        
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message:'Internal server error.', err})
@@ -1136,11 +1178,11 @@ app.get('/verify-code', async (req, res) => {
         const verification = await Verification.findOne({ email, code })
 
         if (!verification) {
-            return res.status(400).json({ message: 'Invalid verification code.'})
+            return res.status(203).json({ message: 'Invalid verification code.'})
         }
 
         if (verification.expiresAt < new Date()) {
-            return res.status(401).json({ message: 'Verification code expired.' })
+            return res.status(202).json({ message: 'Verification code expired.' })
         }
 
         return res.status(200).json({ message: 'Email verified successfully.' })
