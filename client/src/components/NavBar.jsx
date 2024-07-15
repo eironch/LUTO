@@ -12,23 +12,22 @@ import CreateIcon from '../assets/create-icon.png'
 import SaveIcon from '../assets/saved-icon.png'
 
 function NavBar({
-        user, currentTab,
-        setCurrentTab, formatDate,
-        setConfirmationShown, authorName,
-        profilePicture, recipeId,
-        recipeImage, setRecipeImage,
-        title, summary,
-        setSummary, ingredients,
-        setIngredients, tags,
-        setTags, points,
-        setPoints, pointStatus,
-        setPointStatus, feedbackCount,
-        setFeedbackCount, isRecipeSaved,
-        publishRecipe, handleSaveRecipe,
-        handleGiveRecipePoint, systemTags,
-        filters, setFilters,
-        handleFollowUser
-    }) {
+    user, currentTab,
+    setCurrentTab, formatDate,
+    setConfirmationShown, authorName,
+    profilePicture, recipeId,
+    recipeImage, setRecipeImage,
+    title, summary,
+    setSummary, ingredients,
+    setIngredients, tags,
+    setTags, points,
+    setPoints, pointStatus,
+    setPointStatus, feedbackCount,
+    setFeedbackCount, isRecipeSaved,
+    publishRecipe, handleSaveRecipe,
+    handleGiveRecipePoint, systemTags,
+    filters, setFilters
+}) {
 
     return (
         <>

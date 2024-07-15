@@ -14,16 +14,13 @@ import AllowIcon from '../assets/allow-icon.png'
 import CreateIcon from '../assets/create-icon.png'
 import Logo from '../assets/luto-logo-gradient.png'
 
-function Profile(p) {
-    const user = p.user
-    const currentTab = p.currentTab
-    const setCurrentTab = p.setCurrentTab
-
-    const handleGiveRecipePoint = p.handleGiveRecipePoint
-    const formatDate = p.formatDate
-    const handleFlagRecipe = p.handleFlagRecipe
-    const handleRemoveRecipe = p.handleRemoveRecipe
-    const handleAllowRecipe = p.handleAllowRecipe
+function Profile({
+    user, currentTab,
+    setCurrentTab, handleGiveRecipePoint,
+    formatDate, handleFlagRecipe,
+    handleRemoveRecipe, handleAllowRecipe,
+    screenSize
+}) {
     
     const { authorName } = useParams()
     const [userRecipes, setUserRecipes] = useState([])
@@ -147,7 +144,13 @@ function Profile(p) {
     return (
        <div className="h-svh scrollable-div overflow-y-scroll" ref={ scrollDivRef }>
             {/* navbar */}
-            <div className="hidden xl:block">
+            {
+                screenSize <= 3 ?
+                <SidebarProfile 
+                    user={ user } authorName={ authorName }
+                    screenSize={ screenSize }
+                />
+                :
                 <div className="fixed flex gap-3 flex-col w-full h-svh pointer-events-none">
                     <div className="p-3 pb-0">
                         <div className="grid gap-3 w-full min-h-16 pointer-events-none" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
@@ -168,17 +171,12 @@ function Profile(p) {
                         user={ user } authorName={ authorName }
                     />
                 </div>
-            </div>
-            <div className="block xl:hidden">
-                <SidebarProfile 
-                    user={ user } authorName={ authorName }
-                />
-            </div>
+            }
             <div className="flex flex-col p-3 pb-0 pr-0 bg-zinc-950">
                 {/* content */}
                 <div className="flex xl:grid w-full h-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                     <div className="hidden xl:block xl:col-span-4"></div>
-                    <div className="w-full xl:col-span-11 block">
+                    <div className={`${ screenSize <= 3 && "mb-20" } w-full xl:col-span-11 block`}>
                         { 
                             userRecipes &&
                             userRecipes.length > 0 &&

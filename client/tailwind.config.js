@@ -7,7 +7,10 @@ module.exports = {
   theme: {
     extend: {
       boxShadow: {
-        'right': '8px 0px 15px -5px rgba(0, 0, 0, 0.1)',
+        'right': '4px 0px 6px -1px rgba(0, 0, 0, 0.1), 2px 0px 4px -1px rgba(0, 0, 0, 0.06)',
+        'left': '-4px 0px 6px -1px rgba(0, 0, 0, 0.1), -2px 0px 4px -1px rgba(0, 0, 0, 0.06)',
+        'top': '0px -4px 6px -1px rgba(0, 0, 0, 0.1), 0px -2px 4px -1px rgba(0, 0, 0, 0.06)',
+        'bottom': '0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)',
       },
       keyframes: {
         rotate: { 

@@ -14,6 +14,7 @@ import Saved from './pages/Saved'
 import Popular from './pages/Popular'
 
 import Modal from './components/Modal'
+import MobileNavBar from './components/MobileNavBar'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState()
@@ -25,6 +26,7 @@ function App() {
   const [filters, setFilters] = useState()
   const filtersRef = useRef(filters)
   const [searchQuery, setSearchQuery] = useState("")
+  const [screenSize, setScreenSize] = useState(getScreenSize())
   const systemTags = [
     'American',
     'Appetizer',
@@ -239,6 +241,16 @@ function App() {
     }
   }, [isAuthenticated])
 
+  useEffect(() => {
+    function handleResize() {
+      setScreenSize(getScreenSize)
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    return () => window.removeEventListener('resize', handleResize)
+  },[])
+
   function calculateDiffInTime(dateNow, pastDate, unitsOfTime) {
     const diffInMilliseconds = dateNow - pastDate
     const diffInTime = Math.floor(diffInMilliseconds / (1000 * unitsOfTime))
@@ -280,6 +292,18 @@ function App() {
     return 'just now'
   }
 
+  function getScreenSize() {
+    const width = window.innerWidth
+
+    if (width >= 1536) return 5
+    if (width >= 1280) return 4
+    if (width >= 1024) return 3
+    if (width >= 768) return 2
+    if (width >= 640) return 1
+
+    return 0
+  }
+
   return (
     <>
       {
@@ -309,6 +333,7 @@ function App() {
                     formatDate={ formatDate } searchQuery={ searchQuery } 
                     setSearchQuery={ setSearchQuery } handleRemoveRecipe={ handleRemoveRecipe } 
                     handleAllowRecipe={ handleAllowRecipe } handleFlagRecipe={ handleFlagRecipe }
+                    screenSize={ screenSize }
                   />
                 }
               />
@@ -317,7 +342,7 @@ function App() {
                     user={ user } setUser={ setUser }
                     currentTab={ currentTab } setCurrentTab={ setCurrentTab } 
                     handleLogOut={ handleLogOut } setShowModal={ setShowModal } 
-                    setModalMessage={ setModalMessage } 
+                    setModalMessage={ setModalMessage } screenSize={ screenSize }
                   />
                 } 
               />
@@ -375,6 +400,10 @@ function App() {
                 } 
               />
             </Routes>
+            {
+              screenSize <= 3 &&
+              <MobileNavBar user={ user } currentTab={ currentTab } />
+            }
         </>
         :
         <Auth 
