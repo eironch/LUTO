@@ -9,9 +9,6 @@ import SidebarTab from '../components/SidebarTab'
 
 import LogOutIcon from '../assets/log-out-icon.png'
 import ProfileIcon from '../assets/profile-icon.png'
-import RemoveIcon from '../assets/remove-icon.png'
-import AllowIcon from '../assets/allow-icon.png'
-import CreateIcon from '../assets/create-icon.png'
 import Logo from '../assets/luto-logo-gradient.png'
 
 function Settings({

@@ -131,7 +131,7 @@ function RecipeOverview(p) {
     return (
         <>
             {/* mobile */}
-            <div className="block md:hidden mb-3 rounded-3xl bg-zinc-900">
+            <div className={`${ currentTab === "Popular" ? "rounded-t-none rounded-b-3xl xl:rounded-3xl" : "rounded-3xl" } block md:hidden mb-3 bg-zinc-900`}>
                 <div className="flex flex-col w-full gap-3 p-6 pb-3">
                     <div className="flex gap-3 items-center">
                         <Link to={`/recipe/${ recipeId }`} className="pb-1 w-full text-zinc-100 text-3xl font-bold line-clamp-2 hover:underline">

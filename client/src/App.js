@@ -380,7 +380,7 @@ function App() {
                     setFilters={ setFilters } formatDate={ formatDate }
                     filtersRef={ filtersRef } handleGiveRecipePoint={ handleGiveRecipePoint } 
                     handleFlagRecipe={ handleFlagRecipe } handleLogOut={ handleLogOut }
-                    systemTags={ systemTags }
+                    systemTags={ systemTags } screenSize={ screenSize }
                   /> 
                 } 
               />
@@ -391,7 +391,7 @@ function App() {
                     setFilters={ setFilters } formatDate={ formatDate }
                     filtersRef={ filtersRef } handleGiveRecipePoint={ handleGiveRecipePoint } 
                     handleFlagRecipe={ handleFlagRecipe } handleLogOut={ handleLogOut }
-                    systemTags={ systemTags }
+                    systemTags={ systemTags } screenSize={ screenSize }
                   /> 
                 } 
               />
