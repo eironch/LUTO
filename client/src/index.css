@@ -3,14 +3,24 @@
 @tailwind utilities;
 
 .scrollable-div::-webkit-scrollbar {
-    width: 0.75rem;
-    height: 0.75rem;
-    background-color: transparent;
+    width: 0.75rem !important;
+    height: 0.75rem !important;
+    background-color: transparent !important;
 }
 
 .scrollable-div::-webkit-scrollbar-thumb {
-    background-color: rgba(63, 63, 70, 0.5); 
-    border-radius: 6px;
-    border: 2px solid transparent;
-    background-clip: content-box;
+    background-color: rgba(63, 63, 70, 0.5) !important; 
+    border-radius: 6px !important;
+    border: 2px solid transparent !important;
+    background-clip: content-box !important;
+}
+
+
+.hide-scrollbar::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.hide-scrollbar {
+    scrollbar-width: none;
 }

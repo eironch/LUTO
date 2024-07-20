@@ -91,7 +91,7 @@ function Recipe(p) {
                 handleSaveRecipe={ handleSaveRecipe } handleGiveRecipePoint={ handleGiveRecipePoint }
                 profilePicture={ profilePicture }
             />
-            <div className="pr-0 flex flex-col gap-3 p-3 pb-0 h-svh overflow-y-scroll scrollable-div bg-zinc-950">
+            <div className="pr-0 flex flex-col gap-3 p-3 pb-0 h-dvh overflow-y-scroll scrollable-div bg-zinc-950">
                 <div className="grid w-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                     <div className="col-span-4"></div>
                     <div className="col-span-11 flex flex-col rounded-3xl text-zinc-100">

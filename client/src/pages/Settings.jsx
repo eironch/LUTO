@@ -7,9 +7,9 @@ import ConfirmModal from '../components/ConfirmModal'
 import Textarea from '../components/Textarea'
 import SidebarTab from '../components/SidebarTab'
 
-import LogOutIcon from '../assets/log-out-icon.png'
-import ProfileIcon from '../assets/profile-icon.png'
-import Logo from '../assets/luto-logo-gradient.png'
+import LogOutIcon from '../assets/log-out-icon.svg'
+import ProfileIcon from '../assets/profile-icon.svg'
+import LogoGradient from '../assets/luto-gradient-logo.svg'
 
 function Settings({
     user, setUser,
@@ -112,7 +112,7 @@ function Settings({
             {/* navbar */}
             {
                 screenSize > 3 &&
-                <div className="fixed flex gap-3 flex-col w-full h-svh pointer-events-none">
+                <div className="fixed flex gap-3 flex-col w-full h-dvh pointer-events-none">
                     <div className="p-3 pb-0">
                         <div className="grid gap-3 w-full min-h-16 pointer-events-none" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                             {/* logo navbar middle */}
@@ -120,7 +120,7 @@ function Settings({
                                 { 
                                     (currentTab === "Settings") &&
                                     <Link to="/home" className="fixed flex items-center pointer-events-auto left-1/2 transform -translate-x-1/2">
-                                        <img className="px-4 w-48 " src={ Logo } alt="" />
+                                        <img className="px-4 w-48 " src={ LogoGradient }alt="" />
                                     </Link>
                                 }
                             </div>
@@ -139,8 +139,8 @@ function Settings({
                     <SidebarTab currentTab={ currentTab } /> 
                 </div>
             }
-            <div className="h-svh">
-                <div className={`${ isChangingPassword ? "xl:h-full" : "md:h-full" } flex flex-col gap-3 p-3 pr-0 xl:pr-3 bg-zinc-950`}>
+            <div className="h-dvh">
+                <div className={`${ isChangingPassword ? "xl:h-full" : "md:h-full" } flex flex-col gap-3 p-3 pr-3 xl:pr-0 bg-zinc-950`}>
                     {/* space for top navbar */}
                     {
                         screenSize > 3 &&
@@ -185,7 +185,7 @@ function Settings({
                                                     />
                                                 </div>
                                                 <button 
-                                                    className={`${ password && passwordAgain && password === passwordAgain ? "hover:bg-zinc-500" : "" } p-3 max-w-44 w-11/12 rounded-3xl bg-zinc-700 disabled:cursor-not-allowed disabled:bg-zinc-800`} 
+                                                    className={`${ password && passwordAgain && password === passwordAgain ? "hover:bg-zinc-500" : "" } p-3 max-w-44 w-11/12 rounded-3xl bg-zinc-600 disabled:cursor-not-allowed disabled:bg-zinc-800`} 
                                                     disabled={ password !== passwordAgain || password === "" || passwordAgain === "" } ref={ buttonRef }
                                                     onClick={ () => { handleChangePassword() } }
                                                 >
@@ -193,7 +193,7 @@ function Settings({
                                                 </button>
                                             </>
                                             :
-                                            <button className="p-3 max-w-44 w-11/12 rounded-3xl bg-zinc-700 hover:bg-zinc-500" onClick={ () => { setIsChangingPassword(true) } }>
+                                            <button className="p-3 max-w-44 w-11/12 rounded-3xl bg-zinc-600 hover:bg-zinc-500" onClick={ () => { setIsChangingPassword(true) } }>
                                                 Change
                                             </button>
                                         }
@@ -205,7 +205,7 @@ function Settings({
                                 <div className="flex flex-col gap-3 items-center md:grid md:grid-cols-2">
                                     <img className="w-24 h-24 object-cover rounded-full" src={ user.profilePicture || ProfileIcon } alt="" />
                                     <div className="flex w-full justify-center md:justify-end items-center">
-                                        <button className="flex p-3 max-w-44 w-11/12 rounded-3xl bg-zinc-700 hover:bg-zinc-500">
+                                        <button className="flex p-3 max-w-44 w-11/12 rounded-3xl bg-zinc-600 hover:bg-zinc-500">
                                             <label className="w-full h-fit justify-center border-zinc-500 rounded-3xl cursor-pointer" htmlFor="input">
                                                 Upload Image
                                             </label>
@@ -225,7 +225,7 @@ function Settings({
                                         />
                                     </div>
                                     <div className="flex md:w-64 justify-center md:justify-end">
-                                        <button className="p-3 max-w-44 w-11/12 h-fit rounded-3xl bg-zinc-700 hover:bg-zinc-500" onClick={ () => { handleChangeBio() } }>
+                                        <button className="p-3 max-w-44 w-11/12 h-fit rounded-3xl bg-zinc-600 hover:bg-zinc-500" onClick={ () => { handleChangeBio() } }>
                                             Change Bio
                                         </button>
                                     </div>

@@ -1,20 +1,19 @@
 import React, { useState, useLayoutEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
-import debounce from 'lodash.debounce'
+import { debounce } from 'lodash'
 
 import Textarea from './Textarea'
 
-import ProfileIcon from '../assets/profile-icon.png'
-import ApproveIcon from '../assets/approve-icon.png'
-import FeedbackIcon from '../assets/feedback-icon.png'
-import AddIcon from '../assets/add-icon.png'
-import SearchIcon from '../assets/search-icon.png'
-import TagIcon from '../assets/tag-icon.png'
-import IngredientsIcon from '../assets/ingredients-icon.png'
-import SummaryIcon from '../assets/summary-icon.png'
-import GivePointNegativeIcon from '../assets/give-point-negative-icon.png'
-import GivePointPositiveIcon from '../assets/give-point-positive-icon.png'
+import ProfileIcon from '../assets/profile-icon.svg'
+import FeedbackIcon from '../assets/feedback-icon.svg'
+import AddIcon from '../assets/add-icon.svg'
+import SearchIcon from '../assets/search-icon.svg'
+import TagIcon from '../assets/tag-icon.svg'
+import IngredientsIcon from '../assets/ingredients-icon.svg'
+import SummaryIcon from '../assets/summary-icon.svg'
+import GivePointNegativeIcon from '../assets/give-point-negative-icon.svg'
+import GivePointPositiveIcon from '../assets/give-point-positive-icon.svg'
 
 function IngredientForm(p) {
     const keyIndex = p.keyIndex
@@ -122,7 +121,7 @@ function SidebarCreate(p) {
     
     return (
         <div className="pl-3 grid w-full h-full overflow-hidden" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
-            <div className="flex overflow-x-hidden overflow-y-scroll h-full scrollable-div flex-col text-zinc-100 col-span-4 pointer-events-auto">
+            <div className="flex overflow-x-hidden overflow-y-scroll h-full  scrollable-div flex-col text-zinc-100 col-span-4 pointer-events-auto">
                 {/* recipe image */}
                 <div className="mb-3 rounded-3xl bg-zinc-900">
                     <div className="p-2 rounded-3xl bg-gradient-to-tr from-orange-500 to-orange-400">
@@ -232,7 +231,7 @@ function SidebarCreate(p) {
                     }
                     {
                         tags.length > 0 &&
-                        <button className="mx-6 py-2 font-semibold rounded-3xl shadow-md shadow-zinc-950 bg-zinc-600 hover:bg-zinc-500" onClick={ () => setTags([]) }>
+                        <button className="mx-6 py-2 text-red-500 font-semibold rounded-3xl shadow-md shadow-zinc-950 bg-zinc-600 hover:bg-zinc-500" onClick={ () => setTags([]) }>
                             Clear filters
                         </button>
                     }
@@ -258,7 +257,7 @@ function SidebarCreate(p) {
                                 const isAdded = tags.find(recipeTag => recipeTag === tag)
 
                                 return (
-                                    <button className={`${ isAdded ? "bg-zinc-700" : "bg-zinc-600 hover:bg-zinc-500" } m-1 px-3 py-1 w-fit rounded-3xl`} 
+                                    <button className={`${ isAdded ? "bg-zinc-800" : "bg-zinc-600 hover:bg-zinc-500" } m-1 px-3 py-1 w-fit rounded-3xl`} 
                                         disabled={ isAdded } key={ index } id={ index } onClick={ e => { addTag(e) } }
                                     >
                                         { tag }

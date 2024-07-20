@@ -1,15 +1,11 @@
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 
-import HomeIcon from '../assets/home-icon.png'
-import PopularIcon from '../assets/popular-icon.png'
-import SavedIcon from '../assets/saved-icon.png'
-import CreateIcon from '../assets/create-icon.png'
-import SettingsIcon from '../assets/settings-icon.png'
-import ProfileIcon from '../assets/profile-icon.png'
-import FilterIcon from '../assets/filter-icon.png'
-import SearchIcon from '../assets/search-icon.png'
-import LogOutIcon from '../assets/log-out-icon.png'
+import HomeIcon from '../assets/home-icon.svg'
+import PopularIcon from '../assets/popular-icon.svg'
+import SavedIcon from '../assets/saved-icon.svg'
+import CreateIcon from '../assets/create-icon.svg'
+import ProfileIcon from '../assets/profile-icon.svg'
 
 function MobileNavBar({ user, currentTab }) {
     const { authorName } = useParams()

@@ -5,13 +5,13 @@ import { debounce } from 'lodash'
 
 import SidebarTab from '../components/SidebarTab'
 import RecipeOverview from '../components/RecipeOverview'
-import FeedbacksModal from '../components/FeedbacksModal'
+import FeedbackModal from '../components/FeedbackModal'
 import RecipeSuspense from '../components/RecipeSuspense'
 import ConfirmModal from '../components/ConfirmModal'
 
-import LogOutIcon from '../assets/log-out-icon.png'
-import ProfileIcon from '../assets/profile-icon.png'
-import Logo from '../assets/luto-logo-gradient.png'
+import LogOutIcon from '../assets/log-out-icon.svg'
+import ProfileIcon from '../assets/profile-icon.svg'
+import LogoGradient from '../assets/luto-gradient-logo.svg'
 
 function Saved({
     user, currentTab,
@@ -111,16 +111,16 @@ function Saved({
     }
 
     return (
-        <div className="overflow-y-scroll scrollable-div" ref={ scrollDivRef }>
+        <div className="pr-3 xl:pr-0 hide-scrollbar xl:scrollable-div overflow-y-scroll " ref={ scrollDivRef }>
             {/* navbar */}
             {
                 screenSize > 3 &&
-                <div className="fixed flex gap-3 flex-col w-full h-svh pointer-events-none">
+                <div className="fixed flex gap-3 flex-col w-full h-dvh pointer-events-none">
                     <div className="p-3 pb-0">
                         <div className="grid gap-3 w-full min-h-16 pointer-events-none" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                             {/* logo navbar side*/}
                             <Link to="/home" className="pointer-events-auto rounded-3xl flex col-span-2 items-center justify-center bg-zinc-900 hover:bg-zinc-500">
-                                <img className="px-4 w-48" src={ Logo } alt="" />
+                                <img className="px-4 w-48" src={ LogoGradient }alt="" />
                             </Link>
                             {/* logo navbar middle */}
                             <div className="rounded-3xl flex items-center justify-center" 
@@ -129,7 +129,7 @@ function Saved({
                                 { 
                                     (currentTab === "Settings") &&
                                     <Link to="/home" className="fixed flex items-center pointer-events-auto left-1/2 transform -translate-x-1/2">
-                                        <img className="px-4 w-48 " src={ Logo } alt="" />
+                                        <img className="px-4 w-48 " src={ LogoGradient }alt="" />
                                     </Link>
                                 }
                             </div>
@@ -152,7 +152,7 @@ function Saved({
                     /> 
                 </div>
             }
-            <div className="flex flex-col pr-0 gap-3 h-svh">
+            <div className="flex flex-col pr-0 gap-3 h-dvh">
                 <div className="flex flex-col gap-3 p-3 pr-0 pb-20 xl:pb-0">
                     {/* space for top navbar */}
                     <div className="flex xl:grid w-full gap-3 xl:h-16" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
@@ -194,15 +194,15 @@ function Saved({
                                         key={ recipe.recipeId } user={ user }
                                         recipeId={ recipe.recipeId } recipeImage={ recipe.recipeImage } 
                                         title={ recipe.title } summary={ recipe.summary } 
-                                        authorName={ recipe.userId.username } pointStatus={ recipe.pointStatus } 
+                                        authorName={ recipe.userId.username } recipePointStatus={ recipe.pointStatus } 
                                         points={ recipe.points } feedbackCount={ recipe.feedbackCount } 
-                                        dateCreated={ recipe.createdAt } recipes={ savedRecipes } 
+                                        createdAt={ recipe.createdAt } recipes={ savedRecipes } 
                                         setRecipes={ setSavedRecipes } setPrevRecipeId={ setPrevRecipeId }
                                         setPrevTitle={ setPrevTitle } setIsFeedbacksShown={ setIsFeedbacksShown }
                                         prevRecipeId={ prevRecipeId } prevFeedbackCount={ prevFeedbackCount } 
                                         moreModalShown={ moreModalShown } setMoreModalShown={ setMoreModalShown }
                                         handleGiveRecipePoint={ handleGiveRecipePoint } formatDate={ formatDate }
-                                        currentTab={ currentTab } 
+                                        currentTab={ currentTab } screenSize={ screenSize }
                                     />
                                 )
                             }
@@ -225,7 +225,7 @@ function Saved({
                 {/* feedbacks modal */}
                 {
                     isFeedbacksShown &&
-                    <FeedbacksModal 
+                    <FeedbackModal 
                         key={ prevRecipeId }  user={ user } recipeId={ prevRecipeId }
                         title={ prevTitle } feedbackCount={ prevFeedbackCount } 
                         setFeedbackCount={ setPrevFeedbackCount } setShowModal={ setIsFeedbacksShown } 

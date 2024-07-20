@@ -1,5 +1,5 @@
 import React, { useState, useRef, useLayoutEffect } from 'react'
-import RemoveIcon from '../assets/remove-icon.png'
+import RemoveIcon from '../assets/remove-icon.svg'
 
 function CustomTextarea(p) {
     const textareaRef = useRef(null)
@@ -144,7 +144,7 @@ function ImageCarousel(p) {
 
     return (
         <div className="pt-6 pb-3 px-6 flex flex-col justify-center items-center gap-3 mb-3 rounded-3xl overflow-hidden bg-zinc-900">
-            <div className="flex flex-row w-full h-full gap-3 justify-start items-center overflow-x-scroll scrollable-div" ref={ divRef }>
+            <div className="flex flex-row w-full h-full gap-3  justify-start items-center overflow-x-scroll scrollable-div" ref={ divRef }>
                 {
                     elementFiles.value.map((value, index) => (
                         <div className="w-full min-w-32 max-w-96 h-full max-h-96 min-h-32 aspect-1 overflow-y-hidden flex-none" key={ keyIndex }>

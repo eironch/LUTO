@@ -5,14 +5,14 @@ import axios from 'axios'
 import RecipeOverview from '../components/RecipeOverview'
 import NavBar from '../components/NavBar'
 import SidebarProfile from '../components/SidebarProfile'
-import FeedbacksModal from '../components/FeedbacksModal'
+import FeedbackModal from '../components/FeedbackModal'
 import ConfirmModal from '../components/ConfirmModal'
 import RecipeSuspense from '../components/RecipeSuspense'
 
-import RemoveIcon from '../assets/remove-icon.png'
-import AllowIcon from '../assets/allow-icon.png'
-import CreateIcon from '../assets/create-icon.png'
-import Logo from '../assets/luto-logo-gradient.png'
+import RemoveIcon from '../assets/remove-icon.svg'
+import AllowIcon from '../assets/allow-icon.svg'
+import CreateIcon from '../assets/create-icon.svg'
+import LogoGradient from '../assets/luto-gradient-logo.svg'
 
 function Profile({
     user, currentTab,
@@ -142,7 +142,7 @@ function Profile({
     }
 
     return (
-       <div className="h-svh scrollable-div overflow-y-scroll" ref={ scrollDivRef }>
+       <div className="h-dvh pr-3 xl:pr-0 hide-scrollbar xl:scrollable-div overflow-y-scroll " ref={ scrollDivRef }>
             {/* navbar */}
             {
                 screenSize <= 3 ?
@@ -151,11 +151,11 @@ function Profile({
                     screenSize={ screenSize }
                 />
                 :
-                <div className="fixed flex gap-3 flex-col w-full h-svh pointer-events-none">
+                <div className="fixed flex gap-3 flex-col w-full h-dvh pointer-events-none">
                     <div className="p-3 pb-0">
                         <div className="grid gap-3 w-full min-h-16 pointer-events-none" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                             <Link to="/home" className="pointer-events-auto rounded-3xl flex col-span-2 items-center justify-center bg-zinc-900 hover:bg-zinc-500">
-                                <img className="px-4 w-48" src={ Logo } alt="" />
+                                <img className="px-4 w-48" src={ LogoGradient }alt="" />
                             </Link>
                             <div className="col-span-2 pointer-events-auto">
                                 <Link to="/create" className="flex items-center p-4 gap-4 w-full h-full rounded-3xl bg-orange-500 hover:bg-orange-400 overflow-hidden">
@@ -195,7 +195,8 @@ function Profile({
                                     prevRecipeId={ prevRecipeId } prevFeedbackCount={ prevFeedbackCount } 
                                     moreModalShown={ moreModalShown } setMoreModalShown={ setMoreModalShown }
                                     handleFlagRecipe={ handleFlagRecipe } flagCount={ recipe.flagCount }
-                                    setConfirmationShown={ setConfirmationShown } currentTab={ currentTab } 
+                                    setConfirmationShown={ setConfirmationShown } currentTab={ currentTab }
+                                    screenSize={ screenSize }
                                 />
                             )
                         }
@@ -213,7 +214,7 @@ function Profile({
                 {/* feedbacks modal */}
                 {
                     isFeedbacksShown &&
-                    <FeedbacksModal 
+                    <FeedbackModal 
                         user={ user } recipeId={ prevRecipeId }
                         title={ prevTitle } feedbackCount={ prevFeedbackCount } 
                         setFeedbackCount={ setPrevFeedbackCount } setShowModal={ setIsFeedbacksShown } 

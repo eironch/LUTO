@@ -6,10 +6,10 @@ import SidebarTab from '../components/SidebarTab'
 import SidebarProfile from '../components/SidebarProfile'
 import SidebarRecipe from '../components/SidebarRecipe'
 
-import Logo from '../assets/luto-logo-gradient.png'
-import ProfileIcon from '../assets/profile-icon.png'
-import CreateIcon from '../assets/create-icon.png'
-import SaveIcon from '../assets/saved-icon.png'
+import LogoGradient from '../assets/luto-gradient-logo.svg'
+import ProfileIcon from '../assets/profile-icon.svg'
+import CreateIcon from '../assets/create-icon.svg'
+import SaveIcon from '../assets/saved-icon.svg'
 
 function NavBar({
     user, currentTab,
@@ -31,7 +31,7 @@ function NavBar({
 
     return (
         <>
-            <div className="fixed flex gap-3 flex-col w-full h-svh pointer-events-none">
+            <div className="fixed flex gap-3 flex-col w-full h-dvh pointer-events-none">
                 {/* navbar */}
                 <div className="p-3 pb-0">
                     <div className="grid gap-3 w-full min-h-16 pointer-events-none" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
@@ -42,7 +42,7 @@ function NavBar({
                                 currentTab === "Saved" || currentTab === "Popular"
                             ) &&
                             <Link to="/home" className="pointer-events-auto rounded-3xl flex col-span-2 items-center justify-center bg-zinc-900 hover:bg-zinc-500">
-                                <img className="px-4 w-48" src={ Logo } alt="" />
+                                <img className="px-4 w-48" src={ LogoGradient }alt="" />
                             </Link>
                         }
                         {/* publish/create navbar `*/}
@@ -52,11 +52,11 @@ function NavBar({
                                 {
                                     currentTab === "Create" ?
                                     <button className="col-span-2 items-center gap-4 bg-zinc-900 pointer-events-auto flex flex-row justify-center w-full h-full rounded-3xl overflow-hidden hover:bg-zinc-500" onClick={ () => { setConfirmationShown("exit") } }>
-                                        <img className="px-4 w-48 " src={ Logo } alt="" />
+                                        <img className="px-4 w-48 " src={ LogoGradient }alt="" />
                                     </button>
                                     :
                                     <Link to="/home" className="col-span-2 items-center gap-4 bg-zinc-900 pointer-events-auto flex flex-row justify-center w-full h-full rounded-3xl overflow-hidden hover:bg-zinc-500">
-                                        <img className="px-4 w-48 " src={ Logo } alt="" />
+                                        <img className="px-4 w-48 " src={ LogoGradient }alt="" />
                                     </Link>
                                 }
                                 <div className="col-span-2 pointer-events-auto">
@@ -110,7 +110,7 @@ function NavBar({
                                 { 
                                     (currentTab === "Settings") &&
                                     <Link to="/home" className="fixed flex items-center pointer-events-auto left-1/2 transform -translate-x-1/2">
-                                        <img className="px-4 w-48 " src={ Logo } alt="" />
+                                        <img className="px-4 w-48 " src={ LogoGradient }alt="" />
                                     </Link>
                                 }
                             </div>

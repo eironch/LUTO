@@ -1,24 +1,21 @@
 import React, { useState, useLayoutEffect } from 'react'
 import { Link } from 'react-router-dom'
-import debounce from 'lodash.debounce'
+import { debounce } from 'lodash'
 
-import HomeIcon from '../assets/home-icon.png'
-import PopularIcon from '../assets/popular-icon.png'
-import SavedIcon from '../assets/saved-icon.png'
-import CreateIcon from '../assets/create-icon.png'
-import SettingsIcon from '../assets/settings-icon.png'
-import FilterIcon from '../assets/filter-icon.png'
-import SearchIcon from '../assets/search-icon.png'
-import LogOutIcon from '../assets/log-out-icon.png'
+import HomeIcon from '../assets/home-icon.svg'
+import PopularIcon from '../assets/popular-icon.svg'
+import SavedIcon from '../assets/saved-icon.svg'
+import CreateIcon from '../assets/create-icon.svg'
+import SettingsIcon from '../assets/settings-icon.svg'
+import FilterIcon from '../assets/filter-icon.svg'
+import SearchIcon from '../assets/search-icon.svg'
+import LogOutIcon from '../assets/log-out-icon.svg'
 
-function SidebarTab(p) {
-    const currentTab = p.currentTab
-
-    const systemTags = p.systemTags
-    const filters = p.filters
-    const setFilters = p.setFilters
-    const setConfirmationShown = p.setConfirmationShown
-
+function SidebarTab({ 
+    currentTab, systemTags, 
+    filters, setFilters, 
+    setConfirmationShown 
+}) {
     const [searchValue, setSearchValue] = useState('')
     const [tagChoices, setTagChoices] = useState(systemTags)
     
@@ -118,7 +115,7 @@ function SidebarTab(p) {
                             </div>
                             {
                                 filters.length > 0 &&
-                                <button className="px-3 py-2 font-semibold rounded-3xl shadow-md shadow-zinc-950 bg-zinc-600 hover:bg-zinc-500" onClick={ () => setFilters([]) }>
+                                <button className="px-3 py-2 text-red-500 font-semibold rounded-3xl shadow-md shadow-zinc-950 bg-zinc-600 hover:bg-zinc-500" onClick={ () => setFilters([]) }>
                                     Clear filters
                                 </button>
                             }
@@ -143,7 +140,7 @@ function SidebarTab(p) {
                                         }
                                         
                                         return (
-                                            <button className={`${ isAdded ? "bg-zinc-900" : "bg-zinc-600 hover:bg-zinc-500" } m-1 px-3 py-1 w-fit rounded-3xl`} 
+                                            <button className={`${ isAdded ? "bg-zinc-800" : "bg-zinc-600 hover:bg-zinc-500" } m-1 px-3 py-1 w-fit rounded-3xl`} 
                                                 disabled={ isAdded } key={ index } id={ index } onClick={ e => { addTag(e) } }
                                             >
                                                 { tag }

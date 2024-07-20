@@ -8,14 +8,14 @@ import NavBar from '../components/NavBar'
 import RecipeElement from '../components/RecipeElement'
 import ConfirmModal from '../components/ConfirmModal'
 
-import AddIcon from '../assets/add-icon.png'
-import TextIcon from '../assets/text-icon.png'
-import SectionIcon from '../assets/section-icon.png'
-import ImageIcon from '../assets/image-icon.png'
-import BackIcon from '../assets/back-icon.png'
-import LoadingIcon from '../assets/loading-icon.png'
-import AllowIcon from '../assets/allow-icon.png'
-import RemoveIcon from '../assets/remove-icon.png'
+import AddIcon from '../assets/add-icon.svg'
+import TextIcon from '../assets/text-icon.svg'
+import SectionIcon from '../assets/section-icon.svg'
+import ImageIcon from '../assets/image-icon.svg'
+import BackIcon from '../assets/back-icon.svg'
+import LoadingIcon from '../assets/loading-icon.svg'
+import AllowIcon from '../assets/allow-icon.svg'
+import RemoveIcon from '../assets/remove-icon.svg'
 
 function ElementsModal(p) {
     const setShowModal = p.setShowModal
@@ -209,7 +209,7 @@ function Create(p) {
                 publishRecipe={ publishRecipe } systemTags={ systemTags }
                 setConfirmationShown={ setConfirmationShown } 
             />
-            <div className="pr-0 flex flex-col gap-3 p-3 h-svh overflow-y-scroll scrollable-div bg-zinc-950">
+            <div className="pr-0 flex flex-col gap-3 p-3 h-dvh overflow-y-scroll scrollable-div bg-zinc-950">
                 <div className="grid w-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                     <div className="col-span-4"></div>
                     <div className="col-span-11 flex flex-col rounded-3xl text-zinc-100">

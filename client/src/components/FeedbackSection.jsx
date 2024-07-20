@@ -3,9 +3,9 @@ import axios from 'axios'
 
 import Textarea from '../components/Textarea'
 
-import ProfileIcon from '../assets/profile-icon.png'
-import MoreIcon from '../assets/more-icon.png'
-import FeedbackIcon from '../assets/feedback-icon.png'
+import ProfileIcon from '../assets/profile-icon.svg'
+import MoreIcon from '../assets/more-icon.svg'
+import FeedbackIcon from '../assets/feedback-icon.svg'
 
 function Feedback(p) {
     const username = p.username
@@ -107,7 +107,7 @@ function FeedbackSection(p) {
                     maxLength={ 500 } value={ userFeedback || "" } setValue={ setUserFeedback }
                     placeholder="Got Feedbacks?"
                 />
-                <button className={`${ userFeedback ? "hover:bg-zinc-500 bg-zinc-600" : "bg-zinc-700" } p-3 rounded-3xl disabled:cursor-not-allowed`} 
+                <button className={`${ userFeedback ? "hover:bg-zinc-500 bg-zinc-600" : "bg-zinc-800" } p-3 rounded-3xl disabled:cursor-not-allowed`} 
                     disabled={ !userFeedback } onClick={ () => { submitFeedback() } }
                 >
                     Send

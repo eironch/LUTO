@@ -3,51 +3,40 @@ import { Link } from 'react-router-dom'
 
 import PointSection from './PointSection'
 
-import FeedbackIcon from '../assets/feedback-icon.png'
-import RemoveIcon from '../assets/remove-icon.png'
-import AllowIcon from '../assets/allow-icon.png'
+import FeedbackIcon from '../assets/feedback-icon.svg'
+import RemoveIcon from '../assets/remove-icon.svg'
+import AllowIcon from '../assets/allow-icon.svg'
 
-function RecipeOverview(p) {
-    const user = p.user
-    const currentTab = p.currentTab
-    const formatDate = p.formatDate
-
-    const recipes = p.recipes
-    const setRecipes = p.setRecipes
-    const authorName = p.authorName
-    const recipeId = p.recipeId
-    const prevRecipeId = p.prevRecipeId
-    const title = p.title
-    const summary = p.summary
-    const recipeImage = p.recipeImage
-    const points = p.points
-    const feedbackCount = p.feedbackCount
-    const prevFeedbackCount = p.prevFeedbackCount
-    const setPrevRecipeId = p.setPrevRecipeId
-    const setPrevTitle = p.setPrevTitle
-    const setIsFeedbacksShown = p.setIsFeedbacksShown
-    const handleGiveRecipePoint = p.handleGiveRecipePoint
-    const moreModalShown = p.moreModalShown
-    const setMoreModalShown = p.setMoreModalShown
-    const handleFlagRecipe = p.handleFlagRecipe
-    const flagCount = p.flagCount
-    const setConfirmationShown = p.setConfirmationShown
-
-    const dateCreated = new Date(p.dateCreated)
-    const [pointStatus, setPointStatus] = useState(p.pointStatus)
+function RecipeOverview({
+    user, currentTab,
+    formatDate, recipes,
+    setRecipes, authorName,
+    recipeId, prevRecipeId,
+    title, summary,
+    recipeImage, points,
+    feedbackCount, prevFeedbackCount,
+    setPrevRecipeId, setPrevTitle,
+    setIsFeedbacksShown, handleGiveRecipePoint,
+    moreModalShown, setMoreModalShown,
+    handleFlagRecipe, flagCount,
+    setConfirmationShown, createdAt,
+    recipePointStatus, screenSize
+}) {
+    const dateCreated = new Date(createdAt)
+    const [pointStatus, setPointStatus] = useState(recipePointStatus)
     const [formattedDate, setFormattedDate] = useState('')
-    const modalRef = useRef(null)
-    const buttonRef = useRef(null)
-    
+    const mobileButtonRef = useRef(null)
+    const desktopButtonRef = useRef(null)
+
     function handleClickOutside(e) {
-        console.log(!modalRef.current.contains(e.target))
-        console.log(e.target)
-        console.log(!buttonRef.current.contains(e.target))
-        if (modalRef.current && buttonRef.current && 
-            modalRef.current !== e.target && buttonRef.current !== e.target) {
-            setMoreModalShown()
-        } else if (buttonRef.current.contains(e.target)) {
-            setMoreModalShown(recipeId)
+        if (mobileButtonRef.current.contains(e.target) || desktopButtonRef.current.contains(e.target)) {
+            if (moreModalShown === recipeId) {
+                setMoreModalShown(recipeId)
+            } else {
+                setMoreModalShown(null)
+            }
+        } else {
+            setMoreModalShown(null)
         }
     }
 
@@ -134,24 +123,31 @@ function RecipeOverview(p) {
             <div className={`${ currentTab === "Popular" ? "rounded-t-none rounded-b-3xl xl:rounded-3xl" : "rounded-3xl" } block md:hidden mb-3 bg-zinc-900`}>
                 <div className="flex flex-col w-full gap-3 p-6 pb-3">
                     <div className="flex gap-3 items-center">
-                        <Link to={`/recipe/${ recipeId }`} className="pb-1 w-full text-zinc-100 text-3xl font-bold line-clamp-2 hover:underline">
-                            { title }
-                        </Link>
-                        <div className="relative z-10 flex h-full justify-center items-center text-zinc-100">
-                            <button className="w-10 h-10 text-lg rounded-3xl hover:bg-zinc-500" onClick={ () => handleShowMoreModal() } ref={ buttonRef }>
+                        {
+                            screenSize > 3 ?
+                            <Link to={`/recipe/${ recipeId }`} className="pb-1 w-full text-zinc-100 text-2xl xl:text-3xl font-bold line-clamp-2 hover:underline">
+                                { title }
+                            </Link>
+                            :
+                            <p className="pb-1 w-full text-zinc-100 text-2xl xl:text-3xl font-bold line-clamp-2">
+                                { title }
+                            </p>
+                        }
+                        <div className="relative z-100 flex h-full justify-center items-center text-zinc-100">
+                            <button className="w-10 h-10 text-lg rounded-3xl hover:bg-zinc-500" onClick={ () => handleShowMoreModal() } ref={ mobileButtonRef }>
                                 •••
                             </button>
                             {
                                 moreModalShown === recipeId &&
-                                <div className="absolute flex p-3 mt-28 mr-24 w-36 rounded-3xl bg-zinc-600 shadow-md shadow-zinc-950" ref={ modalRef }>
-                                    <button className="p-3 w-full text-left font-semibold text-red-600 rounded-3xl hover:bg-zinc-500" onClick={ () => flagRecipe() }>
+                                <div className="absolute flex py-3 mt-28 mr-24 w-36 rounded-3xl bg-zinc-600 shadow-md shadow-zinc-950 overflow-hidden">
+                                    <button className="p-3 w-full text-left font-semibold text-red-600 hover:bg-zinc-500" onClick={ () => flagRecipe() }>
                                         Flag Content
                                     </button>
                                 </div>
                             }
                         </div>
                     </div>
-                    <div className="flex flex-row -mt-2 text-lg overflow-hidden text-clip text-zinc-400">
+                    <div className="flex flex-row -mt-2 text-base xl:text-lg overflow-hidden text-clip text-zinc-400">
                         <Link to={`/${ authorName }`} className="hover:underline">
                             { authorName }
                         </Link>
@@ -170,7 +166,7 @@ function RecipeOverview(p) {
                     </div>
                 </Link>
                 <div className="px-6 py-3">
-                    <p className="text-zinc-100 text-lg text-ellipsis overflow-hidden line-clamp-4">
+                    <p className="text-zinc-100 text-base xl:text-lg text-ellipsis overflow-hidden line-clamp-4">
                         { summary }
                     </p>
                 </div>
@@ -222,14 +218,14 @@ function RecipeOverview(p) {
                             <Link to={`/recipe/${ recipeId }`} className="ml-6 mt-6 pb-1 w-full text-zinc-100 text-3xl font-bold line-clamp-2 hover:underline">
                                 { title }
                             </Link>
-                            <div className="relative flex mr-10 mt-6 h-full justify-center items-center text-zinc-100">
-                                <button className="w-10 h-10 text-lg rounded-3xl hover:bg-zinc-500" onClick={ () => handleShowMoreModal()} ref={ buttonRef }>
+                            <div className="relative flex mr-6 mt-6 h-full justify-center items-center text-zinc-100">
+                                <button className="w-10 h-10 text-lg rounded-3xl hover:bg-zinc-500" onClick={ () => handleShowMoreModal()} ref={ desktopButtonRef }>
                                     •••
                                 </button>
                                 {
                                     moreModalShown === recipeId &&
-                                    <div className="absolute flex p-3 mt-28 mr-24 w-36 rounded-3xl bg-zinc-600 shadow-md shadow-zinc-950" ref={ modalRef }>
-                                        <button className="p-3 w-full text-left font-semibold text-red-600 rounded-3xl hover:bg-zinc-500" onClick={ () => flagRecipe() }>
+                                    <div className="absolute flex py-3 mt-28 mr-24 w-36 rounded-3xl bg-zinc-600 shadow-md shadow-zinc-950 overflow-hidden">
+                                        <button className="p-3 w-full text-left font-semibold text-red-600 hover:bg-zinc-500" onClick={ () => flagRecipe() }>
                                             Flag Content
                                         </button>
                                     </div>

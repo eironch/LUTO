@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-import Logo from '../assets/luto-logo-white.png'
-import AllowIcon from '../assets/allow-icon.png'
+import LogoWhite from '../assets/luto-white-logo.svg'
+import AllowIcon from '../assets/allow-icon.svg'
 
 function Auth(p) {
     const user = p.user
@@ -365,9 +365,9 @@ function Auth(p) {
     },[verifyInput5])
 
     return (
-        <div className="grid grid-cols-2 p-3 h-svh bg-gradient-to-b from-orange-500 to-orange-400 gap-3 overflow-hidden">
+        <div className="grid grid-cols-2 p-3 h-dvh bg-gradient-to-b from-orange-500 to-orange-400 gap-3 overflow-hidden">
             <div className="flex flex-col items-center justify-center">
-                <img className="" src={ Logo } alt=""/>
+                <img className="" src={ LogoWhite }alt=""/>
                 <p className="mt-3 text-zinc-100 text-4xl overflow-hidden text-ellipsis line-clamp-1">Community with a Recipe.</p>
             </div>
             <div className="flex flex-col shadow-md shadow-zinc-950 bg-zinc-900 rounded-3xl justify-center py-5">

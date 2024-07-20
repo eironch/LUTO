@@ -1,9 +1,9 @@
 import React from 'react'
 
-import GivePointNegativeIcon from '../assets/give-point-negative-icon.png'
-import GivenPointNegativeIcon from '../assets/given-point-negative-icon.png'
-import GivePointPositiveIcon from '../assets/give-point-positive-icon.png'
-import GivenPointPositiveIcon from '../assets/given-point-positive-icon.png'
+import GivePointNegativeIcon from '../assets/give-point-negative-icon.svg'
+import GivenPointNegativeIcon from '../assets/given-point-negative-icon.svg'
+import GivePointPositiveIcon from '../assets/give-point-positive-icon.svg'
+import GivenPointPositiveIcon from '../assets/given-point-positive-icon.svg'
 
 function PointSection(p) {
     const handleGivePoint = p.handleGivePoint

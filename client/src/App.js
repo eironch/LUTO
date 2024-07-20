@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react'
+import React, { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import axios from 'axios'
+import { debounce } from 'lodash'
 import { format, getYear } from 'date-fns'
 
 import Auth from './pages/Auth'
@@ -172,8 +173,8 @@ function App() {
       })
   }
 
-  function handleSaveFilters() {
-    axios.post('http://localhost:8080/save-filters', { userId: user.userId, filters })
+  function handleSaveFilters(user) {
+    axios.post('http://localhost:8080/save-filters', { userId: user.userId , filters })
       .then(res => {
         console.log('Status Code:' , res.status)
         console.log('Data:', res.data)
@@ -184,8 +185,8 @@ function App() {
       })
   }
 
-  function handleGetPreferences() {
-    axios.get('http://localhost:8080/get-preferences', { params: { userId: user.userId } })
+  function handleGetPreferences(userId) {
+    axios.get('http://localhost:8080/get-preferences', { params: { userId } })
       .then(res => {
         console.log('Status Code:' , res.status)
         console.log('Data:', res.data)
@@ -198,48 +199,53 @@ function App() {
       })
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     axios.get(`http://localhost:8080/check-auth`, { withCredentials: true })
       .then(res => {
-          console.log('Status Code:' , res.status)
-          console.log('Data:', res.data)
-          
-          setIsLoading(false)
-          setUser({ 
-            username: res.data.payload.username, 
-            userId: res.data.payload.userId,
-            accountType: res.data.payload.accountType,
-            profilePicture: res.data.payload.profilePicture,
-            bio: res.data.payload.bio
-          })
-          setIsAuthenticated(res.data.isAuthenticated)
+        console.log('Status Code:' , res.status)
+        console.log('Data:', res.data)
+        
+        setIsLoading(false)
+        setUser({ 
+          username: res.data.payload.username, 
+          userId: res.data.payload.userId,
+          accountType: res.data.payload.accountType,
+          profilePicture: res.data.payload.profilePicture,
+          bio: res.data.payload.bio
+        })
+        setIsAuthenticated(res.data.isAuthenticated)
+        handleGetPreferences(res.data.payload.userId)
       })
       .catch(error => {
-          if (error.res) {
-              console.log('Error Status:', error.res.status)
-              console.log('Error Data:', error.res.data)
-          } else if (error.request) {
-              console.log('Error Request:', error.request)
-          } else {
-              console.log('Error Message:', error.message)
-          }
+        if (error.res) {
+            console.log('Error Status:', error.res.status)
+            console.log('Error Data:', error.res.data)
+        } else if (error.request) {
+            console.log('Error Request:', error.request)
+        } else {
+            console.log('Error Message:', error.message)
+        }
 
-          setIsLoading(false)
-          setIsAuthenticated(false)
+        setIsLoading(false)
+        setIsAuthenticated(false)
       })
   }, [])
 
-  useEffect(() => {
-    if (isAuthenticated && filters) {
-      handleSaveFilters()
-    }
-  }, [filters])
+  const debouncedFetch = useCallback(
+    debounce((user) => {
+      if (!user.userId) {
+        return 
+      }
+
+      handleSaveFilters(user)
+    }, 1000), []
+  )
 
   useEffect(() => {
-    if (isAuthenticated) {
-      handleGetPreferences()
+    if (isAuthenticated && filters) {
+      debouncedFetch(user)
     }
-  }, [isAuthenticated])
+  }, [filters])
 
   useEffect(() => {
     function handleResize() {
@@ -323,6 +329,7 @@ function App() {
                     setSearchQuery={ setSearchQuery } handleFlagRecipe={ handleFlagRecipe } 
                     handleRemoveRecipe={ handleRemoveRecipe } handleAllowRecipe={ handleAllowRecipe } 
                     handleLogOut={ handleLogOut } systemTags={ systemTags }
+                    screenSize={ screenSize }
                   />
                 }
               />
@@ -355,6 +362,7 @@ function App() {
                     searchQuery={ searchQuery } setSearchQuery={ setSearchQuery }
                     handleRemoveRecipe={ handleRemoveRecipe } handleAllowRecipe={ handleAllowRecipe }
                     handleLogOut={ handleLogOut } systemTags={ systemTags }
+                    screenSize={ screenSize }
                   /> 
                 } 
               />

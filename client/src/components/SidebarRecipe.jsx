@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom'
 import ActionSection from './PointSection'
 import FeedbackSection from '../components/FeedbackSection'
 
-import ProfileIcon from '../assets/profile-icon.png'
-import FeedbackIcon from '../assets/feedback-icon.png'
-import TagIcon from '../assets/tag-icon.png'
-import IngredientsIcon from '../assets/ingredients-icon.png'
-import SummaryIcon from '../assets/summary-icon.png'
+import ProfileIcon from '../assets/profile-icon.svg'
+import FeedbackIcon from '../assets/feedback-icon.svg'
+import TagIcon from '../assets/tag-icon.svg'
+import IngredientsIcon from '../assets/ingredients-icon.svg'
+import SummaryIcon from '../assets/summary-icon.svg'
 
 function SidebarRecipe(p) {
     const user = p.user
@@ -140,7 +140,7 @@ function SidebarRecipe(p) {
                                 <p className="text-xl text-center">No tags provided</p>
                                 :
                                 tags.map((tag, index) => 
-                                    <div className="inline-block m-1 px-3 py-1 w-fit bg-zinc-700 rounded-3xl" key={ index } id={ index }>
+                                    <div className="inline-block m-1 px-3 py-1 w-fit bg-zinc-800 rounded-3xl" key={ index } id={ index }>
                                         { tag }
                                     </div>
                                 )

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import RemoveIcon from '../assets/remove-icon.png'
+import RemoveIcon from '../assets/remove-icon.svg'
 
 function LoadingModal(p) {
     const setShowModal = p.setShowModal
@@ -8,7 +8,7 @@ function LoadingModal(p) {
     const title = p.title
 
     return (
-        <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-y-scroll scrollable-div" 
+        <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80" 
             onMouseDownCapture={ e => { 
                     const isOutsideModal = !e.target.closest('.model-inner')
 
@@ -18,7 +18,7 @@ function LoadingModal(p) {
                 } 
             }
         >
-            <div className="flex flex-col gap-3 justify-center items-center w-5/12 overflow-hidden model-inner">
+            <div className="flex flex-col gap-3 -mr-3 justify-center items-center w-5/12 overflow-hidden model-inner">
                 {
                     title &&
                     <p className="px-6 text-xl font-semibold text-ellipsis line-clamp-1">
