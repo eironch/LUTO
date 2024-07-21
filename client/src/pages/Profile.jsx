@@ -130,11 +130,15 @@ function Profile({
         fetchedRecipeIdsRef.current = []
         setUserRecipes([])
         fetchUserRecipes([])
+        setIsFeedbacksShown(false)
     }, [authorName])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         setCurrentTab('Profile')
         setUserRecipes([])
+        return () => {
+            setIsFeedbacksShown(false)
+        }
     }, [])
 
     if (currentTab !== 'Profile') {

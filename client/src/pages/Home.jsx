@@ -5,7 +5,7 @@ import { debounce } from 'lodash'
 
 import SidebarTab from '../components/SidebarTab'
 import RecipeOverview from '../components/RecipeOverview'
-import SearchBar from '../components/SearchBar'
+import NavbarTop from '../components/NavbarTop'
 import FeedbackModal from '../components/FeedbackModal'
 import ConfirmModal from '../components/ConfirmModal'
 import RecipeSuspense from '../components/RecipeSuspense'
@@ -28,6 +28,7 @@ function Home({
     handleAllowRecipe, screenSize
 }) {
     const [feedRecipes, setFeedRecipes] = useState([])
+    const [isNavbarTopShown, setIsNavbarTopShown] = useState(true)
     const [isFeedbacksShown, setIsFeedbacksShown] = useState(false)
     const [confirmationShown, setConfirmationShown] = useState()
     const [prevRecipeId, setPrevRecipeId] = useState()
@@ -38,6 +39,7 @@ function Home({
     const [isFetching, setIsFetching] = useState(false)
     const [isFetchedAll, setIsFetchedAll] = useState(false)
     const [isFilterShown, setIsFilterShown] = useState(false)
+
     const scrollDivRef = useRef(null)
 
     function removeRecipe() {
@@ -96,16 +98,26 @@ function Home({
         }, 1000), []
     )
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         filtersRef.current = filters
     }, [filters])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         debouncedFetch()
     }, [filters, debouncedFetch])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
+        if (isFeedbacksShown && !isNavbarTopShown) {
+            setIsNavbarTopShown(true)
+        }
+    }, [isNavbarTopShown, isFeedbacksShown])
+
+    useEffect(() => {
         setCurrentTab('Home')
+
+        return () => {
+            setIsFeedbacksShown(false)
+        }
     }, [])
 
     useEffect(() => {
@@ -235,10 +247,12 @@ function Home({
                     </div>
                 </div>
                 {/* search */} 
-                <SearchBar 
+                <NavbarTop 
                     searchQuery={ searchQuery } setSearchQuery={ setSearchQuery } 
                     scrollDivRef={ scrollDivRef } screenSize={ screenSize }
                     isFilterShown={ isFilterShown } setIsFilterShown={ setIsFilterShown }
+                    isNavbarTopShown={ isNavbarTopShown } setIsNavbarTopShown={ setIsNavbarTopShown }
+
                 />
                 {/* filter modal */}
                 {

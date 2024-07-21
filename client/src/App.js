@@ -15,7 +15,7 @@ import Saved from './pages/Saved'
 import Popular from './pages/Popular'
 
 import Modal from './components/Modal'
-import MobileNavBar from './components/MobileNavBar'
+import NavbarBot from './components/NavbarBot'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState()
@@ -410,7 +410,7 @@ function App() {
             </Routes>
             {
               screenSize <= 3 &&
-              <MobileNavBar user={ user } currentTab={ currentTab } />
+              <NavbarBot user={ user } currentTab={ currentTab } />
             }
         </>
         :
