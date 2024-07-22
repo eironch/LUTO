@@ -252,7 +252,6 @@ function Home({
                     scrollDivRef={ scrollDivRef } screenSize={ screenSize }
                     isFilterShown={ isFilterShown } setIsFilterShown={ setIsFilterShown }
                     isNavbarTopShown={ isNavbarTopShown } setIsNavbarTopShown={ setIsNavbarTopShown }
-
                 />
                 {/* filter modal */}
                 {
@@ -270,7 +269,8 @@ function Home({
                         key={ prevRecipeId }  user={ user } recipeId={ prevRecipeId }
                         title={ prevTitle } feedbackCount={ prevFeedbackCount } 
                         setFeedbackCount={ setPrevFeedbackCount } setShowModal={ setIsFeedbacksShown } 
-                        formatDate={ formatDate } setFeedRecipes={ setFeedRecipes } 
+                        formatDate={ formatDate } setFeedRecipes={ setFeedRecipes }
+                        currentTab={ currentTab }
                     />
                 }
                 {/* confirm modal */}

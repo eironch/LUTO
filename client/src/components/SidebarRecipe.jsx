@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-import ActionSection from './PointSection'
+import PointSection from './PointSection'
 import FeedbackSection from '../components/FeedbackSection'
 
 import ProfileIcon from '../assets/profile-icon.svg'
@@ -10,33 +10,25 @@ import TagIcon from '../assets/tag-icon.svg'
 import IngredientsIcon from '../assets/ingredients-icon.svg'
 import SummaryIcon from '../assets/summary-icon.svg'
 
-function SidebarRecipe(p) {
-    const user = p.user
-    const formatDate = p.formatDate
-    
-    const recipeId = p.recipeId
-    const authorName = p.authorName
-    const profilePicture = p.profilePicture
-    const recipeImage = p.recipeImage
-    const summary = p.summary
-    const ingredients = p.ingredients
-    const tags = p.tags
-    const points = p.points
-    const setPoints = p.setPoints
-    const pointStatus = p.pointStatus
-    const setPointStatus = p.setPointStatus
-    const feedbackCount = p.feedbackCount
-    const setFeedbackCount  = p.setFeedbackCount
-    const handleGiveRecipePoint = p.handleGiveRecipePoint
-
-    const divRef = useRef(null)
+function SidebarRecipe({
+    user, formatDate,
+    recipeId, authorName,
+    profilePicture, recipeImage,
+    summary, ingredients,
+    tags, points,
+    setPoints, pointStatus,
+    setPointStatus, feedbackCount,
+    setFeedbackCount, handleGiveRecipePoint,
+    scrollDivRef, currentTab
+}) {
+    const localRef = useRef(null)
     const sectionRef = useRef(null)
 
     const scrollToBottom = () => {
-        if (divRef.current && sectionRef.current) {
-            const offsetTop = sectionRef.current.offsetTop - divRef.current.offsetTop
+        if (localRef.current && sectionRef.current) {
+            const offsetTop = sectionRef.current.offsetTop - localRef.current.offsetTop
 
-            divRef.current.scrollTo({
+            localRef.current.scrollTo({
                 top: offsetTop,
                 behavior: 'smooth'
             })
@@ -53,12 +45,18 @@ function SidebarRecipe(p) {
         setPoints(points)
         setPointStatus(recipePointStatus)
     }
+    
+    useEffect(() => {
+        if (scrollDivRef) {
+            scrollDivRef.current = localRef.current
+        }
+    }, [scrollDivRef])
 
     return (
-        <div className="pl-3 grid w-full h-full overflow-hidden" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
-            <div className="flex overflow-x-hidden overflow-y-scroll h-full scrollable-div flex-col text-zinc-100 col-span-4 pointer-events-auto" ref={ divRef }>
+        <div className="pl-3 flex xl:grid w-full h-dvh overflow-hidden" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+            <div className="flex flex-col w-full h-full pr-3 xl:pr-0 py-20 xl:py-20 text-zinc-100 col-span-4 pointer-events-auto overflow-x-hidden overflow-y-scroll hide-scrollbar xl:scrollable-div" ref={ localRef }>
                 {/* recipe image */}
-                <div className="mb-3 rounded-3xl bg-zinc-900">
+                <div className="mb-3 mt-3 xl:mt-0 rounded-3xl bg-zinc-900">
                     <div className="p-2 rounded-3xl bg-gradient-to-tr from-orange-500 to-orange-400">
                         <div className="relative w-full h-auto aspect-w-2 aspect-h-2 rounded-3xl">
                             {
@@ -80,7 +78,7 @@ function SidebarRecipe(p) {
                             </button>
                         </div>
                         <div className="flex justify-end items-end w-full overflow-hidden">
-                            <ActionSection 
+                            <PointSection 
                                 handleGivePoint={ handleGivePoint } pointStatus={ pointStatus }
                                 points={ points }
                             />
@@ -149,11 +147,12 @@ function SidebarRecipe(p) {
                     </div>
                 </div>
                 {/* feedbacks */}
-                <div ref={ sectionRef }>
+                <div className="mb-3 xl:mb-0" ref={ sectionRef }>
                     <FeedbackSection 
                         user={ user } recipeId={ recipeId } 
                         feedbackCount={ feedbackCount } setFeedbackCount={ setFeedbackCount } 
                         formatDate={ formatDate } attribute={ "mb-3" }
+                        currentTab={ currentTab }
                     />
                 </div>
             </div>

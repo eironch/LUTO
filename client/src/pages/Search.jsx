@@ -233,6 +233,7 @@ function Search({
                         title={ prevTitle } feedbackCount={ prevfeedbackCount } 
                         setFeedbackCount={ setPrevFeedbackCount } setShowModal={ setIsFeedbacksShown } 
                         formatDate={ formatDate }
+                        currentTab={ currentTab }
                     />
                 }
                 {/* confirm modal */}

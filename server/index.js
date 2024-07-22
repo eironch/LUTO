@@ -22,8 +22,20 @@ import Archive from './models/archive.js'
 import Follow from './models/follow.js'
 import Verification from './models/verification.js'
 
+let config
+
+try {
+  config = await import('./secrets.js')
+} catch (error) {
+  if (error.code === 'MODULE_NOT_FOUND') {
+    config = await import('./config.js')
+  } else {
+    throw error
+  }
+}
+
 const PORT = 8080
-const secretKey = 'luto-app'
+const SECRET_KEY = 'luto-app'
 const CLIENT_ID = '953893801198-ggldql2gttngqpulgup1k46g42cm08aa.apps.googleusercontent.com'
 const CLIENT_SECRET = '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'
 const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
@@ -42,16 +54,16 @@ app.use(cors({
 app.use(cookieParser())
 
 function generateAccessToken(userId, username) {
-    return jwt.sign({ userId, username }, secretKey, { expiresIn: '1h' })
+    return jwt.sign({ userId, username }, SECRET_KEY, { expiresIn: '1h' })
 }
 
 function generateRefreshToken(userId, username) {
-    return jwt.sign({ userId, username }, secretKey, { expiresIn: '30d' })
+    return jwt.sign({ userId, username }, SECRET_KEY, { expiresIn: '30d' })
 }
 
 function verifyToken(token) {
     try {
-        return jwt.verify(token, secretKey)
+        return jwt.verify(token, SECRET_KEY)
     } catch(err) {
         return null
     }

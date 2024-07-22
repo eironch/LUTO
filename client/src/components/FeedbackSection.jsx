@@ -8,44 +8,11 @@ import ProfileIcon from '../assets/profile-icon.svg'
 import BackIcon from '../assets/back-icon.svg'
 import FeedbackIcon from '../assets/feedback-icon.svg'
 
-function Feedback({
-    username, profilePicture,
-    text, createdAt,
-    formatDate
-}) {
-    const [formattedDate, setFormattedDate] = useState()
-
-    useEffect(() => {
-        setFormattedDate(formatDate(new Date(createdAt)))
-    })
-
-    return (
-        <div className="flex flex-row gap-4">
-            <Link to={`/${ username }`} className="h-full w-12">
-                <img className="w-10 h-10 aspect-1 rounded-full object-cover" src={ profilePicture || ProfileIcon } alt="" />
-            </Link >
-            <div className="flex flex-col gap-1 w-full">
-                <div className="flex flex-row font-semibold">
-                    <div className="flex flex-row items-center w-full">
-                        <Link to={`/${ username }`} className="hover:underline">
-                            { username }
-                        </Link>
-                        &nbsp;
-                        <p className="text-sm text-zinc-400">
-                            • said { formattedDate }
-                        </p>
-                    </div>
-                </div>
-                <p>{ text }</p>
-            </div>
-        </div>
-    )
-}
-
 function FeedbackSection({
     user, formatDate, 
     recipeId, feedbackCount, 
-    setFeedbackCount, setShowModal
+    setFeedbackCount, setShowModal,
+    currentTab
 }) {
     const [userFeedback, setUserFeedback] = useState()
     const [feedbacks, setFeedbacks] = useState()
@@ -92,14 +59,17 @@ function FeedbackSection({
         <div className="flex flex-col w-full md:w-10/12 xl:w-5/12 rounded-3xl bg-zinc-900 overflow-hidden model-inner">
             {/* header */}
             <div className="flex items-center p-6 gap-3 shadow-md shadow-zinc-950">
-                <div className="block xl:hidden w-fit h-full">
-                    <button className="p-3 rounded-3xl hover:bg-zinc-600" onClick={ () => setShowModal(false) }>
-                        <img className="min-w-4 w-4" src={ BackIcon } alt=""/>
-                    </button>
-                </div>
+                {
+                    currentTab !== "Recipe" &&
+                    <div className="block xl:hidden w-fit h-full">
+                        <button className="p-3 rounded-3xl hover:bg-zinc-600" onClick={ () => setShowModal(false) }>
+                            <img className="min-w-4 w-4" src={ BackIcon } alt=""/>
+                        </button>
+                    </div>
+                }
                 <div className="flex gap-6 items-center w-full">
                     <img className="w-10" src={ FeedbackIcon } alt="" />
-                    <p className="hidden sm:block text-2xl font-semibold">Feedbacks</p>
+                    <p className={`${ currentTab !== "Recipe" && "hidden sm:block" } text-2xl font-semibold`}>Feedbacks</p>
                     <p className="flex pr-3 text-2xl font-semibold justify-end w-full">
                         { feedbackCount > 0 && feedbackCount }
                     </p>
@@ -140,6 +110,40 @@ function FeedbackSection({
                 :
                 <div className="pb-3"></div>
             }
+        </div>
+    )
+}
+
+function Feedback({
+    username, profilePicture,
+    text, createdAt,
+    formatDate
+}) {
+    const [formattedDate, setFormattedDate] = useState()
+
+    useEffect(() => {
+        setFormattedDate(formatDate(new Date(createdAt)))
+    })
+
+    return (
+        <div className="flex flex-row gap-4">
+            <Link to={`/${ username }`} className="h-full w-12">
+                <img className="w-10 h-10 aspect-1 rounded-full object-cover" src={ profilePicture || ProfileIcon } alt="" />
+            </Link >
+            <div className="flex flex-col gap-1 w-full">
+                <div className="flex flex-row font-semibold">
+                    <div className="flex flex-row items-center w-full">
+                        <Link to={`/${ username }`} className="hover:underline">
+                            { username }
+                        </Link>
+                        &nbsp;
+                        <p className="text-sm text-zinc-400">
+                            • said { formattedDate }
+                        </p>
+                    </div>
+                </div>
+                <p>{ text }</p>
+            </div>
         </div>
     )
 }

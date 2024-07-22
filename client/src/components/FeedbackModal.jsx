@@ -5,7 +5,8 @@ function FeedbackModal({
     user, formatDate, 
     recipeId, title, 
     feedbackCount, setFeedbackCount, 
-    setShowModal, setFeedRecipes
+    setShowModal, setFeedRecipes,
+    currentTab
 }) {
     return (
         <div className="absolute inset-0 z-30 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-y-scroll scrollable-div" 
@@ -27,7 +28,7 @@ function FeedbackModal({
                             user={ user } recipeId={ recipeId } 
                             feedbackCount={ feedbackCount } setFeedbackCount={ setFeedbackCount } 
                             formatDate={ formatDate } setFeedRecipes={ setFeedRecipes }
-                            setShowModal={ setShowModal } 
+                            setShowModal={ setShowModal } currentTab={ currentTab }
                         />
                 </div>
             </div>

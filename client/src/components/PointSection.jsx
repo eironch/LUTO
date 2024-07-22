@@ -15,14 +15,18 @@ function PointSection(p) {
             <button className="flex justify-end items-center p-3 rounded-3xl hover:bg-zinc-500" onClick={ () => { handleGivePoint("negative") } }>
                 <img className="min-w-10 w-10" src={ pointStatus === "negative" ? GivenPointNegativeIcon : GivePointNegativeIcon } alt="" />
             </button>
-            <p className="text-zinc-100 text-lg font-semibold line-clamp-1">
+            <div className="text-zinc-100 text-lg font-semibold line-clamp-1">
                 { 
                     points ?
-                    <>{ points } pts.</>
+                    <>
+                        { points }<p className="hidden sm:block">&nbsp;pts.</p>
+                    </>
                     :
-                    <>0 pts.</>
+                    <>
+                        0<p className="hidden sm:block">&nbsp;pts.</p>
+                    </>
                 }
-            </p>
+            </div>
             <button className="flex justify-end items-center p-3 rounded-3xl hover:bg-zinc-500" onClick={ () => { handleGivePoint("positive") } }>
                 <img className="min-w-10 w-10" src={ pointStatus === "positive" ? GivenPointPositiveIcon : GivePointPositiveIcon } alt="" />
             </button>

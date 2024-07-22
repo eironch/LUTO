@@ -189,7 +189,8 @@ function Popular({
                         key={ prevRecipeId }  user={ user } recipeId={ prevRecipeId }
                         title={ prevTitle } feedbackCount={ prevFeedbackCount } 
                         setFeedbackCount={ setPrevFeedbackCount } setShowModal={ setIsFeedbacksShown } 
-                        formatDate={ formatDate } setFeedRecipes={ setPopularRecipes } 
+                        formatDate={ formatDate } setFeedRecipes={ setPopularRecipes }
+                        currentTab={ currentTab }
                     />
                 }
                 {/* confirm modal */}

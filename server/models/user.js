@@ -38,10 +38,10 @@ const userSchema = new Schema({
     },
 }, { timestamps: true })
 // placeholder
-const secretKey = "luto-app"
+const SECRET_KEY = "luto-app"
 
 function generateRefreshToken(userId, username) {
-    return jwt.sign({ userId, username}, secretKey, { expiresIn: '30d' })
+    return jwt.sign({ userId, username}, SECRET_KEY, { expiresIn: '30d' })
 }
 
 userSchema.pre('save', function(next) {

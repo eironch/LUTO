@@ -377,7 +377,7 @@ function App() {
                   <Recipe 
                     user={ user } currentTab={ currentTab } 
                     setCurrentTab={ setCurrentTab } formatDate={ formatDate }
-                    handleGiveRecipePoint={ handleGiveRecipePoint }
+                    handleGiveRecipePoint={ handleGiveRecipePoint } screenSize={ screenSize }
                   /> 
                 } 
               />

@@ -229,7 +229,8 @@ function Saved({
                         key={ prevRecipeId }  user={ user } recipeId={ prevRecipeId }
                         title={ prevTitle } feedbackCount={ prevFeedbackCount } 
                         setFeedbackCount={ setPrevFeedbackCount } setShowModal={ setIsFeedbacksShown } 
-                        formatDate={ formatDate } setFeedRecipes={ setSavedRecipes } 
+                        formatDate={ formatDate } setFeedRecipes={ setSavedRecipes }
+                        currentTab={ currentTab }
                     />
                 }
                 {/* confirm modal */}

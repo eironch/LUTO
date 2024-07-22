@@ -222,7 +222,8 @@ function Profile({
                         user={ user } recipeId={ prevRecipeId }
                         title={ prevTitle } feedbackCount={ prevFeedbackCount } 
                         setFeedbackCount={ setPrevFeedbackCount } setShowModal={ setIsFeedbacksShown } 
-                        formatDate={ formatDate } setFeedRecipes={ setUserRecipes } 
+                        formatDate={ formatDate } setFeedRecipes={ setUserRecipes }
+                        currentTab={ currentTab }
                     />
                 }
                 {/* confirm modal */}
