@@ -23,7 +23,7 @@ import Follow from './models/follow.js'
 import Verification from './models/verification.js'
 
 let config
-
+console.log("1")
 try {
   config = await import('./secrets.js')
 } catch (error) {
@@ -33,7 +33,7 @@ try {
     throw error
   }
 }
-
+console.log("1")
 const app = express()
 const upload = multer({ storage: multer.memoryStorage() })
 const oAuth2Client = new google.auth.OAuth2(config.CLIENT_ID, config.CLIENT_SECRET, config.REDIRECT_URI)
@@ -45,7 +45,7 @@ app.use(cors(
     // credentials: true}
 ))
 app.use(cookieParser())
-
+console.log("1")
 function generateAccessToken(userId, username) {
     return jwt.sign({ userId, username }, config.SECRET_KEY, { expiresIn: '1h' })
 }
@@ -61,7 +61,7 @@ function verifyToken(token) {
         return null
     }
 }
-
+console.log("1")
 // connect to mongodb
 mongoose.connect(config.DB_URI, { autoIndex: false })
     .then(() => { 
@@ -72,12 +72,12 @@ mongoose.connect(config.DB_URI, { autoIndex: false })
     .catch(err => { 
         console.log('Connection error') 
     })
-
+    console.log("1")
 // mongoose and mongo sandbox routes
 app.get('/', (req, res) => {
     res.json('good mourning.')
 })
-
+console.log("1")
 app.post('/sign-up', async (req, res) => {
     const { username, password, email } = req.body
 
