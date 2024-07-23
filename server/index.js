@@ -39,12 +39,12 @@ const oAuth2Client = new google.auth.OAuth2(config.CLIENT_ID, config.CLIENT_SECR
 oAuth2Client.setCredentials({ refresh_token: config.REFRESH_TOKEN })
 
 app.use(express.json())
-app.use(cors(
-    // {origin: config.ORIGIN,
-    // credentials: true}
-))
+app.use(cors({
+    origin: config.ORIGIN,
+    credentials: true
+}))
 app.use(cookieParser())
-console.log("1")
+
 function generateAccessToken(userId, username) {
     return jwt.sign({ userId, username }, config.SECRET_KEY, { expiresIn: '1h' })
 }
@@ -71,12 +71,12 @@ mongoose.connect(config.DB_URI, { autoIndex: false })
     .catch(err => { 
         console.log('Connection error') 
     })
-    console.log("1")
+    
 // mongoose and mongo sandbox routes
 app.get('/', (req, res) => {
     res.json('good mourning.')
 })
-console.log("1")
+
 app.post('/sign-up', async (req, res) => {
     const { username, password, email } = req.body
 
