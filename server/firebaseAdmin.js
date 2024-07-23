@@ -1,15 +1,14 @@
 import admin from 'firebase-admin'
 
 let config
-
 try {
-  config = await import('./secrets.js')
+    config = await import('./secrets.js')
 } catch (error) {
-  if (error.code === 'MODULE_NOT_FOUND') {
-    config = await import('./config.js')
-  } else {
-    throw error
-  }
+    try {
+        config = await import('./config.js')
+    } catch (error) {
+        throw error
+    }
 }
 
 function parseJsonIfNeeded(variable) {
