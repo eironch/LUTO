@@ -155,7 +155,7 @@ function Saved({
             <div className="flex flex-col pr-0 gap-3 h-dvh">
                 <div className="flex flex-col gap-6 p-3 pr-0 pb-20 xl:pb-0">
                     {/* space for top navbar */}
-                    <div className="flex xl:grid w-full gap-3 xl:h-16" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+                    <div className="flex xl:grid w-full gap-3 xl:h-16 bg-cyan-300" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
                             screenSize > 3 &&
                             <div className="col-span-2"></div>
@@ -179,7 +179,7 @@ function Saved({
                         }    
                     </div>
                     {/* content */}
-                    <div className="flex xl:grid w-full h-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+                    <div className="flex xl:grid w-full h-full gap-3 bg-cyan-200" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
                             screenSize > 3 &&
                             <div className="col-span-2"></div>
