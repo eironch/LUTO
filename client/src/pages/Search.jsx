@@ -92,7 +92,7 @@ function Search({
     }
 
     return (
-        <div className="overflow-y-scroll scrollable-div">
+        <div className="h-screen overflow-y-scroll scrollable-div">
             {/* navbar */}
             {
                 screenSize > 3 &&

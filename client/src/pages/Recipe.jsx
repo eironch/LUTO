@@ -83,7 +83,7 @@ function Recipe({
     }
 
     return (
-        <div className="flex h-dvh">
+        <div className="flex h-screen">
             {
                 screenSize > 3 &&
                 <div className="fixed flex gap-3 flex-col w-full h-dvh pointer-events-none">

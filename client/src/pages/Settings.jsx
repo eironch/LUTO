@@ -108,7 +108,7 @@ function Settings({
     }
 
     return (
-        <div className="overflow-y-scroll xl:overflow-y-hidden scrollable-div">
+        <div className="h-screen overflow-y-scroll xl:overflow-y-hidden scrollable-div">
             {/* navbar */}
             {
                 screenSize > 3 &&

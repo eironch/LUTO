@@ -146,7 +146,7 @@ function Profile({
     }
 
     return (
-       <div className="h-dvh pr-3 xl:pr-0 hide-scrollbar xl:scrollable-div overflow-y-scroll " ref={ scrollDivRef }>
+       <div className="h-screen pr-3 xl:pr-0 hide-scrollbar xl:scrollable-div overflow-y-scroll " ref={ scrollDivRef }>
             {/* navbar */}
             {
                 screenSize <= 3 ?

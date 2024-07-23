@@ -146,7 +146,7 @@ function Home({
     }
 
     return (
-        <div className="h-screen pr-3s hide-scrollbars xl: scrollable-div overflow-y-scroll" ref={ scrollDivRef }>
+        <div className="h-screen pr-3 hide-scrollbar xl:scrollable-div overflow-y-scroll" ref={ scrollDivRef }>
             {/* navbar */}
             {
                 screenSize > 3 &&

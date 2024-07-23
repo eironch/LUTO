@@ -70,7 +70,7 @@ function Popular({
     }
 
     return (
-        <div className="pr-3 xl:pr-0 hide-scrollbar xl:scrollable-div overflow-y-scroll ">
+        <div className="h-screen pr-3 xl:pr-0 hide-scrollbar xl:scrollable-div overflow-y-scroll ">
             {/* navbar */}
             {
                 screenSize > 3 &&
