@@ -2,26 +2,26 @@ import admin from 'firebase-admin'
 
 let config
 try {
-    config = await import('./secrets.js')
+  config = await import('./secrets.js')
 } catch (error) {
-    try {
-        config = await import('./config.js')
-    } catch (error) {
-        throw error
-    }
+  try {
+    config = await import('./config.js')
+  } catch (error) {
+    throw error
+  }
 }
 
 function parseJsonIfNeeded(variable) {
-    if (typeof variable === 'object') {
-        return variable
-    }
+  if (typeof variable === 'object') {
+    return variable
+  }
 
-    try {
-        return JSON.parse(variable)
-    } catch (e) {
-        console.error('Error parsing JSON:', e)
-        return null
-    }
+  try {
+    return JSON.parse(variable)
+  } catch (e) {
+      console.error('Error parsing JSON:', e, config)
+    return null
+  }
 }
 
 admin.initializeApp({
