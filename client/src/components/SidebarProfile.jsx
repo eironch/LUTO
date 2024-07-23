@@ -18,7 +18,7 @@ function SidebarProfile({
     function handleFollowUser() {
         setIsFollowed(!isFollowed)
 
-        axios.post(`${ process.env.APP_API_URL || 'http://localhost:8080' }/follow-user`, { userId: user.userId, authorName })
+        axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/follow-user`, { userId: user.userId, authorName })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -37,7 +37,7 @@ function SidebarProfile({
     }
 
     function handleAuthorInfo() {
-        axios.get(`${ process.env.APP_API_URL || 'http://localhost:8080' }/get-author-info`, { params: { userId: user.userId, authorName } })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/get-author-info`, { params: { userId: user.userId, authorName } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)

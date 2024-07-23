@@ -39,7 +39,7 @@ function Profile({
     function fetchUserRecipes(userRecipes) {
         setIsFetching(true)
 
-        axios.get(`${ process.env.APP_API_URL || 'http://localhost:8080' }/user-recipes`, { params: { userId: user.userId, authorName, sort: user.accountType === "user" ? { createdAt: -1 } : { flagCount: 1 }, fetchedRecipeIds: fetchedRecipeIdsRef.current } })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/user-recipes`, { params: { userId: user.userId, authorName, sort: user.accountType === "user" ? { createdAt: -1 } : { flagCount: 1 }, fetchedRecipeIds: fetchedRecipeIdsRef.current } })
             .then(res => {
                 console.log('Status Code:', res.status)
                 console.log('Data:', res.data)

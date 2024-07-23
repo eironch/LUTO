@@ -30,7 +30,7 @@ function Popular({
     const [moreModalShown, setMoreModalShown] = useState()
 
     function fetchPopularRecipes(filters) {
-        axios.get(`${ process.env.APP_API_URL || 'http://localhost:8080' }/popular-recipes`, { params: { userId: user.userId, filters } })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/popular-recipes`, { params: { userId: user.userId, filters } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)

@@ -44,7 +44,7 @@ function Auth(p) {
     const navigate = useNavigate()
     
     function signUp() {
-        axios.post(`${ process.env.APP_API_URL || 'http://localhost:8080' }/sign-up`, { username: user.username, password, email })
+        axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/sign-up`, { username: user.username, password, email })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -69,7 +69,7 @@ function Auth(p) {
     }
 
     function signIn() {
-        axios.get(`${ process.env.APP_API_URL || 'http://localhost:8080' }/sign-in`, { params: { username: user.username, password }, withCredentials: true })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/sign-in`, { params: { username: user.username, password }, withCredentials: true })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -95,7 +95,7 @@ function Auth(p) {
     }
 
     function checkAvailability() {
-        axios.get(`${ process.env.APP_API_URL || 'http://localhost:8080' }/check-availability`, { params: { username: user.username, email } })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/check-availability`, { params: { username: user.username, email } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -127,7 +127,7 @@ function Auth(p) {
     }
 
     function sendVerificationCode() {
-        axios.post(`${ process.env.APP_API_URL || 'http://localhost:8080' }/send-verification`, { email: email })
+        axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/send-verification`, { email: email })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -141,7 +141,7 @@ function Auth(p) {
     function verifyCode() {
         setVerification({ message: '', status: null })
 
-        axios.get(`${ process.env.APP_API_URL || 'http://localhost:8080' }/verify-code`, { params: { email: email, code: verifyInputUses.map(use => use.state[0]).join('') } })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/verify-code`, { params: { email: email, code: verifyInputUses.map(use => use.state[0]).join('') } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
