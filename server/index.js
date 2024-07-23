@@ -43,6 +43,7 @@ app.use(cors({
     origin: config.ORIGIN,
     credentials: true
 }))
+
 app.use(cookieParser())
 
 function generateAccessToken(userId, username) {
@@ -114,7 +115,6 @@ app.get('/sign-in', async (req, res) => {
 
     try {
         const user = await User.findOne({ username })
-        console.log(await User.find())
 
         if(!user) {
             return res.status(202).json({ message: 'User not found.' })

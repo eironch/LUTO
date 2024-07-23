@@ -200,7 +200,6 @@ function App() {
   }
 
   useEffect(() => {
-    console.log(process.env)
     axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/check-auth`, { withCredentials: true })
       .then(res => {
         console.log('Status Code:' , res.status)

@@ -9,7 +9,7 @@ function FeedbackModal({
     currentTab
 }) {
     return (
-        <div className="absolute inset-0 z-30 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-y-scroll scrollable-div" 
+        <div className="absolute inset-0 z-30 grid place-items-center h-full pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-y-scroll scrollable-div" 
             onMouseDownCapture={e => { 
                     const isOutsideModal = !e.target.closest('.model-inner')
                     
