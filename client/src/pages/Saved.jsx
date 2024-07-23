@@ -179,7 +179,7 @@ function Saved({
                         }    
                     </div>
                     {/* content */}
-                    <div className="flex xl:grid w-full h-full gap-3 bg-cyan-200" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+                    <div className="flex xl:grid w-full h-full gap-3 mt-3 bg-cyan-200" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
                             screenSize > 3 &&
                             <div className="col-span-2"></div>
