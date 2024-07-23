@@ -68,16 +68,17 @@ mongoose.connect(config.DB_URI, { autoIndex: false })
         app.listen(config.PORT, () => {
             console.log('Connected to backend.')
         }) 
+
+        app.get('/', (req, res) => {
+            res.json('good mourning.')
+        })
     })
     .catch(err => { 
         console.log('Connection error') 
     })
-    console.log("1")
-// mongoose and mongo sandbox routes
-app.get('/', (req, res) => {
-    res.json('good mourning.')
-})
 console.log("1")
+// mongoose and mongo sandbox routes
+
 app.post('/sign-up', async (req, res) => {
     const { username, password, email } = req.body
 
