@@ -4,10 +4,10 @@ import jwt from 'jsonwebtoken'
 
 let config
 try {
-    config = await import('./secrets.js')
+    config = await import('../secrets.js')
 } catch (error) {
     try {
-        config = await import('./config.js')
+        config = await import('../config.js')
     } catch (error) {
         throw error
     }
