@@ -22,13 +22,6 @@ import Archive from './models/archive.js'
 import Follow from './models/follow.js'
 import Verification from './models/verification.js'
 
-app.listen(config.PORT, () => {
-    console.log('Connected to backend.')
-}) 
-
-app.get('/', (req, res) => {
-    res.json('good mourning.')
-})
 
 console.log("1")
 const app = express()
@@ -43,3 +36,11 @@ app.use(cors(
 ))
 app.use(cookieParser())
 console.log("1")
+
+app.listen(config.PORT, () => {
+    console.log('Connected to backend.')
+}) 
+
+app.get('/', (req, res) => {
+    res.json('good mourning.')
+})
