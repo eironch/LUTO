@@ -40,10 +40,10 @@ const oAuth2Client = new google.auth.OAuth2(config.CLIENT_ID, config.CLIENT_SECR
 oAuth2Client.setCredentials({ refresh_token: config.REFRESH_TOKEN })
 
 app.use(express.json())
-app.use(cors({
-    origin: config.ORIGIN,
-    credentials: true
-}))
+app.use(cors(
+    // {origin: config.ORIGIN,
+    // credentials: true}
+))
 app.use(cookieParser())
 
 function generateAccessToken(userId, username) {
