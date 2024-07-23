@@ -23,17 +23,16 @@ import Follow from './models/follow.js'
 import Verification from './models/verification.js'
 
 let config
-console.log("1")
 try {
-  config = await import('./secrets.js')
+    config = await import('./secrets.js')
 } catch (error) {
-  if (error.code === 'MODULE_NOT_FOUND') {
-    config = await import('./config.js')
-  } else {
-    throw error
-  }
+    try {
+        config = await import('./config.js')
+    } catch (error) {
+        throw error
+    }
 }
-console.log("1")
+
 const app = express()
 const upload = multer({ storage: multer.memoryStorage() })
 const oAuth2Client = new google.auth.OAuth2(config.CLIENT_ID, config.CLIENT_SECRET, config.REDIRECT_URI)
@@ -61,7 +60,7 @@ function verifyToken(token) {
         return null
     }
 }
-console.log("1")
+
 // connect to mongodb
 mongoose.connect(config.DB_URI, { autoIndex: false })
     .then(() => { 
