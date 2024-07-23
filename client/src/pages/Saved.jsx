@@ -153,7 +153,7 @@ function Saved({
                 </div>
             }
             <div className="flex flex-col pr-0 gap-3 h-dvh">
-                <div className="flex flex-col gap-3 p-3 pr-0 pb-20 xl:pb-0">
+                <div className="flex flex-col gap-6 p-3 pr-0 pb-20 xl:pb-0">
                     {/* space for top navbar */}
                     <div className="flex xl:grid w-full gap-3 xl:h-16" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {

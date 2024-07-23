@@ -100,7 +100,7 @@ function FilterModal({
                                             }
                                             
                                             return (
-                                                <button className={`${ isAdded ? "bg-zinc-800" : "bg-zinc-700 hover:bg-zinc-500" } m-1 px-3 py-1 w-fit rounded-3xl`} 
+                                                <button className={`${ isAdded ? "bg-zinc-800" : "bg-zinc-600 hover:bg-zinc-500" } m-1 px-3 py-1 w-fit rounded-3xl`} 
                                                     disabled={ isAdded } key={ index } id={ index } onClick={ e => { addTag(e) } }
                                                 >
                                                     { tag }
