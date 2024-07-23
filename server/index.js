@@ -37,10 +37,10 @@ app.use(cors(
 app.use(cookieParser())
 console.log("1")
 
-app.listen(config.PORT, () => {
-    console.log('Connected to backend.')
-}) 
-
 app.get('/', (req, res) => {
     res.json('good mourning.')
 })
+
+app.listen(config.PORT, () => {
+    console.log('Connected to backend.')
+}) 
