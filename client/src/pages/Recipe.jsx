@@ -35,7 +35,7 @@ function Recipe({
     function handleSaveRecipe() {
         setIsRecipeSaved(!isRecipeSaved)
 
-        axios.post('http://localhost:8080/save-recipe', { userId: user.userId, recipeId })
+        axios.post(`${ process.env.APP_API_URL || 'http://localhost:8080' }/save-recipe`, { userId: user.userId, recipeId })
             .then(res => {
                 console.log('Status Code:', res.status)
                 console.log('Data:', res.data)
@@ -50,7 +50,7 @@ function Recipe({
     }
 
     useLayoutEffect(() => {
-        axios.get('http://localhost:8080/get-recipe', { params: { recipeId, userId: user.userId } })
+        axios.get(`${ process.env.APP_API_URL || 'http://localhost:8080' }/get-recipe`, { params: { recipeId, userId: user.userId } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)

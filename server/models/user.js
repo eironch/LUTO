@@ -2,6 +2,18 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
+let config
+
+try {
+  config = await import('../secrets.js')
+} catch (error) {
+  if (error.code === 'MODULE_NOT_FOUND') {
+    config = await import('../config.js')
+  } else {
+    throw error
+  }
+}
+
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({ 
@@ -37,11 +49,9 @@ const userSchema = new Schema({
         unique: true,
     },
 }, { timestamps: true })
-// placeholder
-const SECRET_KEY = "luto-app"
 
 function generateRefreshToken(userId, username) {
-    return jwt.sign({ userId, username}, SECRET_KEY, { expiresIn: '30d' })
+    return jwt.sign({ userId, username}, config.SECRET_KEY, { expiresIn: '30d' })
 }
 
 userSchema.pre('save', function(next) {

@@ -36,7 +36,7 @@ function Saved({
     function fetchSavedRecipes(filters) {
         setIsFetching(true)
 
-        axios.get('http://localhost:8080/saved-recipes', { params: { userId: user.userId, filters, fetchedRecipeIds  } })
+        axios.get(`${ process.env.APP_API_URL || 'http://localhost:8080' }/saved-recipes`, { params: { userId: user.userId, filters, fetchedRecipeIds  } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)

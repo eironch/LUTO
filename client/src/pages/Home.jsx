@@ -61,7 +61,7 @@ function Home({
     function fetchFeedRecipes(filters) {
         setIsFetching(true)
         
-        axios.get('http://localhost:8080/feed-recipes', { params: { userId: user.userId, filters, sort: user.accountType === "user" ? { createdAt: -1 } : { flagCount: 1 }, fetchedRecipeIds }})
+        axios.get(`${ process.env.APP_API_URL || 'http://localhost:8080' }/feed-recipes`, { params: { userId: user.userId, filters, sort: user.accountType === "user" ? { createdAt: -1 } : { flagCount: 1 }, fetchedRecipeIds }})
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)

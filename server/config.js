@@ -1,8 +1,9 @@
-export const config ={
-    PORT: process.env.PORT,
-    SECRET_KEY: process.env.SECRET_KEY,
-    CLIENT_ID: process.env.CLIENT_ID,
-    CLIENT_SECRET: process.env.CLIENT_SECRET,
-    REDIRECT_URI: process.env.REDIRECT_URI,
-    REFRESH_TOKEN: process.env.REFRESH_TOKEN
-}
+export const ORIGIN = process.env.ORIGIN
+export const PORT = process.env.PORT
+export const DB_URI = process.env.DB_URI
+export const SECRET_KEY = process.env.SECRET_KEY
+export const CLIENT_ID = process.env.CLIENT_ID
+export const CLIENT_SECRET = process.env.CLIENT_SECRET
+export const REDIRECT_URI = process.env.REDIRECT_URI
+export const REFRESH_TOKEN = process.env.REFRESH_TOKEN
+export const SERVICE_ACCOUNT_KEY = process.env.SERVICE_ACCOUNT_KEY

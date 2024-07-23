@@ -34,46 +34,38 @@ try {
   }
 }
 
-const PORT = 8080
-const SECRET_KEY = 'luto-app'
-const CLIENT_ID = '953893801198-ggldql2gttngqpulgup1k46g42cm08aa.apps.googleusercontent.com'
-const CLIENT_SECRET = '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'
-const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
-const REFRESH_TOKEN = '1//04toRPpwF8bX0CgYIARAAGAQSNwF-L9IrErFvAi6WVjePNI4cGDDceP9kTUdmua6ejp7dwegh2DwiJ7XlA-Adhtku6P9KBUKT6l0'
-
 const app = express()
 const upload = multer({ storage: multer.memoryStorage() })
-const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
-oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
+const oAuth2Client = new google.auth.OAuth2(config.CLIENT_ID, config.CLIENT_SECRET, config.REDIRECT_URI)
+oAuth2Client.setCredentials({ refresh_token: config.REFRESH_TOKEN })
 
 app.use(express.json())
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: config.ORIGIN,
     credentials: true
 }))
 app.use(cookieParser())
 
 function generateAccessToken(userId, username) {
-    return jwt.sign({ userId, username }, SECRET_KEY, { expiresIn: '1h' })
+    return jwt.sign({ userId, username }, config.SECRET_KEY, { expiresIn: '1h' })
 }
 
 function generateRefreshToken(userId, username) {
-    return jwt.sign({ userId, username }, SECRET_KEY, { expiresIn: '30d' })
+    return jwt.sign({ userId, username }, config.SECRET_KEY, { expiresIn: '30d' })
 }
 
 function verifyToken(token) {
     try {
-        return jwt.verify(token, SECRET_KEY)
+        return jwt.verify(token, config.SECRET_KEY)
     } catch(err) {
         return null
     }
 }
 
 // connect to mongodb
-const dbURI = 'mongodb+srv://test:f2qWY9k3dxnsqj9T@luto.tihpifs.mongodb.net/luto?retryWrites=true&w=majority&appName=LUTO'
-mongoose.connect(dbURI, { autoIndex: false })
+mongoose.connect(config.DB_URI, { autoIndex: false })
     .then(() => { 
-        app.listen(PORT, () => {
+        app.listen(config.PORT, () => {
             console.log('Connected to backend.')
         }) 
     })
@@ -123,6 +115,7 @@ app.get('/sign-in', async (req, res) => {
 
     try {
         const user = await User.findOne({ username })
+        console.log(await User.find())
 
         if(!user) {
             return res.status(202).json({ message: 'User not found.' })
@@ -1137,9 +1130,9 @@ app.post('/send-verification', async (req, res) => {
             auth: {
                 type: 'OAuth2',
                 user: 'luto.vercel.app@gmail.com',
-                clientId: CLIENT_ID,
-                clientSecret: CLIENT_SECRET,
-                refreshToken: REFRESH_TOKEN,
+                clientId: config.CLIENT_ID,
+                clientSecret: config.CLIENT_SECRET,
+                refreshToken: config.REFRESH_TOKEN,
                 accesToken: accessToken
             }
         })
