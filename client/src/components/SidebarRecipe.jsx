@@ -19,7 +19,8 @@ function SidebarRecipe({
     setPoints, pointStatus,
     setPointStatus, feedbackCount,
     setFeedbackCount, handleGiveRecipePoint,
-    scrollDivRef, currentTab
+    scrollDivRef, currentTab,
+    screenSize
 }) {
     const localRef = useRef(null)
     const sectionRef = useRef(null)
@@ -54,7 +55,7 @@ function SidebarRecipe({
 
     return (
         <div className="pl-3 flex xl:grid w-full h-dvh overflow-hidden" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
-            <div className="flex flex-col w-full h-full pr-3 xl:pr-0 py-20 xl:py-20 text-zinc-100 col-span-4 pointer-events-auto overflow-x-hidden overflow-y-scroll hide-scrollbar xl:scrollable-div" ref={ localRef }>
+            <div className={`${ screenSize > 2 ? "scrollable-div" : "pr-3 hide-scrollbar" } flex flex-col w-full h-full py-20 xl:py-0 text-zinc-100 col-span-4 pointer-events-auto overflow-x-hidden overflow-y-scroll`} ref={ localRef }>
                 {/* recipe image */}
                 <div className="mb-3 mt-3 xl:mt-0 rounded-3xl bg-zinc-900">
                     <div className="p-2 rounded-3xl bg-gradient-to-tr from-orange-500 to-orange-400">

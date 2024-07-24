@@ -61,7 +61,7 @@ function Home({
     function fetchFeedRecipes(filters) {
         setIsFetching(true)
         
-        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/feed-recipes`, { params: { userId: user.userId, filters, sort: user.accountType === "user" ? { createdAt: -1 } : { flagCount: 1 }, fetchedRecipeIds }})
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/feed-recipes`, { params: { userId: user.userId, filters, sort: user.accountType === "user" ? { createdAt: -1 } : { flagCount: 1 }, fetchedRecipeIds }})
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -146,7 +146,7 @@ function Home({
     }
 
     return (
-        <div className="h-screen pr-3 hide-scrollbar xl:scrollable-div overflow-y-scroll" ref={ scrollDivRef }>
+        <div className={`${ screenSize > 2 ? "scrollable-div" : "pr-3 hide-scrollbar" } w-screen h-screen overflow-y-scroll`} ref={ scrollDivRef }>
             {/* navbar */}
             {
                 screenSize > 3 &&
@@ -187,7 +187,7 @@ function Home({
                     /> 
                 </div>
             }
-            <div className="flex flex-col pr-0">
+            <div className="flex flex-col h-screen pr-0">
                 <div className="flex flex-col gap-0 xl:gap-3 p-3 pt-0 pr-0 pb-20 xl:pb-0">
                     {/* space for top navbar */}
                     <div className="flex xl:grid w-full gap-3 min-h-20 pt-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
@@ -253,6 +253,8 @@ function Home({
                     isFilterShown={ isFilterShown } setIsFilterShown={ setIsFilterShown }
                     isNavbarTopShown={ isNavbarTopShown } setIsNavbarTopShown={ setIsNavbarTopShown }
                 />
+            </div>
+            <div className="absolute inset-0 z-30 h-screen pointer-events-none remove-scrollbar">
                 {/* filter modal */}
                 {
                     isFilterShown &&

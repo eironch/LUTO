@@ -9,7 +9,7 @@ function FeedbackModal({
     currentTab
 }) {
     return (
-        <div className="absolute inset-0 z-30 grid place-items-center h-full pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-y-scroll scrollable-div" 
+        <div className="absolute z-30 grid place-items-center w-screen h-screen px-3 pt-3 pb-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-x-hidden overflow-y-scroll scrollable-div pointer-events-auto" 
             onMouseDownCapture={e => { 
                     const isOutsideModal = !e.target.closest('.model-inner')
                     
@@ -19,9 +19,9 @@ function FeedbackModal({
                 } 
             }
         >
-            <div className="flex justify-center w-full h-full -mr-3 px-1.5 xl:p-0 py-20 xl:py-0 items-center">
+            <div className="flex justify-center min-w-0 w-full h-full xl:-mr-3 xl:p-0 pt-20 pb-44 xl:py-0 items-center">
                 <div className="flex flex-col gap-3 justify-center items-center w-full overflow-hidden">
-                        <p className="text-2xl font-semibold text-ellipsis line-clamp-1">
+                        <p className="text-xl xl:text-2xl font-semibold text-ellipsis line-clamp-1">
                             { title }
                         </p>
                         <FeedbackSection 

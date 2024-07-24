@@ -35,7 +35,7 @@ function Recipe({
     function handleSaveRecipe() {
         setIsRecipeSaved(!isRecipeSaved)
 
-        axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/save-recipe`, { userId: user.userId, recipeId })
+        axios.post(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/save-recipe`, { userId: user.userId, recipeId })
             .then(res => {
                 console.log('Status Code:', res.status)
                 console.log('Data:', res.data)
@@ -50,7 +50,7 @@ function Recipe({
     }
 
     useLayoutEffect(() => {
-        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/get-recipe`, { params: { recipeId, userId: user.userId } })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/get-recipe`, { params: { recipeId, userId: user.userId } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -115,12 +115,12 @@ function Recipe({
                         setFeedbackCount={ setFeedbackCount } currentTab={ currentTab } 
                         pointStatus={ pointStatus || null } setPointStatus={ setPointStatus || null }
                         formatDate={ formatDate || null } handleGiveRecipePoint={ handleGiveRecipePoint }
-                        profilePicture={ profilePicture }
+                        profilePicture={ profilePicture } screenSize={ screenSize }
                     />      
                 </div>
             }
             {
-                recipeTabShown === "Overview" &&
+                recipeTabShown === "Overview" && screenSize < 3 &&
                 <SidebarRecipe
                     user={ user } recipeId={ recipeId || null }
                     summary={ summary || null } recipeImage={ recipeImage || null }
@@ -131,11 +131,12 @@ function Recipe({
                     pointStatus={ pointStatus || null } setPointStatus={ setPointStatus || null }
                     formatDate={ formatDate || null } handleGiveRecipePoint={ handleGiveRecipePoint }
                     profilePicture={ profilePicture } scrollDivRef={ scrollDivRef }
+                    screenSize={ screenSize }
                 />   
             }
             {
-                recipeTabShown === "Instructions" &&
-                <div className="flex flex-col gap-3 pl-3 pr-3 xl:pr-0 pb-20 xl:pb-0 pt-20 xl:pt-0 h-dvh bg-zinc-950 overflow-y-scroll hide-scrollbar xl:scrollable-div" ref={ scrollDivRef }>
+                recipeTabShown === "Instructions" || screenSize > 2 &&
+                <div className={`${ screenSize > 2 ? "scrollable-div" : "pr-3 hide-scrollbar" } flex flex-col gap-3 pl-3 pb-20 xl:pb-0 pt-20 xl:pt-0 h-dvh bg-zinc-950 overflow-y-scroll`} ref={ scrollDivRef }>
                     <div className="flex xl:grid pt-3 w-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
                             screenSize > 3 &&
@@ -196,19 +197,22 @@ function Recipe({
                 </div>
             }
             {/* NavBar */} 
-            <NavbarRecipe
-                user={ user } recipeId={ recipeId || null }
-                summary={ summary || null } recipeImage={ recipeImage || null }
-                ingredients={ ingredients || null } tags={ tags || null }
-                authorName={ authorName || null } points={ points } 
-                setPoints={ setPoints } feedbackCount={ feedbackCount } 
-                setFeedbackCount={ setFeedbackCount } currentTab={ currentTab } 
-                pointStatus={ pointStatus || null } setPointStatus={ setPointStatus || null }
-                formatDate={ formatDate || null } handleGiveRecipePoint={ handleGiveRecipePoint }
-                profilePicture={ profilePicture } scrollDivRef={ scrollDivRef }
-                isNavbarRecipeShown={ isNavbarRecipeShown } setIsNavbarRecipeShown={ setIsNavbarRecipeShown }
-                recipeTabShown={ recipeTabShown } setRecipeTabShown={ setRecipeTabShown }
-            />
+            {
+                screenSize < 3 &&
+                <NavbarRecipe
+                    user={ user } recipeId={ recipeId || null }
+                    summary={ summary || null } recipeImage={ recipeImage || null }
+                    ingredients={ ingredients || null } tags={ tags || null }
+                    authorName={ authorName || null } points={ points } 
+                    setPoints={ setPoints } feedbackCount={ feedbackCount } 
+                    setFeedbackCount={ setFeedbackCount } currentTab={ currentTab } 
+                    pointStatus={ pointStatus || null } setPointStatus={ setPointStatus || null }
+                    formatDate={ formatDate || null } handleGiveRecipePoint={ handleGiveRecipePoint }
+                    profilePicture={ profilePicture } scrollDivRef={ scrollDivRef }
+                    isNavbarRecipeShown={ isNavbarRecipeShown } setIsNavbarRecipeShown={ setIsNavbarRecipeShown }
+                    recipeTabShown={ recipeTabShown } setRecipeTabShown={ setRecipeTabShown }
+                />
+            }
         </div>
     )
 }

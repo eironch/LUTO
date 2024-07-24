@@ -63,7 +63,7 @@ function NavbarTop({
     }, [showSearch])
 
     return (
-        <div className="absolute z-40 w-full h-dvh pointer-events-none">
+        <div className="absolute z-40 xl:z-30 w-full h-dvh pointer-events-none">
             <div className={`${ isNavbarTopShown ? "translate-y-0" : "-translate-y-full" } xl:z-10 flex xl:grid gap-3 xl:p-3 w-full h-20 xl:h-fit overflow-hidden pointer-events-none transform transition-transform duration-300 ease-in-out`} style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                 {
                     screenSize > 3 &&

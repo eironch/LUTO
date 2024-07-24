@@ -30,7 +30,7 @@ function Popular({
     const [moreModalShown, setMoreModalShown] = useState()
 
     function fetchPopularRecipes(filters) {
-        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/popular-recipes`, { params: { userId: user.userId, filters } })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/popular-recipes`, { params: { userId: user.userId, filters } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -70,7 +70,7 @@ function Popular({
     }
 
     return (
-        <div className="h-screen pr-3 xl:pr-0 hide-scrollbar xl:scrollable-div overflow-y-scroll ">
+        <div className={`${ screenSize > 2 ? "scrollable-div" : "pr-3 hide-scrollbar" } h-screen overflow-y-scroll`}>
             {/* navbar */}
             {
                 screenSize > 3 &&
@@ -112,9 +112,9 @@ function Popular({
                 </div>
             }
             <div className="flex flex-col pr-0 gap-3 h-dvh">
-                <div className="flex flex-col gap-3 p-3 pr-0 pb-20 xl:pb-0">
+                <div className="flex flex-col p-3 pr-0 pb-20 xl:pb-0">
                     {/* space for top navbar */}
-                    <div className="flex xl:grid w-full mb-3 xl:mb-0" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+                    <div className="flex xl:grid w-full" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
                             screenSize > 3 &&
                             <div className="col-span-2"></div>
@@ -137,14 +137,14 @@ function Popular({
                             screenSize > 3 &&
                             <div className="col-span-2"></div>
                         }
-                        <div className="w-full col-span-11 block">
+                        <div className="w-full col-span-11 block mb-3">
                             {
                                 popularRecipes &&
                                 popularRecipes.length > 0 &&
                                 popularRecipes.map((recipe, index) => 
                                     recipe &&
                                     <div className="flex flex-col md:flex-row rounded-3xl" key={ index }>
-                                        <div className="w-full md:max-w-32 md:w-32 mb-0 md:mb-3 rounded-t-3xl rounded-b-none md:rounded-bl-3xl md:rounded-r-none bg-zinc-900 overflow-hidden">
+                                        <div className="w-full md:max-w-32 md:w-32 mt-3 mb-0 rounded-t-3xl rounded-b-none md:rounded-bl-3xl md:rounded-r-none bg-zinc-900 overflow-hidden">
                                             <p className={`${ index + 1 === 10 ? "md:-ml-8" : "md:ml-1.5" } w-full md:-mt-8 text-center md:text-start text-zinc-100`} style={ { fontSize: screenSize > 1 ? "13rem" : "5rem"} }>{ index + 1 }</p>
                                         </div>
                                         <div className={`${ index + 1 !== 10 ? "mb-0" : "xl:-mb-3"  } w-full`}>

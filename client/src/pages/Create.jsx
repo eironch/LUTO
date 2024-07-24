@@ -22,7 +22,7 @@ function ElementsModal(p) {
     const addElement = p.addElement
 
     return (
-        <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-y-scroll scrollable-div" 
+        <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-y-scroll scrollable-div" 
             onMouseDownCapture={ e => { 
                     const isOutsideModal = !e.target.closest('.model-inner')
 
@@ -172,7 +172,7 @@ function Create(p) {
 
         setPublishState('publishing')
 
-        axios.post(`http://localhost:8080/publish-recipe`, formData, { 
+        axios.post(`http://172.20.10.3:8080/publish-recipe`, formData, { 
                 headers: { 'Content-Type': 'multipart/form-data' } 
             })
             .then(response => {
@@ -257,7 +257,7 @@ function Create(p) {
                 }
                 {
                     publishState &&
-                    <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-y-scroll scrollable-div"
+                    <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-y-scroll scrollable-div"
                             onMouseDownCapture={e => { 
                                 if (publishState === 'published') {
                                     navigate('/home')

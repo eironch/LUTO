@@ -39,7 +39,7 @@ function Profile({
     function fetchUserRecipes(userRecipes) {
         setIsFetching(true)
 
-        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/user-recipes`, { params: { userId: user.userId, authorName, sort: user.accountType === "user" ? { createdAt: -1 } : { flagCount: 1 }, fetchedRecipeIds: fetchedRecipeIdsRef.current } })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/user-recipes`, { params: { userId: user.userId, authorName, sort: user.accountType === "user" ? { createdAt: -1 } : { flagCount: 1 }, fetchedRecipeIds: fetchedRecipeIdsRef.current } })
             .then(res => {
                 console.log('Status Code:', res.status)
                 console.log('Data:', res.data)
@@ -146,7 +146,7 @@ function Profile({
     }
 
     return (
-       <div className="h-screen pr-3 xl:pr-0 hide-scrollbar xl:scrollable-div overflow-y-scroll " ref={ scrollDivRef }>
+       <div className={`${ screenSize > 2 ? "scrollable-div" : "pr-3 hide-scrollbar" } h-screen overflow-y-scroll`} ref={ scrollDivRef }>
             {/* navbar */}
             {
                 screenSize <= 3 ?
@@ -176,11 +176,11 @@ function Profile({
                     />
                 </div>
             }
-            <div className="flex flex-col p-3 pb-0 pr-0 bg-zinc-950">
+            <div className="flex flex-col p-3 pb-0 pt-0 pr-0 bg-zinc-950">
                 {/* content */}
                 <div className="flex xl:grid w-full h-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                     <div className="hidden xl:block xl:col-span-4"></div>
-                    <div className={`${ screenSize <= 3 && "mb-20" } w-full xl:col-span-11 block`}>
+                    <div className={`${ screenSize <= 3 ? "mb-20" : "mb-3" } w-full xl:col-span-11 block`}>
                         { 
                             userRecipes &&
                             userRecipes.length > 0 &&

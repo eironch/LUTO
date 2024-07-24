@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-::-webkit-scrollbar {
-    display: none;
-}
-
 .scrollable-div::-webkit-scrollbar {
     width: 0.75rem !important;
     height: 0.75rem !important;
@@ -19,12 +15,23 @@
     background-clip: content-box !important;
 }
 
-
-.hide-scrollbar::-webkit-scrollbar {
-    width: 0 !important;
-    height: 0 !important;
-}
-
-.hide-scrollbar {
+/* .hide-scrollbar {
+    overflow: auto;
     scrollbar-width: none;
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.remove-scrollbar {
+    overflow: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+#root {
+    overflow: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+} */

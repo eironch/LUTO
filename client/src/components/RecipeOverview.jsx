@@ -120,7 +120,7 @@ function RecipeOverview({
     return (
         <>
             {/* mobile */}
-            <div className={`${ currentTab === "Popular" ? "rounded-t-none rounded-b-3xl xl:rounded-3xl" : "rounded-3xl" } block md:hidden mt-3 bg-zinc-900`}>
+            <div className={`${ currentTab === "Popular" ? "rounded-t-none rounded-b-3xl xl:rounded-3xl" : "rounded-3xl mt-3" } block md:hidden bg-zinc-900`}>
                 <div className="flex flex-col w-full gap-3 p-6 pb-3">
                     <div className="flex gap-3 items-center">
                         {

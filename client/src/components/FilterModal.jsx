@@ -50,7 +50,7 @@ function FilterModal({
     }, [])
 
     return (
-        <div className="absolute inset-0 z-0 grid place-items-center text-zinc-100 bg-zinc-950 bg-opacity-80 overflow-hidden">
+        <div className="absolute inset-0 z-0 grid place-items-center text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-hidden">
             <div className="inset-0 flex justify-center w-full h-full p-3 py-20 items-center overflow-hidden">
                 <div className="flex w-full h-full py-3 justify-center items-center">
                     <div className="flex flex-col h-full w-full md:w-10/12 text-zinc-100 rounded-3xl col-span-2 bg-zinc-900 overflow-hidden pointer-events-auto">

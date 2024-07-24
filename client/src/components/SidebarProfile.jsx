@@ -18,7 +18,7 @@ function SidebarProfile({
     function handleFollowUser() {
         setIsFollowed(!isFollowed)
 
-        axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/follow-user`, { userId: user.userId, authorName })
+        axios.post(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/follow-user`, { userId: user.userId, authorName })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -37,7 +37,7 @@ function SidebarProfile({
     }
 
     function handleAuthorInfo() {
-        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/get-author-info`, { params: { userId: user.userId, authorName } })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/get-author-info`, { params: { userId: user.userId, authorName } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -66,7 +66,7 @@ function SidebarProfile({
 
     return (
         <div className="xl:grid pl-3 pt-3 xl:pt-0 pb-0 pr-0 w-full xl:h-full overflow-hidden" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
-            <div className="flex flex-col gap-3  text-zinc-100 col-span-4 pointer-events-auto overflow-y-hidden xl:overflow-y-scroll overflow-x-hidden scrollable-div">
+            <div className="flex flex-col gap-3 text-zinc-100 col-span-4 pointer-events-auto overflow-y-hidden xl:overflow-y-scroll overflow-x-hidden scrollable-div">
                 {/* user */}
                 <div className="flex flex-row p-6 gap-6 items-center text-2xl rounded-3xl bg-zinc-900">
                     <img className="w-28 h-28 aspect-1 rounded-full object-cover" src={ authorProfilePicture || ProfileIcon } alt="" />

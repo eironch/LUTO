@@ -16,11 +16,11 @@ function FeedbackSection({
 }) {
     const [userFeedback, setUserFeedback] = useState()
     const [feedbacks, setFeedbacks] = useState()
-    
+
     function getFeedbacks() {
         setFeedbackCount(0)
 
-        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/get-feedbacks`, { params: { recipeId } })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/get-feedbacks`, { params: { recipeId } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -38,7 +38,7 @@ function FeedbackSection({
     function submitFeedback() {
         setUserFeedback('')
 
-        axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/submit-feedback`, { userId: user.userId, recipeId, text: userFeedback })
+        axios.post(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/submit-feedback`, { userId: user.userId, recipeId, text: userFeedback })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -56,7 +56,7 @@ function FeedbackSection({
     }, [])
 
     return (
-        <div className="flex flex-col w-full md:w-10/12 xl:w-5/12 rounded-3xl bg-zinc-900 overflow-hidden model-inner">
+        <div className={`${ currentTab === "Recipe" ? "xl:w-full mb-3" : "xl:w-5/12" } flex flex-col w-full md:w-10/12 rounded-3xl bg-zinc-900 overflow-hidden model-inner`}>
             {/* header */}
             <div className="flex items-center p-6 gap-3 shadow-md shadow-zinc-950">
                 {
