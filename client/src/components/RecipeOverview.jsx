@@ -120,7 +120,7 @@ function RecipeOverview({
     return (
         <>
             {/* mobile */}
-            <div className={`${ currentTab === "Popular" ? "rounded-t-none rounded-b-3xl xl:rounded-3xl" : "rounded-3xl" } block md:hidden mb-3 bg-zinc-900`}>
+            <div className={`${ currentTab === "Popular" ? "rounded-t-none rounded-b-3xl xl:rounded-3xl" : "rounded-3xl" } block md:hidden mt-3 bg-zinc-900`}>
                 <div className="flex flex-col w-full gap-3 p-6 pb-3">
                     <div className="flex gap-3 items-center">
                         {
@@ -204,7 +204,7 @@ function RecipeOverview({
                 </div>
             </div>
             {/* desktop */}
-            <div className={`${ currentTab === "Popular" ? "rounded-r-3xl" : "rounded-3xl" } hidden md:grid grid-cols-12 mb-3 w-full bg-zinc-900 overflow-hidden`}>
+            <div className={`${ currentTab === "Popular" ? "rounded-r-3xl" : "rounded-3xl" } hidden md:grid grid-cols-12 mt-3 w-full bg-zinc-900 overflow-hidden`}>
                 {/* recipe image */}
                 <Link to={`/recipe/${ recipeId }`}  className="flex col-span-4 rounded-3xl p-2 shadow-zinc-950 shadow-right bg-gradient-to-br from-orange-600 to-orange-400">
                     <div className="w-full aspect-w-1 aspect-h-1 overflow-hidden">

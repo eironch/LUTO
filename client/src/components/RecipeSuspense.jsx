@@ -2,7 +2,7 @@ import React from 'react'
 
 function RecipeSuspense() {
     return (
-        <div className="grid grid-cols-12 mb-3 w-full rounded-3xl bg-zinc-900">
+        <div className="grid grid-cols-12 mt-3 w-full rounded-3xl bg-zinc-900">
             <div className="flex flex-row w-full col-span-4 rounded-3xl p-2 shadow-zinc-950 shadow-right bg-zinc-600">
                 <div className="w-full aspect-w-1 aspect-h-1 overflow-hidden"></div>
             </div>

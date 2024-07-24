@@ -11,7 +11,7 @@ function NavbarBot({ user, currentTab }) {
     const { authorName } = useParams()
 
     return (
-        <div className="fixed z-40 flex top-0 right-0 bottom-0 left-0 p-0 pointer-events-none">
+        <div className="absolute z-[9999] flex bottom-0 left-0 right-0 p-0 pointer-events-none">
             <div className="flex w-full h-dvh p-0 justify-center items-end">
                 <div className="relative flex w-full min-h-20 h-20 p-1 gap-3 bg-zinc-900 pointer-events-auto border-t border-zinc-800">
                     <Link to="/home" className={`${ currentTab==="Home" && "bg-zinc-600" } flex flex-col justify-center items-center gap-2 p-2 overflow-hidden w-full rounded-3xl hover:bg-zinc-500`}>
