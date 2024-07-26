@@ -1,5 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { debounce } from 'lodash'
 
@@ -15,53 +14,19 @@ import SummaryIcon from '../assets/summary-icon.svg'
 import GivePointNegativeIcon from '../assets/give-point-negative-icon.svg'
 import GivePointPositiveIcon from '../assets/give-point-positive-icon.svg'
 
-function IngredientForm(p) {
-    const keyIndex = p.keyIndex
-    const ingredients = p.ingredients
-    const setIngredients = p.setIngredients
-
-    const [ingredientValue, setIngredientValue] = useState('')
-    const ingredient = ingredients.find(ingredient => ingredient.key === keyIndex).value
-
-    useLayoutEffect(() => {
-        const newIngredients = [...ingredients]
-        newIngredients.forEach(ingredient => {
-            if (ingredient.key === keyIndex) {
-                ingredient.value = ingredientValue
-            }
-        })
-        
-        setIngredients(newIngredients)
-    }, [ingredientValue])
-
-    return (
-        <li className="flex rounded-3xl text-center items-center">
-            <p className="flex items-center px-3 text-2xl font-bold">
-                •
-            </p>
-            <input className={`${ (ingredient === "") ? "bg-zinc-600 border border-red-600" : "bg-zinc-900" } p-3 w-full rounded-3xl focus:bg-zinc-600 hover:bg-zinc-600`} 
-                value={ ingredientValue } onChange={ e => setIngredientValue(e.target.value) } 
-                placeholder="What Ingredient?" maxLength={ 30 }
-            />
-        </li>
-    )
-}
-
-function SidebarCreate(p) {
-    const user = p.user
-
-    const setRecipeImage = p.setRecipeImage
-    const summary = p.summary
-    const setSummary = p.setSummary
-    const ingredients = p.ingredients
-    const setIngredients = p.setIngredients
-    const tags = p.tags
-    const setTags = p.setTags
-    const systemTags = p.systemTags
+function SidebarCreate({
+    user, setRecipeImage,
+    summary, setSummary,
+    ingredients, setIngredients,
+    tags, setTags,
+    systemTags, title,
+    setTitle
+}) {
     const [preRecipeImage, setPreRecipeImage] = useState()
     const [searchValue, setSearchValue] = useState('')
     const [tagChoices, setTagChoices] = useState([])
-    
+    const [lastRef, setLastRef] = useState(null)
+    const refs = useRef([React.createRef()])
 
     function addTag(e) {
         const index = e.target.id
@@ -79,9 +44,15 @@ function SidebarCreate(p) {
         setTags(tags.filter(recipeTag => recipeTag !== tag))
     }
 
-    function addIngredient() {
+    async function addIngredient() {
         const newIngredients = [...ingredients]
-        setIngredients([...newIngredients.filter(ingredient => ingredient.value.length > 0), { key: uuidv4(), value: '' }])
+
+        setIngredients(
+            [
+                ...newIngredients.filter(ingredient => ingredient.value.length > 0), 
+                { key: uuidv4(), value: '', refIndex: refs.current.length }
+            ]
+        )
     }
 
     function handleFileChange(e) {
@@ -99,7 +70,9 @@ function SidebarCreate(p) {
 
     const handleTagSearch = debounce(input => {
         if (!input) {
-            return handlePopularTags()
+            handlePopularTags()
+            
+            return
         }
         
         setTagChoices(systemTags.filter(tag => 
@@ -111,19 +84,67 @@ function SidebarCreate(p) {
         setTagChoices(systemTags)
     }
 
-    useLayoutEffect(() => {
+    function handleKeyDown(e, index, refIndex) {
+        if (e.key === 'Backspace' && !e.target.value && ingredients.length !== 1) {
+            setIngredients(ingredients.filter((_, i) => i !== index))
+            refs.current = refs.current.filter((_, i) => i !== index)
+            
+            return
+        }
+
+        if (e.key !== 'Enter') {
+            return
+        }
+
+        if (!e.target.value || index !== ingredients.length -1) {
+            return
+        }
+
+        if (!refs.current[refIndex + 1]) {
+            addIngredient()
+            
+            return
+        }
+
+        refs.current[refIndex + 1].focus()
+    }
+
+    useEffect(() => {
         handleTagSearch(searchValue)
     }, [searchValue])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
+        if (refs.current.length < ingredients.length) {
+            const newRef = React.createRef()
+            refs.current.push(newRef)
+            setLastRef(newRef)
+
+            return
+        }
+    }, [ingredients])
+
+    useEffect(() => {
+        if (lastRef) {
+            lastRef.current.focus()       
+        }
+    }, [lastRef])
+
+    useEffect(() => {
         handlePopularTags()
     }, [])
     
     return (
-        <div className="pl-3 grid w-full h-full overflow-hidden" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
-            <div className="flex overflow-x-hidden overflow-y-scroll h-full  scrollable-div flex-col text-zinc-100 col-span-4 pointer-events-auto">
+        <div className="pl-3 flex xl:grid w-full h-full overflow-hidden" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+            <div className="flex overflow-x-hidden overflow-y-scroll h-full py-[5.75rem] xl:py-0 scrollable-div flex-col text-zinc-100 col-span-4 pointer-events-auto">
                 {/* recipe image */}
                 <div className="mb-3 rounded-3xl bg-zinc-900">
+                    <div className="flex flex-col items-center w-full py-6 px-3 rounded-3xl bg-zinc-900">
+                        <Textarea 
+                            attribute={`${ !title && "pt-2.5 border border-red-600 bg-zinc-600" } px-3 text-2xl md:3xl xl:text-4xl font-bold w-full text-center focus:bg-zinc-600 bg-transparent`} 
+                            maxLength={ 200 } value={ title } setValue={ setTitle } 
+                            placeholder="What is the title of your recipe?" 
+                        />
+                    </div>
                     <div className="p-2 rounded-3xl bg-gradient-to-tr from-orange-500 to-orange-400">
                         <div className="relative w-full h-auto aspect-w-2 aspect-h-2">
                             {
@@ -189,10 +210,12 @@ function SidebarCreate(p) {
                     <ul className="text-lg flex flex-col gap-1 p-6 pt-3">
                         {
                             ingredients &&
-                            ingredients.map(ingredient => 
+                            ingredients.map((ingredient, index) => 
                                 <IngredientForm 
-                                    value={ ingredient.value } key={ ingredient.key } keyIndex={ ingredient.key } 
+                                    value={ ingredient.value } key={ ingredient.key } 
+                                    index={ index } refIndex={ ingredient.refIndex } 
                                     ingredients={ ingredients } setIngredients={ setIngredients } 
+                                    refs={ refs } handleKeyDown={ handleKeyDown }
                                 />
                             )
                         }
@@ -209,7 +232,7 @@ function SidebarCreate(p) {
                     </p>
                 </div>
                 {/* tags */}
-                <div className="flex flex-col mb-3 gap-3 rounded-3xl bg-zinc-900">
+                <div className="flex flex-col xl:mb-3 gap-3 rounded-3xl bg-zinc-900">
                     {/* header */}
                     <div className="flex flex-row gap-6 p-6 mb-3 items-center shadow-md shadow-zinc-950">
                         <img className="w-10" src={ TagIcon } alt="" />
@@ -269,6 +292,35 @@ function SidebarCreate(p) {
                 </div>
             </div>
         </div>
+    )
+}
+
+function IngredientForm({
+    index, ingredients,
+    refIndex, setIngredients,
+    refs, handleKeyDown,
+    value
+}) {
+    const [ingredientValue, setIngredientValue] = useState('')
+
+    useEffect(() => {
+        const newIngredients = [...ingredients]
+        newIngredients[index].value = ingredientValue
+        
+        setIngredients(newIngredients)
+    }, [ingredientValue])
+
+    return (
+        <li className="flex rounded-3xl text-center items-center">
+            <p className="flex items-center px-3 text-2xl font-bold">
+                •
+            </p>
+            <input className={`${ value === "" ? index === ingredients.length - 1 ? "bg-zinc-600 border border-red-600" : "bg-zinc-600" : "bg-zinc-900" } p-3 w-full rounded-3xl focus:bg-zinc-600 hover:bg-zinc-600`} 
+                value={ ingredientValue } onChange={ e => e.target.value.length <= 30 && setIngredientValue(e.target.value) } 
+                placeholder="What Ingredient?" onKeyDown={ e => handleKeyDown(e, index, refIndex) }
+                ref={ refs.current[refIndex] }
+            />
+        </li>
     )
 }
 

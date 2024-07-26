@@ -243,7 +243,7 @@ function RecipeOverview({
                                 { formattedDate }
                             </p>
                         </div>
-                        <p className="mx-6 text-zinc-100 text-lg text-ellipsis overflow-hidden line-clamp-4">
+                        <p className="mx-6 text-zinc-100 text-lg text-ellipsis overflow-hidden line-clamp-4 md:line-clamp-3 2xl:line-clamp-4">
                             { summary }
                         </p>
                     </div>

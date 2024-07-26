@@ -15,7 +15,7 @@
     background-clip: content-box !important;
 }
 
-/* .hide-scrollbar {
+.hide-scrollbar {
     overflow: auto;
     scrollbar-width: none;
 }
@@ -24,14 +24,8 @@
     display: none;
 }
 
-.remove-scrollbar {
-    overflow: hidden;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
 #root {
     overflow: hidden;
     -ms-overflow-style: none;
     scrollbar-width: none;
-} */
+}

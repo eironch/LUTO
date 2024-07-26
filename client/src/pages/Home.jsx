@@ -254,14 +254,14 @@ function Home({
                     isNavbarTopShown={ isNavbarTopShown } setIsNavbarTopShown={ setIsNavbarTopShown }
                 />
             </div>
-            <div className="absolute inset-0 z-30 h-screen pointer-events-none remove-scrollbar">
+            <div className="absolute inset-0 z-30 h-screen pointer-events-none">
                 {/* filter modal */}
                 {
                     isFilterShown &&
                     screenSize < 4 &&
                     <FilterModal 
                         filters={ filters } setFilters={ setFilters }
-                        systemTags={ systemTags }
+                        systemTags={ systemTags } setIsFilterShown={ setIsFilterShown }
                     />
                 }
                 {/* feedbacks modal */}
@@ -272,7 +272,7 @@ function Home({
                         title={ prevTitle } feedbackCount={ prevFeedbackCount } 
                         setFeedbackCount={ setPrevFeedbackCount } setShowModal={ setIsFeedbacksShown } 
                         formatDate={ formatDate } setFeedRecipes={ setFeedRecipes }
-                        currentTab={ currentTab }
+                        currentTab={ currentTab } screenSize={ screenSize }
                     />
                 }
                 {/* confirm modal */}

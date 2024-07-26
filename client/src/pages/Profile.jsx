@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 
 import RecipeOverview from '../components/RecipeOverview'
-import NavBar from '../components/NavBar'
 import SidebarProfile from '../components/SidebarProfile'
 import FeedbackModal from '../components/FeedbackModal'
 import ConfirmModal from '../components/ConfirmModal'

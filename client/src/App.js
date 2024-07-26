@@ -370,6 +370,7 @@ function App() {
                   <Create
                     user={ user } currentTab={ currentTab } 
                     setCurrentTab={ setCurrentTab } systemTags={ systemTags }
+                    screenSize={ screenSize }
                   />
                 } 
               />

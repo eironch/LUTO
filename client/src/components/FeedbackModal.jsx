@@ -6,11 +6,15 @@ function FeedbackModal({
     recipeId, title, 
     feedbackCount, setFeedbackCount, 
     setShowModal, setFeedRecipes,
-    currentTab
+    currentTab, screenSize
 }) {
     return (
-        <div className="absolute z-30 grid place-items-center w-screen h-screen px-3 pt-3 pb-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-x-hidden overflow-y-scroll scrollable-div pointer-events-auto" 
-            onMouseDownCapture={e => { 
+        <div className="absolute z-30 grid place-items-center w-screen h-screen pl-3 pt-3 pb-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-x-hidden overflow-y-scroll scrollable-div pointer-events-auto" 
+            onMouseDownCapture={e => {
+                    if (screenSize < 4) {
+                        return
+                    } 
+                    
                     const isOutsideModal = !e.target.closest('.model-inner')
                     
                     if (isOutsideModal) {

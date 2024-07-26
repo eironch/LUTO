@@ -1,13 +1,12 @@
-import React, { useState, useLayoutEffect, useRef, useEffect } from 'react'
+import React, { useState, useLayoutEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 
 import SidebarRecipe from '../components/SidebarRecipe'
+import NavbarRecipe from '../components/NavbarRecipe'
 
 import LogoGradient from '../assets/luto-gradient-logo.svg'
 import SaveIcon from '../assets/saved-icon.svg'
-import SummaryIcon from '../assets/summary-icon.svg'
-import TextIcon from '../assets/text-icon.svg'
 
 function Recipe({
     user, currentTab,
@@ -131,13 +130,13 @@ function Recipe({
                     pointStatus={ pointStatus || null } setPointStatus={ setPointStatus || null }
                     formatDate={ formatDate || null } handleGiveRecipePoint={ handleGiveRecipePoint }
                     profilePicture={ profilePicture } scrollDivRef={ scrollDivRef }
-                    screenSize={ screenSize }
+                    screenSize={ screenSize } title={ title }
                 />   
             }
             {
-                recipeTabShown === "Instructions" || screenSize > 2 &&
-                <div className={`${ screenSize > 2 ? "scrollable-div" : "pr-3 hide-scrollbar" } flex flex-col gap-3 pl-3 pb-20 xl:pb-0 pt-20 xl:pt-0 h-dvh bg-zinc-950 overflow-y-scroll`} ref={ scrollDivRef }>
-                    <div className="flex xl:grid pt-3 w-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+                (recipeTabShown === "Instructions" || screenSize > 2) &&
+                <div className={`${ screenSize > 2 ? "scrollable-div" : "pr-3 hide-scrollbar" } flex flex-col gap-3 pl-3 pb-[5.75rem] xl:pb-0 pt-[5.75rem] xl:pt-0 h-dvh bg-zinc-950 overflow-y-scroll`} ref={ scrollDivRef }>
+                    <div className="flex xl:grid w-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
                             screenSize > 3 &&
                             <div className="col-span-4"></div>
@@ -145,8 +144,9 @@ function Recipe({
                         <div className="col-span-11 flex flex-col w-full rounded-3xl text-zinc-100">
                             {
                                 title &&
+                                screenSize > 3 &&
                                 <div className="flex flex-col items-center w-full mb-3 p-6 rounded-3xl bg-zinc-900">
-                                    <p className="text-4xl font-bold w-full text-center">
+                                    <p className="text-2xl md:3xl xl:text-4xl font-bold w-full text-center">
                                         { title }
                                     </p>
                                 </div>
@@ -158,7 +158,7 @@ function Recipe({
                                     if (element.contentType === "Section Header") {
                                         return (
                                             <div className="py-6 px-3 flex flex-col gap-3 mb-3 rounded-3xl bg-zinc-900" key={ key }>
-                                                <p className="px-3 text-3xl font-semibold w-full text-justify">
+                                                <p className="px-3 text-3xl font-semibold w-full">
                                                     { element.text }
                                                 </p>
                                             </div>
@@ -166,7 +166,7 @@ function Recipe({
                                     } else if (element.contentType === "Description Text") {
                                         return (
                                             <div className="py-6 px-3 flex flex-col gap-3 mb-3 rounded-3xl bg-zinc-900" key={ key }>
-                                                <p className="px-3 text-xl w-full text-justify">
+                                                <p className="px-3 text-xl w-full">
                                                     { element.text }
                                                 </p>
                                             </div>
@@ -198,78 +198,13 @@ function Recipe({
             }
             {/* NavBar */} 
             {
-                screenSize < 3 &&
+                screenSize < 4 &&
                 <NavbarRecipe
-                    user={ user } recipeId={ recipeId || null }
-                    summary={ summary || null } recipeImage={ recipeImage || null }
-                    ingredients={ ingredients || null } tags={ tags || null }
-                    authorName={ authorName || null } points={ points } 
-                    setPoints={ setPoints } feedbackCount={ feedbackCount } 
-                    setFeedbackCount={ setFeedbackCount } currentTab={ currentTab } 
-                    pointStatus={ pointStatus || null } setPointStatus={ setPointStatus || null }
-                    formatDate={ formatDate || null } handleGiveRecipePoint={ handleGiveRecipePoint }
-                    profilePicture={ profilePicture } scrollDivRef={ scrollDivRef }
-                    isNavbarRecipeShown={ isNavbarRecipeShown } setIsNavbarRecipeShown={ setIsNavbarRecipeShown }
-                    recipeTabShown={ recipeTabShown } setRecipeTabShown={ setRecipeTabShown }
+                    scrollDivRef={ scrollDivRef } isNavbarRecipeShown={ isNavbarRecipeShown } 
+                    setIsNavbarRecipeShown={ setIsNavbarRecipeShown } recipeTabShown={ recipeTabShown } 
+                    setRecipeTabShown={ setRecipeTabShown }
                 />
             }
-        </div>
-    )
-}
-
-function NavbarRecipe({
-    scrollDivRef, isNavbarRecipeShown,
-    setIsNavbarRecipeShown, recipeTabShown, 
-    setRecipeTabShown
-}) {
-    const [lastScrollY, setLastScrollY] = useState(0)
-
-    function handleScroll() {
-        const currentScrollY = scrollDivRef.current.scrollTop
-        const scrollDifference = currentScrollY - lastScrollY
-        
-        if (currentScrollY < 80) {
-            setIsNavbarRecipeShown(true)
-        }
-
-        if (scrollDifference > 10 && currentScrollY > 100) {
-            setIsNavbarRecipeShown(false)
-        } else if (scrollDifference < -10) {
-            setIsNavbarRecipeShown(true)
-        }
-
-        setLastScrollY(currentScrollY)
-    }
-
-    useEffect(() => {
-        if (!scrollDivRef.current) {
-            return
-        }
-        scrollDivRef.current.addEventListener('scroll', handleScroll)
-        
-        return () => {
-            if (!scrollDivRef.current) {
-                return
-            }
-
-            scrollDivRef.current.removeEventListener('scroll', handleScroll)
-        }
-    }, [lastScrollY, scrollDivRef, recipeTabShown])
-
-    return (
-        <div className={`${ isNavbarRecipeShown ? "translate-y-0" : "-translate-y-full" } absolute z-40 flex xl:grid gap-3 w-full h-20 xl:h-fit overflow-hidden pointer-events-none transform transition-transform duration-300 ease-in-out`} style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
-            <div className="grid grid-cols-2 col-span-11 w-full px-3 py-0 pointer-events-auto bg-zinc-900 border-b border-zinc-800">
-                <div className="flex justify-center items-center">
-                    <button className="flex flex-col gap-1 justify-center items-center" onClick={ () => setRecipeTabShown("Overview") }>
-                        <p className="text-base text-zinc-100 font-semibold">Overview</p>
-                    </button>
-                </div>
-                <div className="flex justify-center items-center">
-                    <button className="flex flex-col gap-1 justify-center items-center" onClick={ () => setRecipeTabShown("Instructions") }>
-                        <p className="text-base text-zinc-100 font-semibold">Instructions</p>
-                    </button>
-                </div>
-            </div>
         </div>
     )
 }

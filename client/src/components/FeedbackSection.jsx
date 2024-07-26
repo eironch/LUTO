@@ -5,7 +5,7 @@ import axios from 'axios'
 import Textarea from '../components/Textarea'
 
 import ProfileIcon from '../assets/profile-icon.svg'
-import BackIcon from '../assets/back-icon.svg'
+import RemoveIcon from '../assets/remove-icon.svg'
 import FeedbackIcon from '../assets/feedback-icon.svg'
 
 function FeedbackSection({
@@ -59,21 +59,21 @@ function FeedbackSection({
         <div className={`${ currentTab === "Recipe" ? "xl:w-full mb-3" : "xl:w-5/12" } flex flex-col w-full md:w-10/12 rounded-3xl bg-zinc-900 overflow-hidden model-inner`}>
             {/* header */}
             <div className="flex items-center p-6 gap-3 shadow-md shadow-zinc-950">
-                {
-                    currentTab !== "Recipe" &&
-                    <div className="block xl:hidden w-fit h-full">
-                        <button className="p-3 rounded-3xl hover:bg-zinc-600" onClick={ () => setShowModal(false) }>
-                            <img className="min-w-4 w-4" src={ BackIcon } alt=""/>
-                        </button>
-                    </div>
-                }
                 <div className="flex gap-6 items-center w-full">
                     <img className="w-10" src={ FeedbackIcon } alt="" />
                     <p className={`${ currentTab !== "Recipe" && "hidden sm:block" } text-2xl font-semibold`}>Feedbacks</p>
-                    <p className="flex pr-3 text-2xl font-semibold justify-end w-full">
+                    <p className="flex pr-3 text-2xl font-semibold sm:justify-end w-full">
                         { feedbackCount > 0 && feedbackCount }
                     </p>
                 </div>
+                {
+                    currentTab !== "Recipe" &&
+                    <div className="flex flex-grow justify-end">
+                        <button className="p-3 rounded-3xl hover:bg-zinc-600" onClick={ () => setShowModal(false) }>
+                            <img className="min-w-4 w-4" src={ RemoveIcon } alt=""/>
+                        </button>
+                    </div>
+                }
             </div>
             {/* feedback input */}
             <div className={`${ feedbacks && feedbacks.length > 0 ? "-mb-6" : "-mb-3" } flex flex-row items-center p-6 gap-3`}>

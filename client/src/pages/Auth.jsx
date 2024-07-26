@@ -461,6 +461,9 @@ function Auth(p) {
                     isEmailVerifying &&
                     <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-hidden"
                             onMouseDownCapture={ e => { 
+                                // if (screenSize < 4) {
+                                //     return
+                                // } 
                                 const isOutsideModal = !e.target.closest('.model-inner')
                                 
                                 if (isOutsideModal && verification.status) {

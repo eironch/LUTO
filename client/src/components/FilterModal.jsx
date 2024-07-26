@@ -3,10 +3,11 @@ import { debounce } from 'lodash'
 
 import FilterIcon from '../assets/filter-icon.svg'
 import SearchIcon from '../assets/search-icon.svg'
+import RemoveIcon from '../assets/remove-icon.svg'
 
 function FilterModal({
     systemTags, filters, 
-    setFilters
+    setFilters, setIsFilterShown
 }) {
     const [searchValue, setSearchValue] = useState('')
     const [tagChoices, setTagChoices] = useState(systemTags)
@@ -59,6 +60,11 @@ function FilterModal({
                             <p className="text-2xl font-bold">
                                 Filter
                             </p>
+                            <div className="flex flex-grow justify-end">
+                                <button className="p-3 rounded-3xl hover:bg-zinc-600" onClick={ () => setIsFilterShown(false) }>
+                                    <img className="min-w-4 w-4" src={ RemoveIcon } alt=""/>
+                                </button>
+                            </div>
                         </div>
                         {/* selected tags */}
                         {

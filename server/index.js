@@ -125,23 +125,23 @@ app.get('/sign-in', async (req, res) => {
         if (!isPasswordValid) {
             return res.status(202).json({ message: 'Incorrect username or password.'})
         }
-
+        // placeholder
         res.cookie(
             'accessToken',
             generateAccessToken(user._id, user.username), 
             {
-                httpOnly: true,
-                secure: true,
+                httpOnly: false,
+                secure: false,
                 maxAge: 3600000,
             }
         )
-
+        // placeholder
         res.cookie(
             'refreshToken',
             generateRefreshToken(user._id, user.username), 
             {
-                httpOnly: true,
-                secure: true,
+                httpOnly: false,
+                secure: false,
                 maxAge: 2592000000,
             }
         )
@@ -193,13 +193,13 @@ app.get('/check-auth', async (req, res) => {
     
         if (refreshToken && decodedRefreshToken) {
             const user = await User.findById(decodedRefreshToken.userId)
-
+            // placeholder
             res.cookie(
                 'accessToken',
                 generateAccessToken(decodedRefreshToken.userId, decodedRefreshToken.username), 
                 {
-                    httpOnly: true,
-                    secure: true,
+                    httpOnly: false,
+                    secure: false,
                     maxAge: 3600000,
                 }
             )
