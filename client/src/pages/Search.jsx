@@ -243,7 +243,7 @@ function Search({
                         setShowModal={ setConfirmationShown } confirmAction={ removeRecipe }
                         title={ prevTitle } headerText={ "Confirm Removal" }
                         bodyText={ "Make sure to thoroughly check whether it goes against our content policy. By removing this, your user ID will be saved as the remover." }
-                        icon={ RemoveIcon } isDanger={ true }
+                        icon={ RemoveIcon } isDanger={ true } screenSize={ screenSize }
                     />
                 }
                 {
@@ -252,7 +252,7 @@ function Search({
                         setShowModal={ setConfirmationShown } confirmAction={ allowRecipe }
                         title={ prevTitle } headerText={ "Confirm Clearance" } 
                         bodyText={ "Make sure to thoroughly check whether it is in adherance with our content policy." }
-                        icon={ AllowIcon } isDanger={ false }
+                        icon={ AllowIcon } isDanger={ false } screenSize={ screenSize }
                     />
                 }
                 {
@@ -260,7 +260,7 @@ function Search({
                     <ConfirmModal 
                         setShowModal={ setConfirmationShown } confirmAction={ handleLogOut }
                         headerText={ "Confirm Log Out" } bodyText={ "Are you sure you want to log out?" }
-                        icon={ LogOutIcon } isDanger={ true }
+                        icon={ LogOutIcon } isDanger={ true } screenSize={ screenSize }
                     />
                 }
             </div>

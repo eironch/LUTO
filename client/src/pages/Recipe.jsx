@@ -145,7 +145,7 @@ function Recipe({
                             {
                                 title &&
                                 screenSize > 3 &&
-                                <div className="flex flex-col items-center w-full mb-3 p-6 rounded-3xl bg-zinc-900">
+                                <div className="flex flex-col items-center w-full mb-3 mt-3 p-6 rounded-3xl bg-zinc-900">
                                     <p className="text-2xl md:3xl xl:text-4xl font-bold w-full text-center">
                                         { title }
                                     </p>

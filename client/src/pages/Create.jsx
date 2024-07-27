@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useRef } from 'react'
+import React, { useState, useLayoutEffect, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
@@ -23,10 +23,10 @@ import RemoveIcon from '../assets/remove-icon.svg'
 function Create({
     user, currentTab,
     setCurrentTab, systemTags,
-    screenSize
+    screenSize, confirmation,
+    setConfirmation
 }) {
     const [publishState, setPublishState] = useState() 
-    const [confirmationShown, setConfirmationShown] = useState()
     const [showModal, setShowModal] = useState(false)
     const [recipeImage, setRecipeImage] = useState(new Blob())
     const [summary, setSummary] = useState('')
@@ -54,8 +54,9 @@ function Create({
         { key: keys[1], value:{ contentType: 'Description Text' } }
     ])
     
-    function navigateToHome() {
-        navigate('/home')
+    function navigateToDestination() {
+        setConfirmation({ show: '', destination: '' })
+        navigate(confirmation.destination)
     }
 
     function addElement(contentType) {
@@ -153,7 +154,7 @@ function Create({
                     <div className="p-3 pb-0">
                         <div className="grid gap-3 w-full min-h-16 pointer-events-none" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                             {/* publish/create navbar `*/}
-                            <button className="col-span-2 items-center gap-4 bg-zinc-900 pointer-events-auto flex flex-row justify-center w-full h-full rounded-3xl overflow-hidden hover:bg-zinc-500" onClick={ () => { setConfirmationShown("exit") } }>
+                            <button className="col-span-2 items-center gap-4 bg-zinc-900 pointer-events-auto flex flex-row justify-center w-full h-full rounded-3xl overflow-hidden hover:bg-zinc-500" onClick={ () => { setConfirmation({ shown: "exit", destination: "/home" }) } }>
                                 <img className="px-4 w-48 " src={ LogoGradient }alt="" />
                             </button>
                             <div className="col-span-2 pointer-events-auto">
@@ -229,6 +230,7 @@ function Create({
                                         elementTexts={ elementTexts } setElementTexts={ setElementTexts } 
                                         elementFiles={ elementFiles } setElementFiles={ setElementFiles }
                                         recipeElements={ recipeElements } setRecipeElements={ setRecipeElements }
+                                        screenSize={ screenSize }
                                     />
                                 )
                             }
@@ -239,15 +241,6 @@ function Create({
                             </button>
                         </div>     
                     </div>
-                    {/* confirm modal */}
-                    {
-                        confirmationShown === "exit" &&
-                        <ConfirmModal 
-                            setShowModal={ setConfirmationShown } confirmAction={ navigateToHome }
-                            headerText={ "Confirm Exit" } bodyText={ "Are you sure you want to exit? You will lose all your progress." }
-                            icon={ BackIcon } isDanger={ true }
-                        />
-                    }
                     {
                         publishState &&
                         <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-y-scroll scrollable-div"
@@ -303,6 +296,17 @@ function Create({
                             </div>
                         </div>
                     }
+                </div>
+            }
+            {/* confirm modal */}
+            {
+                confirmation.shown === "exit" &&
+                <div className="absolute z-[70] h-screen w-screen">
+                    <ConfirmModal 
+                        setShowModal={ setConfirmation } confirmAction={ navigateToDestination }
+                        headerText={ "Confirm Exit" } bodyText={ "Are you sure you want to exit? You will lose all your progress for this recipe." }
+                        icon={ BackIcon } isDanger={ true } screenSize={ screenSize }
+                    />
                 </div>
             }
             {/* add element modal */}

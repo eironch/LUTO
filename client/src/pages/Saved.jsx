@@ -239,7 +239,7 @@ function Saved({
                     <ConfirmModal 
                         setShowModal={ setConfirmationShown } confirmAction={ handleLogOut }
                         headerText={ "Confirm Log Out" } bodyText={ "Are you sure you want to log out?" }
-                        icon={ LogOutIcon } isDanger={ true }
+                        icon={ LogOutIcon } isDanger={ true } screenSize={ screenSize }
                     />
                 }
             </div>

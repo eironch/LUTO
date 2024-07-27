@@ -1,20 +1,18 @@
 import React from 'react'
 
-function ConfirmModal(p) {
-    const setShowModal = p.setShowModal
-    const confirmAction = p.confirmAction
-    const title = p.title
-    const headerText = p.headerText
-    const bodyText = p.bodyText
-    const icon = p.icon
-    const isDanger = p.isDanger
-
+function ConfirmModal({
+    setShowModal, confirmAction,
+    title, headerText,
+    bodyText, icon,
+    isDanger, screenSize
+}) {
     return (
-        <div className="absolute inset-0 grid place-items-center h-screen pt-3  text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-y-scroll scrollable-div" 
+        <div className="absolute inset-0 flex xl:grid place-items-center h-screen p-3 text-zinc-100 bg-zinc-950 bg-opacity-70 pointer-events-auto" 
             onMouseDownCapture={ e => { 
-                // if (screenSize < 4) {
-                //     return
-                // } 
+                    if (screenSize < 4) {
+                        return
+                    } 
+
                     const isOutsideModal = !e.target.closest('.model-inner')
 
                     if (isOutsideModal) {
@@ -23,7 +21,7 @@ function ConfirmModal(p) {
                 } 
             }
         >
-            <div className="flex flex-col gap-3 justify-center items-center w-5/12 overflow-hidden model-inner">
+            <div className="flex flex-col gap-3 justify-center items-center w-full md:w-10/12 xl:w-5/12 overflow-hidden model-inner">
                 {
                     title &&
                     <p className="px-6 text-2xl font-semibold text-ellipsis line-clamp-1">{ title }</p>

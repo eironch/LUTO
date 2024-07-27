@@ -19,6 +19,7 @@ import NavbarBot from './components/NavbarBot'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState()
+  const [confirmation, setConfirmation] = useState({ shown: '', destination: '' })
   const [isLoading, setIsLoading] = useState(true) 
   const [user, setUser] = useState({ username: '', userId: '', profilePicture: '', bio: ''})
   const [modalMessage, setModalMessage] = useState('')
@@ -370,7 +371,8 @@ function App() {
                   <Create
                     user={ user } currentTab={ currentTab } 
                     setCurrentTab={ setCurrentTab } systemTags={ systemTags }
-                    screenSize={ screenSize }
+                    screenSize={ screenSize } confirmation={ confirmation } 
+                    setConfirmation={ setConfirmation }
                   />
                 } 
               />
@@ -411,7 +413,10 @@ function App() {
             </Routes>
             {
               screenSize <= 3 &&
-              <NavbarBot user={ user } currentTab={ currentTab } />
+              <NavbarBot 
+                user={ user } currentTab={ currentTab } 
+                setConfirmation={ setConfirmation }
+              />
             }
         </>
         :

@@ -124,7 +124,7 @@ function SidebarTab({
                                 <div className="absolute flex ml-4 left-0 right-0 items-start justify-left pointer-events-none">
                                     <img className="w-6" src={ SearchIcon } alt="" />
                                 </div>
-                                <input className="w-full px-14 h-10 rounded-3xl bg-transparent text-zinc-100 text-start"
+                                <input className="w-full pl-14 h-10 rounded-3xl bg-transparent text-zinc-100 text-start"
                                     value={ searchValue } onChange={ e => setSearchValue(e.target.value) } type="text" placeholder="Search tags"
                                 />
                             </div>
@@ -132,7 +132,8 @@ function SidebarTab({
                             <div className="font-semibold gap-3">
                                 {
                                     tagChoices.map((tag, index) => {
-                                        let isAdded 
+                                        let isAdded
+
                                         if (filters) {
                                         isAdded = filters.find(recipeTag => recipeTag === tag)
                                         } else {

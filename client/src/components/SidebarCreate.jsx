@@ -20,7 +20,7 @@ function SidebarCreate({
     ingredients, setIngredients,
     tags, setTags,
     systemTags, title,
-    setTitle
+    setTitle, screenSize
 }) {
     const [preRecipeImage, setPreRecipeImage] = useState()
     const [searchValue, setSearchValue] = useState('')
@@ -138,13 +138,16 @@ function SidebarCreate({
             <div className="flex overflow-x-hidden overflow-y-scroll h-full py-[5.75rem] xl:py-0 scrollable-div flex-col text-zinc-100 col-span-4 pointer-events-auto">
                 {/* recipe image */}
                 <div className="mb-3 rounded-3xl bg-zinc-900">
-                    <div className="flex flex-col items-center w-full py-6 px-3 rounded-3xl bg-zinc-900">
-                        <Textarea 
-                            attribute={`${ !title && "pt-2.5 border border-red-600 bg-zinc-600" } px-3 text-2xl md:3xl xl:text-4xl font-bold w-full text-center focus:bg-zinc-600 bg-transparent`} 
-                            maxLength={ 200 } value={ title } setValue={ setTitle } 
-                            placeholder="What is the title of your recipe?" 
-                        />
-                    </div>
+                    {
+                        screenSize < 4 &&
+                        <div className="flex flex-col items-center w-full py-6 px-3 rounded-3xl bg-zinc-900">
+                            <Textarea 
+                                attribute={`${ !title && "pt-2.5 border border-red-600 bg-zinc-600" } px-3 text-2xl md:3xl xl:text-4xl font-bold w-full text-center focus:bg-zinc-600 bg-transparent`} 
+                                maxLength={ 200 } value={ title } setValue={ setTitle } 
+                                placeholder="What is the title of your recipe?" 
+                            />
+                        </div>
+                    }
                     <div className="p-2 rounded-3xl bg-gradient-to-tr from-orange-500 to-orange-400">
                         <div className="relative w-full h-auto aspect-w-2 aspect-h-2">
                             {

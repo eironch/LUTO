@@ -179,7 +179,7 @@ function Profile({
                 {/* content */}
                 <div className="flex xl:grid w-full h-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                     <div className="hidden xl:block xl:col-span-4"></div>
-                    <div className={`${ screenSize <= 3 ? "mb-20" : "mb-3" } w-full xl:col-span-11 block`}>
+                    <div className={`${ screenSize <= 3 ? "mb-[5.75rem]" : "mb-3" } w-full xl:col-span-11 block`}>
                         { 
                             userRecipes &&
                             userRecipes.length > 0 &&
@@ -232,7 +232,7 @@ function Profile({
                         setShowModal={ setConfirmationShown } confirmAction={ removeRecipe }
                         title={ prevTitle } headerText={ "Confirm Removal" }
                         bodyText={ "Make sure to thoroughly check whether it goes against our content policy. By removing this, your user ID will be saved as the remover." }
-                        icon={ RemoveIcon } isDanger={ true }
+                        icon={ RemoveIcon } isDanger={ true } screenSize={ screenSize }
                     />
                 }
                 {
@@ -241,7 +241,7 @@ function Profile({
                         setShowModal={ setConfirmationShown } confirmAction={ allowRecipe }
                         title={ prevTitle } headerText={ "Confirm Clearance" } 
                         bodyText={ "Make sure to thoroughly check whether it is in adherance with our content policy." }
-                        icon={ AllowIcon } isDanger={ false }
+                        icon={ AllowIcon } isDanger={ false } screenSize={ screenSize }
                     />
                 }
             </div>
