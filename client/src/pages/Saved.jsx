@@ -210,9 +210,9 @@ function Saved({
                                 savedRecipes &&
                                 (isFetching || !isFetchedAll && (savedRecipes.length > 10 || savedRecipes.length === 0)) &&
                                 <>
-                                    <RecipeSuspense />
-                                    <RecipeSuspense />
-                                    <RecipeSuspense />
+                                    <RecipeSuspense screenSize={ screenSize } />
+                                    <RecipeSuspense screenSize={ screenSize } />
+                                    <RecipeSuspense screenSize={ screenSize } />
                                 </>
                             }
                         </div>

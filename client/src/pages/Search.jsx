@@ -207,9 +207,9 @@ function Search({
                             :
                             isFetchingRecipes ?
                             <div className="col-span-11 flex flex-col w-full h-full rounded-3xl text-zinc-100">
-                                <RecipeSuspense />
-                                <RecipeSuspense />
-                                <RecipeSuspense />
+                                <RecipeSuspense screenSize={ screenSize } />
+                                <RecipeSuspense screenSize={ screenSize } />
+                                <RecipeSuspense screenSize={ screenSize } />
                             </div>
                             :
                             searchedRecipes !== undefined &&

@@ -234,9 +234,9 @@ function Home({
                             {
                                 (isFetching || !isFetchedAll && (feedRecipes.length > 10 || feedRecipes.length === 0)) &&
                                 <>
-                                    <RecipeSuspense />
-                                    <RecipeSuspense />
-                                    <RecipeSuspense />
+                                    <RecipeSuspense screenSize={ screenSize } />
+                                    <RecipeSuspense screenSize={ screenSize } />
+                                    <RecipeSuspense screenSize={ screenSize } />
                                 </>
                             }
                         </div>

@@ -207,9 +207,9 @@ function Profile({
                             userRecipes &&
                             (isFetching || (!isFetchedAll && (userRecipes.length > 10 || userRecipes.length === 0))) &&
                             <>
-                                <RecipeSuspense />
-                                <RecipeSuspense />
-                                <RecipeSuspense />
+                                <RecipeSuspense screenSize={ screenSize } />
+                                <RecipeSuspense screenSize={ screenSize } />
+                                <RecipeSuspense screenSize={ screenSize } />
                             </>
                         }
                     </div>

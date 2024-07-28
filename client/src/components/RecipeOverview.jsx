@@ -133,13 +133,13 @@ function RecipeOverview({
                                 { title }
                             </p>
                         }
-                        <div className="relative z-100 flex h-full justify-center items-center text-zinc-100">
+                        <div className="relative flex h-full justify-center items-center text-zinc-100">
                             <button className="w-10 h-10 text-lg rounded-3xl hover:bg-zinc-500" onClick={ () => handleShowMoreModal() } ref={ mobileButtonRef }>
                                 •••
                             </button>
                             {
                                 moreModalShown === recipeId &&
-                                <div className="absolute flex py-3 mt-28 mr-24 w-36 rounded-3xl bg-zinc-600 shadow-md shadow-zinc-950 overflow-hidden">
+                                <div className="absolute z-10 flex py-3 mt-28 mr-24 w-36 rounded-3xl bg-zinc-600 shadow-md shadow-zinc-950 overflow-hidden">
                                     <button className="p-3 w-full text-left font-semibold text-red-600 hover:bg-zinc-500" onClick={ () => flagRecipe() }>
                                         Flag Content
                                     </button>
@@ -160,7 +160,7 @@ function RecipeOverview({
                     </div>
                 </div>
                 {/* recipe image */}
-                <Link to={`/recipe/${ recipeId }`}  className="flex col-span-4 rounded-3xl p-2 shadow-zinc-950 shadow-right bg-gradient-to-br from-orange-600 to-orange-400">
+                <Link to={`/recipe/${ recipeId }`}  className="relative z-0 flex col-span-4 rounded-3xl p-2 shadow-zinc-950 shadow-right bg-gradient-to-br from-orange-600 to-orange-400">
                     <div className="w-full aspect-w-1 aspect-h-1 overflow-hidden">
                         <img className="w-full h-full rounded-3xl object-cover" src={ recipeImage } alt="" />
                     </div>

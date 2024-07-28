@@ -170,9 +170,9 @@ function Popular({
                                 popularRecipes &&
                                 (popularRecipes.length > 10 || popularRecipes.length === 0) &&
                                 <>
-                                    <RecipeSuspense />
-                                    <RecipeSuspense />
-                                    <RecipeSuspense />
+                                    <RecipeSuspense screenSize={ screenSize } />
+                                    <RecipeSuspense screenSize={ screenSize } />
+                                    <RecipeSuspense screenSize={ screenSize } />
                                 </>
                             }
                         </div>
