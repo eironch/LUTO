@@ -75,7 +75,7 @@ function SidebarRecipe({
                         </div>
                     </div>
                     <div className="grid grid-cols-2 p-3">
-                        <div className="flex">
+                        <div className="flex black">
                             <button className="flex gap-3 p-3 px-4 items-center justify-start rounded-3xl hover:bg-zinc-500" onClick={ () => scrollToBottom() }>
                                 <div className="flex flex-row gap-3 items-center text-lg font-semibold">
                                     <img className="min-w-10 w-10" src={ FeedbackIcon } alt="" />
@@ -86,10 +86,10 @@ function SidebarRecipe({
                                 </div>
                             </button>
                         </div>
-                        <div className="flex justify-end items-end w-full overflow-hidden">
+                        <div className="flex justify-end items-end w-full black overflow-hidden">
                             <PointSection 
                                 handleGivePoint={ handleGivePoint } pointStatus={ pointStatus }
-                                points={ points }
+                                points={ points } screenSize={ screenSize }
                             />
                         </div>
                     </div>

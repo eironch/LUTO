@@ -119,7 +119,7 @@ function Recipe({
                 </div>
             }
             {
-                recipeTabShown === "Overview" && screenSize < 3 &&
+                recipeTabShown === "Overview" && screenSize < 4 &&
                 <SidebarRecipe
                     user={ user } recipeId={ recipeId || null }
                     summary={ summary || null } recipeImage={ recipeImage || null }
@@ -134,7 +134,7 @@ function Recipe({
                 />   
             }
             {
-                (recipeTabShown === "Instructions" || screenSize > 2) &&
+                (recipeTabShown === "Instructions" || screenSize > 3) &&
                 <div className={`${ screenSize > 2 ? "scrollable-div" : "pr-3 hide-scrollbar" } flex flex-col gap-3 pl-3 pb-[5.75rem] xl:pb-0 pt-[5.75rem] xl:pt-0 h-dvh bg-zinc-950 overflow-y-scroll`} ref={ scrollDivRef }>
                     <div className="flex xl:grid w-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {

@@ -102,6 +102,10 @@ function SidebarProfile({
                                 { followCount } followers
                             </p>
                         }
+                        {
+                            followCount === undefined &&
+                            <p className="h-7 rounded-3xl bg-zinc-600"></p>
+                        }
                     </div>
                 </div>
                 {/* bio */}
@@ -112,6 +116,13 @@ function SidebarProfile({
                         <p className="w-full">
                             { authorBio }                        
                         </p>
+                    </div>
+                }
+                {
+                    !authorBio &&
+                    <div className="flex flex-col gap-3 pt-6 pb-3 px-3 rounded-3xl bg-zinc-900">
+                        <p className="px-3 text-2xl font-semibold">Bio</p>
+                        <p className="h-16 rounded-3xl bg-zinc-600"></p>
                     </div>
                 }
                 {/* followers */}
@@ -130,6 +141,13 @@ function SidebarProfile({
                                 )
                             }
                         </div>
+                    </div>
+                }
+                {
+                    !followers &&
+                    <div className="flex flex-col gap-3 p-3 pb-0 rounded-3xl bg-zinc-900">
+                        <p className="text-2xl px-3 pt-3 font-semibold">Followers</p>
+                        <div className="h-[5.5rem] mb-3 bg-zinc-600 rounded-3xl"></div>
                     </div>
                 }
             </div>

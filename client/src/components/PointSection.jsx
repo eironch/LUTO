@@ -5,11 +5,10 @@ import GivenPointNegativeIcon from '../assets/given-point-negative-icon.svg'
 import GivePointPositiveIcon from '../assets/give-point-positive-icon.svg'
 import GivenPointPositiveIcon from '../assets/given-point-positive-icon.svg'
 
-function PointSection(p) {
-    const handleGivePoint = p.handleGivePoint
-    const pointStatus = p.pointStatus
-    const points = p.points
-    
+function PointSection({
+    handleGivePoint, pointStatus,
+    points, screenSize
+}) {
     return (
         <div className="flex justify-end items-center h-fit rounded-3xl bg-zinc-600">
             <button className="flex justify-end items-center p-3 rounded-3xl hover:bg-zinc-500" onClick={ () => { handleGivePoint("negative") } }>
@@ -19,11 +18,19 @@ function PointSection(p) {
                 { 
                     points ?
                     <>
-                        { points }<p className="hidden sm:block">&nbsp;pts.</p>
+                        { points }
+                        {
+                            screenSize > 0 &&
+                            <>&nbsp;pts.</>
+                        }
                     </>
                     :
                     <>
-                        0<p className="hidden sm:block">&nbsp;pts.</p>
+                        0
+                        {
+                            screenSize > 0 &&
+                            <>&nbsp;pts.</>
+                        }
                     </>
                 }
             </div>

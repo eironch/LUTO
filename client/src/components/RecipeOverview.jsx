@@ -185,7 +185,7 @@ function RecipeOverview({
                             user.accountType === "user" || currentTab === "Popular" || currentTab === "Saved" ?
                             <PointSection 
                                 handleGivePoint={ handleGivePoint } pointStatus={ pointStatus }
-                                points={ points }
+                                points={ points } screenSize={ screenSize }
                             />
                             :
                             <div className="flex justify-end items-center rounded-3xl bg-zinc-600">
@@ -262,7 +262,7 @@ function RecipeOverview({
                                 user.accountType === "user" || currentTab === "Popular" || currentTab === "Saved" ?
                                 <PointSection 
                                     handleGivePoint={ handleGivePoint } pointStatus={ pointStatus }
-                                    points={ points }
+                                    points={ points } screenSize={ screenSize }
                                 />
                                 :
                                 <div className="flex justify-end items-center rounded-3xl bg-zinc-600">
