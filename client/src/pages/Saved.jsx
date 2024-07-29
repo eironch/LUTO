@@ -8,6 +8,7 @@ import RecipeOverview from '../components/RecipeOverview'
 import FeedbackModal from '../components/FeedbackModal'
 import RecipeSuspense from '../components/RecipeSuspense'
 import ConfirmModal from '../components/ConfirmModal'
+import NavbarTop from '../components/NavbarTop'
 
 import LogOutIcon from '../assets/log-out-icon.svg'
 import ProfileIcon from '../assets/profile-icon.svg'
@@ -19,7 +20,8 @@ function Saved({
     handleLogOut, systemTags,
     filters, setFilters,
     filtersRef, handleGiveRecipePoint,
-    screenSize
+    screenSize, searchQuery,
+    setSearchQuery
 }) {
     const [savedRecipes, setSavedRecipes] = useState([])
     const [isFeedbacksShown, setIsFeedbacksShown] = useState(false)
@@ -31,6 +33,9 @@ function Saved({
     const [fetchedRecipeIds, setFetchedRecipeIds] = useState([])
     const [isFetching, setIsFetching] = useState(false)
     const [isFetchedAll, setIsFetchedAll] = useState(false)
+    const [isNavbarTopShown, setIsNavbarTopShown] = useState(true)
+    const [isFilterShown, setIsFilterShown] = useState(false)
+
     const scrollDivRef = useRef(null)
 
     function fetchSavedRecipes(filters) {
@@ -73,17 +78,13 @@ function Saved({
         }, 300), []
     )
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         filtersRef.current = filters
     }, [filters])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         debouncedFetch()
     }, [filters, debouncedFetch])
-
-    useLayoutEffect(() => {
-        setCurrentTab('Saved')
-    }, [])
 
     useEffect(() => {
         const scrollDiv = scrollDivRef.current
@@ -105,13 +106,19 @@ function Saved({
             scrollDiv.removeEventListener('scroll', handleScroll)
         }
     })
+
+    useLayoutEffect(() => {
+        setCurrentTab('Saved')
+        
+        return () => setIsFeedbacksShown(false)
+    }, [])
     
     if (currentTab !== 'Saved') {
         return
     }
 
     return (
-        <div className={`${ screenSize > 2 ? "scrollable-div" : "pr-3 hide-scrollbar" } h-screen overflow-y-scroll`} ref={ scrollDivRef }>
+        <div className={`${ screenSize > 3 ? "scrollable-div" : "pr-3 hide-scrollbar" } h-screen overflow-y-scroll`} ref={ scrollDivRef }>
             {/* navbar */}
             {
                 screenSize > 3 &&
@@ -153,38 +160,36 @@ function Saved({
                 </div>
             }
             <div className="flex flex-col pr-0 gap-3 h-dvh">
-                <div className="flex flex-col p-3 pr-0 pb-20 xl:pb-0">
+                <div className="flex flex-col p-3 pr-0 py-[4.75rem] xl:py-0">
                     {/* space for top navbar */}
-                    <div className="flex xl:grid w-full xl:h-16" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
-                        {
-                            screenSize > 3 &&
+                    {
+                        screenSize > 3 &&
+                        <div className="flex xl:grid w-full" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                             <div className="col-span-2"></div>
-                        }
-                        <div className="w-full col-span-11 xl:h-16 p-6 xl:p-3 rounded-3xl bg-zinc-900">
-                            <div className="flex w-full gap-3 items-center text-zinc-100 text-3xl font-bold rounded-3xl">
-                                <div className="flex pl-6 xl:pl-9 w-full h-full items-center">
-                                    Saved Recipes
-                                </div>
-                                <div className="flex pr-9 xl:pr-12 h-full justify-end items-center">
-                                    {
-                                        (savedRecipes && savedRecipes.length > 0) &&
-                                        savedRecipes.length
-                                    }
+                            <div className="w-full col-span-11">
+                                <div className="h-16 my-3 rounded-3xl bg-zinc-900"></div>
+                                <div className="flex w-full gap-3 py-6 items-center text-zinc-100 text-3xl font-bold rounded-3xl bg-zinc-900">
+                                    <div className="flex pl-6 xl:pl-9 w-full h-full items-center">
+                                        Saved Recipes
+                                    </div>
+                                    <div className="flex pr-9 xl:pr-12 h-full justify-end items-center">
+                                        {
+                                            (savedRecipes && savedRecipes.length > 0) &&
+                                            savedRecipes.length
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        {
-                            screenSize > 3 &&
                             <div className="col-span-2"></div>
-                        }    
-                    </div>
+                        </div>
+                    }
                     {/* content */}
-                    <div className="flex xl:grid w-full h-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+                    <div className="flex xl:grid w-full h-full -mt-3 xl:mt-0 gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
                             screenSize > 3 &&
                             <div className="col-span-2"></div>
                         }
-                        <div className="w-full col-span-11 block mb-3">
+                        <div className="w-full col-span-11 block xl:mb-3">
                             {
                                 savedRecipes &&
                                 savedRecipes.length > 0 &&
@@ -208,7 +213,7 @@ function Saved({
                             }
                             {
                                 savedRecipes &&
-                                (isFetching || !isFetchedAll && (savedRecipes.length > 10 || savedRecipes.length === 0)) &&
+                                (isFetching || (!isFetchedAll && (savedRecipes.length > 10 || savedRecipes.length === 0))) &&
                                 <>
                                     <RecipeSuspense screenSize={ screenSize } />
                                     <RecipeSuspense screenSize={ screenSize } />
@@ -222,6 +227,14 @@ function Saved({
                         }
                     </div>
                 </div>
+                {/* navbar top */} 
+                <NavbarTop 
+                    searchQuery={ searchQuery } setSearchQuery={ setSearchQuery } 
+                    scrollDivRef={ scrollDivRef } screenSize={ screenSize }
+                    isFilterShown={ isFilterShown } setIsFilterShown={ setIsFilterShown }
+                    isNavbarTopShown={ isNavbarTopShown } setIsNavbarTopShown={ setIsNavbarTopShown }
+                    currentTab={ currentTab } savedRecipeCount={ savedRecipes.length }
+                />
                 {/* feedbacks modal */}
                 {
                     isFeedbacksShown &&

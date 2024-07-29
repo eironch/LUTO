@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import RemoveIcon from '../assets/remove-icon.svg'
 
 function CustomTextarea(p) {
@@ -20,7 +20,7 @@ function CustomTextarea(p) {
         }
     }
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         autoResize()
 
         function handleResize() {
@@ -105,7 +105,7 @@ function ImageCarousel(p) {
     const [isNewAdded, setIsNewAdded] = useState(false)
     const elementFiles = values.find(element => element.key === keyIndex)
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (divRef.current && isNewAdded) {
             divRef.current.scrollLeft = divRef.current.scrollWidth
             setIsNewAdded(false)

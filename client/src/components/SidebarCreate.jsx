@@ -13,6 +13,7 @@ import IngredientsIcon from '../assets/ingredients-icon.svg'
 import SummaryIcon from '../assets/summary-icon.svg'
 import GivePointNegativeIcon from '../assets/give-point-negative-icon.svg'
 import GivePointPositiveIcon from '../assets/give-point-positive-icon.svg'
+import RemoveIcon from '../assets/remove-icon.svg'
 
 function SidebarCreate({
     user, setRecipeImage,
@@ -135,7 +136,7 @@ function SidebarCreate({
     
     return (
         <div className="pl-3 flex xl:grid w-full h-full overflow-hidden" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
-            <div className="flex overflow-x-hidden overflow-y-scroll h-full py-[5.75rem] xl:py-0 scrollable-div flex-col text-zinc-100 col-span-4 pointer-events-auto">
+            <div className={`${ screenSize > 3 ? "scrollable-div" : "pr-3 hide-scrollbar" } flex h-full py-[4.75rem] xl:py-0 flex-col text-zinc-100 col-span-4 pointer-events-auto overflow-x-hidden overflow-y-scroll`}>
                 {/* recipe image */}
                 <div className="mb-3 rounded-3xl bg-zinc-900">
                     {
@@ -245,7 +246,7 @@ function SidebarCreate({
                     {
                         tags &&
                         tags.length > 0 &&
-                        <div className="block px-6 text-md font-semibold w-full">
+                        <div className="block px-5 text-md font-semibold w-full">
                             {
                                 tags.map((tag, index) => 
                                     <button className="m-1 px-3 py-1 w-fit bg-zinc-600 rounded-3xl hover:bg-zinc-500" key={ index } id={ index } onClick={ e => { removeTag(e) } }>
@@ -273,10 +274,18 @@ function SidebarCreate({
                             <input className="w-full h-10 px-14 rounded-3xl bg-transparent text-zinc-100 text-start"
                                 value={ searchValue } onChange={ e => setSearchValue(e.target.value) } type="text" placeholder="Search tags"
                             />
+                            {
+                                searchValue &&
+                                <div className="absolute flex mr-4 pr-2 w-full justify-end pointer-events-none">
+                                    <button className="p-2 rounded-3xl hover:bg-zinc-500 pointer-events-auto" onClick={ () => setSearchValue('') }>
+                                        <img className="w-4" src={ RemoveIcon } alt=""/>
+                                    </button>
+                                </div>
+                            }
                         </div>
                     </div>
                     {/* tags */}
-                    <div className="block px-6 pb-6 text-md font-semibold w-full">
+                    <div className="block px-5 pb-5 text-md font-semibold w-full">
                         {
                             tags &&
                             tagChoices.map((tag, index) => {
@@ -318,7 +327,7 @@ function IngredientForm({
             <p className="flex items-center px-3 text-2xl font-bold">
                 •
             </p>
-            <input className={`${ value === "" ? index === ingredients.length - 1 ? "bg-zinc-600 border border-red-600" : "bg-zinc-600" : "bg-zinc-900" } p-3 w-full rounded-3xl focus:bg-zinc-600 hover:bg-zinc-600`} 
+            <input className={`${ value === "" ? !ingredients.some(ingredient => ingredient.value !== "") ? "bg-zinc-600 border border-red-600" : "bg-zinc-600" : "bg-zinc-900" } p-3 w-full rounded-3xl focus:bg-zinc-600 hover:bg-zinc-600`} 
                 value={ ingredientValue } onChange={ e => e.target.value.length <= 30 && setIngredientValue(e.target.value) } 
                 placeholder="What Ingredient?" onKeyDown={ e => handleKeyDown(e, index, refIndex) }
                 ref={ refs.current[refIndex] }

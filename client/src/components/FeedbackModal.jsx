@@ -9,7 +9,7 @@ function FeedbackModal({
     currentTab, screenSize
 }) {
     return (
-        <div className="absolute z-30 grid place-items-center w-screen h-screen pl-3 pt-3 pb-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-x-hidden overflow-y-scroll scrollable-div pointer-events-auto" 
+        <div className="absolute z-30 grid place-items-center w-screen h-screen pl-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-x-hidden overflow-y-scroll scrollable-div pointer-events-auto" 
             onMouseDownCapture={e => {
                     if (screenSize < 4) {
                         return
@@ -23,8 +23,8 @@ function FeedbackModal({
                 } 
             }
         >
-            <div className="flex justify-center min-w-0 w-full h-full xl:-mr-3 xl:p-0 pt-20 pb-44 xl:py-0 items-center">
-                <div className="flex flex-col gap-3 justify-center items-center w-full overflow-hidden">
+            <div className="flex justify-center min-w-0 w-full h-full xl:-mr-3 py-[4.75rem] xl:py-0 items-center">
+                <div className="flex flex-col gap-3 xl:mt-3 justify-center items-center w-full overflow-hidden">
                         <p className="text-xl xl:text-2xl font-semibold text-ellipsis line-clamp-1">
                             { title }
                         </p>

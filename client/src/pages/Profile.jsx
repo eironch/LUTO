@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react'
+import React, { useState, useRef, useLayoutEffect, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 
@@ -121,7 +121,7 @@ function Profile({
         }
     })
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         fetchedRecipeIdsRef.current = fetchedRecipeIds
     }, [fetchedRecipeIds])
 
@@ -132,12 +132,11 @@ function Profile({
         setIsFeedbacksShown(false)
     }, [authorName])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setCurrentTab('Profile')
         setUserRecipes([])
-        return () => {
-            setIsFeedbacksShown(false)
-        }
+        
+        return () => setIsFeedbacksShown(false)
     }, [])
 
     if (currentTab !== 'Profile') {
@@ -145,7 +144,7 @@ function Profile({
     }
 
     return (
-       <div className={`${ screenSize > 2 ? "scrollable-div" : "pr-3 hide-scrollbar" } h-screen overflow-y-scroll`} ref={ scrollDivRef }>
+       <div className={`${ screenSize > 3 ? "scrollable-div" : "pr-3 hide-scrollbar" } h-screen overflow-y-scroll`} ref={ scrollDivRef }>
             {/* navbar */}
             {
                 screenSize <= 3 ?
@@ -178,8 +177,11 @@ function Profile({
             <div className="flex flex-col p-3 pb-0 pt-0 pr-0 bg-zinc-950">
                 {/* content */}
                 <div className="flex xl:grid w-full h-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
-                    <div className="hidden xl:block xl:col-span-4"></div>
-                    <div className={`${ screenSize <= 3 ? "mb-[5.75rem]" : "mb-3" } w-full xl:col-span-11 block`}>
+                    {
+                        screenSize > 3 &&
+                        <div className="col-span-4"></div>
+                    }
+                    <div className="pb-[4.75rem] xl:pb-3 w-full xl:col-span-11">
                         { 
                             userRecipes &&
                             userRecipes.length > 0 &&

@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { debounce } from 'lodash'
 
@@ -10,6 +10,7 @@ import SettingsIcon from '../assets/settings-icon.svg'
 import FilterIcon from '../assets/filter-icon.svg'
 import SearchIcon from '../assets/search-icon.svg'
 import LogOutIcon from '../assets/log-out-icon.svg'
+import RemoveIcon from '../assets/remove-icon.svg'
 
 function SidebarTab({ 
     currentTab, systemTags, 
@@ -49,11 +50,11 @@ function SidebarTab({
         setTagChoices(systemTags)
     }
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         handleTagSearch(searchValue)
     }, [searchValue])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         handlePopularTags()
     }, [])
 
@@ -103,8 +104,8 @@ function SidebarTab({
                     {/* selected tags */}
                     {
                         filters &&
-                        <div className="flex flex-col pl-6 pr-3 pt-3 pb-6 gap-3 scrollable-div overflow-y-scroll overflow-x-hidden">
-                            <div className="font-semibold gap-3">
+                        <div className="flex flex-col pt-3 gap-3 scrollable-div overflow-y-scroll overflow-x-hidden">
+                            <div className="font-semibold pl-2 gap-3">
                                 {
                                     filters.map((tag, index) => 
                                         <button className="m-1 px-3 py-1 w-fit bg-zinc-600 rounded-3xl hover:bg-zinc-500" key={ index } id={ index } onClick={ e => { removeTag(e) } }>
@@ -113,23 +114,33 @@ function SidebarTab({
                                     )
                                 }
                             </div>
-                            {
-                                filters.length > 0 &&
-                                <button className="px-3 py-2 text-red-500 font-semibold rounded-3xl shadow-md shadow-zinc-950 bg-zinc-600 hover:bg-zinc-500" onClick={ () => setFilters([]) }>
-                                    Clear filters
-                                </button>
-                            }
-                            {/* search input */}
-                            <div className="relative flex w-full items-center justify-center shadow-md shadow-zinc-950 rounded-3xl bg-zinc-600">
-                                <div className="absolute flex ml-4 left-0 right-0 items-start justify-left pointer-events-none">
-                                    <img className="w-6" src={ SearchIcon } alt="" />
+                            <div className="pl-3 pr-0.5">
+                                {
+                                    filters.length > 0 &&
+                                    <button className="w-full px-3 py-2 mb-3 text-red-500 font-semibold rounded-3xl shadow-md shadow-zinc-950 bg-zinc-600 hover:bg-zinc-500" onClick={ () => setFilters([]) }>
+                                        Clear filters
+                                    </button>
+                                }
+                                {/* search input */}
+                                <div className="relative z-30 flex w-full items-center justify-center shadow-md shadow-zinc-950 rounded-3xl bg-zinc-600">
+                                    <div className="absolute flex ml-4 left-0 right-0 items-start justify-left pointer-events-none">
+                                        <img className="w-6" src={ SearchIcon } alt="" />
+                                    </div>
+                                    <input className="w-full px-14 h-10 rounded-3xl bg-transparent text-zinc-100 text-start"
+                                        value={ searchValue } onChange={ e => setSearchValue(e.target.value) } type="text" placeholder="Search tags"
+                                    />
+                                    {
+                                        searchValue &&
+                                        <div className="absolute flex mr-4 pr-2 w-full justify-end pointer-events-none">
+                                            <button className="p-2 rounded-3xl hover:bg-zinc-500 pointer-events-auto" onClick={ () => setSearchValue('') }>
+                                                <img className="w-4" src={ RemoveIcon } alt=""/>
+                                            </button>
+                                        </div>
+                                    }
                                 </div>
-                                <input className="w-full pl-14 h-10 rounded-3xl bg-transparent text-zinc-100 text-start"
-                                    value={ searchValue } onChange={ e => setSearchValue(e.target.value) } type="text" placeholder="Search tags"
-                                />
                             </div>
                             {/* tags */}
-                            <div className="font-semibold gap-3">
+                            <div className="font-semibold pl-2 mb-3 gap-3">
                                 {
                                     tagChoices.map((tag, index) => {
                                         let isAdded

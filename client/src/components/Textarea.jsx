@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 
 function Textarea(p) {
     const textareaRef = useRef(null)
@@ -17,7 +17,7 @@ function Textarea(p) {
         }
     }
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         autoResize()
 
         function handleResize() {

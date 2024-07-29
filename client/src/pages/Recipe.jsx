@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useRef } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 
@@ -48,7 +48,7 @@ function Recipe({
             })
     }
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/get-recipe`, { params: { recipeId, userId: user.userId } })
             .then(res => {
                 console.log('Status Code:' , res.status)
@@ -135,17 +135,17 @@ function Recipe({
             }
             {
                 (recipeTabShown === "Instructions" || screenSize > 3) &&
-                <div className={`${ screenSize > 2 ? "scrollable-div" : "pr-3 hide-scrollbar" } flex flex-col gap-3 pl-3 pb-[5.75rem] xl:pb-0 pt-[5.75rem] xl:pt-0 h-dvh bg-zinc-950 overflow-y-scroll`} ref={ scrollDivRef }>
+                <div className={`${ screenSize > 3 ? "scrollable-div" : "pr-3 hide-scrollbar" } flex flex-col gap-3 pl-3 py-[4.75rem] xl:py-0 w-screen h-dvh bg-zinc-950 overflow-y-scroll`} ref={ scrollDivRef }>
                     <div className="flex xl:grid w-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
                             screenSize > 3 &&
                             <div className="col-span-4"></div>
                         }
-                        <div className="col-span-11 flex flex-col w-full rounded-3xl text-zinc-100">
-                            {
+                        <div className="xl:col-span-11 flex flex-col w-full xl:mb-3 -mt-3 xl:mt-0 rounded-3xl text-zinc-100">
+                        {
                                 title &&
                                 screenSize > 3 &&
-                                <div className="flex flex-col items-center w-full mb-3 mt-3 p-6 rounded-3xl bg-zinc-900">
+                                <div className="flex flex-col items-center w-full mt-3 p-6 rounded-3xl bg-zinc-900">
                                     <p className="text-2xl md:3xl xl:text-4xl font-bold w-full text-center">
                                         { title }
                                     </p>
@@ -157,7 +157,7 @@ function Recipe({
                                 recipeElements.map((element, key) => {
                                     if (element.contentType === "Section Header") {
                                         return (
-                                            <div className="py-6 px-3 flex flex-col gap-3 mb-3 rounded-3xl bg-zinc-900" key={ key }>
+                                            <div className="py-6 px-3 flex flex-col gap-3 mt-3 rounded-3xl bg-zinc-900" key={ key }>
                                                 <p className="px-3 text-3xl font-semibold w-full">
                                                     { element.text }
                                                 </p>
@@ -165,7 +165,7 @@ function Recipe({
                                         )
                                     } else if (element.contentType === "Description Text") {
                                         return (
-                                            <div className="py-6 px-3 flex flex-col gap-3 mb-3 rounded-3xl bg-zinc-900" key={ key }>
+                                            <div className="py-6 px-3 flex flex-col gap-3 mt-3 rounded-3xl bg-zinc-900" key={ key }>
                                                 <p className="px-3 text-xl w-full">
                                                     { element.text }
                                                 </p>
@@ -173,7 +173,7 @@ function Recipe({
                                         )
                                     } else if (element.contentType === "Image Carousel") {
                                         return (
-                                            <div className="pt-6 pb-3 px-6 flex flex-col justify-center items-center gap-3 mb-3 rounded-3xl overflow-hidden bg-zinc-900" key={ key }>
+                                            <div className="pt-6 pb-3 px-6 flex flex-col justify-center items-center gap-3 mt-3 rounded-3xl overflow-hidden bg-zinc-900" key={ key }>
                                                 <div className={`${ element.files.length > 2 ? "lg:justify-start" : "lg:justify-center" } flex flex-row w-full h-full gap-3 items-center overflow-x-scroll scrollable-div md:justify-start`}>
                                                     {
                                                         element.files.map((file, index) => (
@@ -199,11 +199,7 @@ function Recipe({
             {/* NavBar */} 
             {
                 screenSize < 4 &&
-                <NavbarRecipe
-                    scrollDivRef={ scrollDivRef } isNavbarRecipeShown={ isNavbarRecipeShown } 
-                    setIsNavbarRecipeShown={ setIsNavbarRecipeShown } recipeTabShown={ recipeTabShown } 
-                    setRecipeTabShown={ setRecipeTabShown }
-                />
+                <NavbarRecipe recipeTabShown={ recipeTabShown } setRecipeTabShown={ setRecipeTabShown }/>
             }
         </div>
     )

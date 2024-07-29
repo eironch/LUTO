@@ -11,7 +11,8 @@ function NavbarTop({
     searchQuery, setSearchQuery,
     scrollDivRef, screenSize,
     isFilterShown, setIsFilterShown,
-    isNavbarTopShown, setIsNavbarTopShown
+    isNavbarTopShown, setIsNavbarTopShown,
+    currentTab, savedRecipeCount
 }) {
     const [showSearch, setShowSearch] = useState(false)
     const [lastScrollY, setLastScrollY] = useState(0)
@@ -43,15 +44,11 @@ function NavbarTop({
     }
 
     useEffect(() => {
-        scrollDivRef.current.addEventListener('scroll', handleScroll)
+        const ref = scrollDivRef.current
+ 
+        ref.addEventListener('scroll', handleScroll)
         
-        return () => {
-            if (!scrollDivRef.current) {
-                return
-            }
-
-            scrollDivRef.current.removeEventListener('scroll', handleScroll)
-        }
+        return () => ref.removeEventListener('scroll', handleScroll)
     }, [lastScrollY])
 
     useEffect(() => {
@@ -61,21 +58,40 @@ function NavbarTop({
         
         searchRef.current.focus()
     }, [showSearch])
-
+    
     return (
         <div className="absolute z-40 xl:z-30 w-full h-dvh pointer-events-none">
-            <div className={`${ isNavbarTopShown ? "translate-y-0" : "-translate-y-full" } xl:z-10 flex xl:grid gap-3 xl:p-3 w-full h-20 xl:h-fit overflow-hidden pointer-events-none transform transition-transform duration-300 ease-in-out`} style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+            <div className={`${ isNavbarTopShown ? "translate-y-0" : "-translate-y-full" } xl:z-10 flex xl:grid gap-3 xl:p-3 w-full h-16 xl:h-fit overflow-hidden pointer-events-none transform transition-transform duration-300 ease-in-out`} style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                 {
                     screenSize > 3 &&
                     <div className="col-span-2"></div>
                 }
                 <div className="flex col-span-11 w-full px-3 py-0 xl:py-3 items-center justify-center pointer-events-auto xl:pointer-events-none bg-zinc-900 xl:bg-transparent border-b xl:border-0 border-zinc-800">
+                    {/* logo */}
                     {
-                        !showSearch && screenSize < 4 &&
+                        !showSearch && currentTab === "Home" && screenSize < 4 &&
                         <div className="flex w-full xl:w-2/12 h-full">
                             <Link to="/home" className="w-fit h-full px-3 py-4 mr-3">
                                 <img className="w-full h-full object-contain" src={ LogoGradient }alt="" />
                             </Link>
+                        </div>
+                    }
+                    {
+                        !showSearch && currentTab === "Popular" && screenSize < 4 &&
+                        <div className="flex w-full xl:w-2/12 h-full items-center pl-3 text-zinc-100 text-lg sm:text-2xl font-bold">
+                            Popular Recipes
+                        </div>
+                    }
+                    {
+                        !showSearch && currentTab === "Saved" && screenSize < 4 &&
+                        <div className="flex w-full xl:w-2/12 h-full items-center pl-3 text-zinc-100 text-lg sm:text-2xl font-bold">
+                            <p>Saved Recipes</p>
+                            {
+                                savedRecipeCount ?
+                                <p className="pl-6">{ savedRecipeCount }</p>
+                                :
+                                <></>
+                            }
                         </div>
                     }
                     {
@@ -118,9 +134,10 @@ function NavbarTop({
                             }
                         </div>
                     }
+                    {/* nav bar */}
                     {
                         !showSearch && screenSize < 4 &&
-                        <div className="flex w-full xl:w-2/12 h-full justify-end items-center">
+                        <div className="flex w-fit flex-shrink-0 xl:w-2/12 h-full justify-end items-center">
                             {
                                 !showSearch && screenSize < 4 &&
                                 <div className="flex w-fit h-full mr-0 sm:mr-3"> 
@@ -128,13 +145,13 @@ function NavbarTop({
                                             setShowSearch(true)
                                         }}
                                     >
-                                        <img className="w-8 h-8 object-cover" src={ SearchIcon } alt="" />
+                                        <img className="w-6 object-cover" src={ SearchIcon } alt="" />
                                     </button>
                                 </div>
                             }
                             <div className="flex w-fit h-full justify-end items-center"> 
                                 <button className="p-3" onClick={ () => setIsFilterShown(!isFilterShown) }>
-                                    <img className="w-8 h-8 object-cover" src={ FilterIcon } alt="" />
+                                    <img className="w-6 object-cover" src={ FilterIcon } alt="" />
                                 </button>
                             </div>
                         </div>

@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useEffect, useRef } from 'react'
+import React, { useState, useLayoutEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
@@ -33,11 +33,9 @@ function Create({
     const [ingredients, setIngredients] = useState([{ key: uuidv4(), value: '', refIndex: 0 }])
     const [title, setTitle] = useState('')
     const [tags, setTags] = useState([])
-    const [isNavbarRecipeShown, setIsNavbarRecipeShown] = useState(true)
     const [recipeTabShown, setRecipeTabShown] = useState('Overview')
     
     const navigate = useNavigate()
-    const scrollDivRef = useRef(null) 
 
     const keys = [uuidv4(), uuidv4()]
 
@@ -103,7 +101,7 @@ function Create({
                 ).value
                 
                 if (text === '' && preFiles[0] === '') {
-                    return
+                    return null
                 }
 
                 if (preFiles.length > 1 || preFiles[0] !== '') {
@@ -193,12 +191,12 @@ function Create({
                     tags={ tags || null } setTags={ setTags || null }
                     currentTab={ currentTab } setCurrentTab={ setCurrentTab } 
                     systemTags={ systemTags } title={ title }
-                    setTitle={ setTitle }
+                    setTitle={ setTitle } screenSize={ screenSize }
                 />   
             }
             {
-                (recipeTabShown === "Instructions" || screenSize > 2) &&
-                <div className="pr-0 flex flex-col gap-3 p-3 pb-[5.75rem] xl:pb-0 pt-[5.75rem] xl:pt-0 w-full h-dvh overflow-y-scroll scrollable-div bg-zinc-950">
+                (recipeTabShown === "Instructions" || screenSize > 3) &&
+                <div className={`${ screenSize > 3 ? "scrollable-div" : "pr-3 hide-scrollbar" } pr-0 flex flex-col gap-3 p-3 py-[4.75rem] xl:py-0 w-full h-dvh overflow-y-scroll bg-zinc-950`}>
                     <div className="flex xl:grid w-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
                             screenSize > 3 &&
@@ -241,61 +239,71 @@ function Create({
                             </button>
                         </div>     
                     </div>
-                    {
-                        publishState &&
-                        <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-y-scroll scrollable-div"
-                                onMouseDownCapture={e => { 
-                                    if (screenSize < 4) {
-                                        return
-                                    } 
+                </div>
+            }
+            {
+                publishState &&
+                <div className="absolute z-[9999] inset-0 grid place-items-center h-screen text-zinc-100 bg-zinc-950 bg-opacity-70"
+                        onMouseDownCapture={e => { 
+                            if (screenSize < 4) {
+                                return
+                            } 
 
-                                    if (publishState === 'published') {
-                                        navigate('/home')
+                            if (publishState === 'published') {
+                                navigate('/home')
 
-                                        return
-                                    }
-
-                                    const isOutsideModal = !e.target.closest('.model-inner')
-                                    
-                                    if (isOutsideModal && publishState !== 'publishing') {
-                                        setPublishState()
-                                    }
-                                } 
+                                return
                             }
-                        >
-                            <div className="flex flex-col gap-3 justify-center items-center w-5/12 overflow-hidden model-inner">
-                                <div className="flex flex-col w-full py-20 gap-12 items-center rounded-3xl bg-zinc-900 overflow-hidden">
-                                    {
-                                        publishState === "publishing" &&
-                                        <>
-                                            <p className="w-full text-center text-2xl font-semibold">
-                                                Publishing recipe...
-                                            </p>
-                                            <img className="animate-spin-continuous w-24" src={ LoadingIcon } alt="" />
-                                        </>
-                                    }
-                                    {
-                                        publishState === "published" &&
-                                        <>
-                                            <p className="w-full text-center text-2xl font-semibold">
-                                                Your recipe is now published!
-                                            </p>
-                                            <img className="w-24" src={ AllowIcon } alt="" />
-                                        </>
-                                    }
-                                    {
-                                        publishState === "not published" &&
-                                        <>
-                                            <p className="w-full text-red-600 text-center text-2xl font-semibold">
-                                                Your recipe is not published.<br/>Please try publishing again.
-                                            </p>
-                                            <img className="w-24" src={ RemoveIcon } alt="" />
-                                        </>
-                                    }
-                                </div>
-                            </div>
-                        </div>
+
+                            const isOutsideModal = !e.target.closest('.model-inner')
+                            
+                            if (isOutsideModal && publishState !== 'publishing') {
+                                setPublishState()
+                            }
+                        } 
                     }
+                >
+                    <div className="flex flex-col justify-center items-center w-full md:w-10/12 xl:w-5/12 px-3 overflow-hidden model-inner">
+                        <div className="flex flex-col w-full pb-16 pt-8 items-center rounded-3xl bg-zinc-900 overflow-hidden">
+                            {
+                                publishState === "publishing" &&
+                                <div className="flex flex-col w-full pt-8 items-center">
+                                    <p className="w-full mb-12 text-center text-xl xl:text-2xl font-semibold">
+                                        Publishing recipe...
+                                    </p>
+                                    <img className="animate-spin-continuous w-24" src={ LoadingIcon } alt="" />
+                                </div>
+                            }
+                            {
+                                publishState === "published" &&
+                                <div className="flex flex-col w-full items-center">
+                                    <div className="flex w-full px-6 mb-6 justify-end">
+                                        <button className="p-3 rounded-3xl hover:bg-zinc-600" onClick={ () => navigate('/home') }>
+                                            <img className="min-w-4 w-4" src={ RemoveIcon } alt=""/>
+                                        </button>
+                                    </div>
+                                    <p className="w-full mb-12 text-center text-xl xl:text-2xl font-semibold">
+                                        Your recipe is now published!
+                                    </p>
+                                    <img className="w-24" src={ AllowIcon } alt="" />
+                                </div>
+                            }
+                            {
+                                publishState === "not published" &&
+                                <div className="flex flex-col w-full items-center">
+                                    <div className="flex w-full px-6 mb-6 justify-end">
+                                        <button className="p-3 rounded-3xl hover:bg-zinc-600" onClick={ () => setPublishState() }>
+                                            <img className="min-w-4 w-4" src={ RemoveIcon } alt=""/>
+                                        </button>
+                                    </div>
+                                    <p className="w-full mb-12 text-red-600 text-center text-xl xl:text-2xl font-semibold">
+                                        Your recipe is not published.<br/>Please try publishing again.
+                                    </p>
+                                    <img className="w-24" src={ RemoveIcon } alt="" />
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </div>
             }
             {/* confirm modal */}
@@ -320,11 +328,7 @@ function Create({
             {/* navbar */}
             {
                 screenSize < 4 &&
-                <NavbarRecipe
-                    scrollDivRef={ scrollDivRef } isNavbarRecipeShown={ isNavbarRecipeShown } 
-                    setIsNavbarRecipeShown={ setIsNavbarRecipeShown } recipeTabShown={ recipeTabShown } 
-                    setRecipeTabShown={ setRecipeTabShown }
-                />
+                <NavbarRecipe recipeTabShown={ recipeTabShown } setRecipeTabShown={ setRecipeTabShown }/>
             }
         </div>
     )
@@ -335,7 +339,7 @@ function ElementsModal({
     screenSize
 }) {
     return (
-        <div className="absolute z-30 flex xl:grid place-items-center w-screen h-screen px-3 py-[5.75rem] xl:py-0 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-hidden" 
+        <div className="absolute z-30 flex xl:grid place-items-center w-screen h-screen px-3 py-16 xl:py-0 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-hidden" 
             onMouseDownCapture={ e => { 
                     if (screenSize < 4) {
                         return

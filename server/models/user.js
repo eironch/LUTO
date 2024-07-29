@@ -41,11 +41,12 @@ const userSchema = new Schema({
         type: String
     },
     bio: {
-        type: String
+        type: String,
+        default: ''
     },
     refreshToken: {
         type: String,
-        unique: true,
+        unique: true
     },
 }, { timestamps: true })
 

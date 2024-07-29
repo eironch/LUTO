@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import axios from 'axios'
 import { debounce } from 'lodash'
@@ -391,7 +391,8 @@ function App() {
                     setFilters={ setFilters } formatDate={ formatDate }
                     filtersRef={ filtersRef } handleGiveRecipePoint={ handleGiveRecipePoint } 
                     handleFlagRecipe={ handleFlagRecipe } handleLogOut={ handleLogOut }
-                    systemTags={ systemTags } screenSize={ screenSize }
+                    systemTags={ systemTags } screenSize={ screenSize } 
+                    searchQuery={ searchQuery } setSearchQuery={ setSearchQuery }
                   /> 
                 } 
               />
@@ -403,6 +404,7 @@ function App() {
                     filtersRef={ filtersRef } handleGiveRecipePoint={ handleGiveRecipePoint } 
                     handleFlagRecipe={ handleFlagRecipe } handleLogOut={ handleLogOut }
                     systemTags={ systemTags } screenSize={ screenSize }
+                    searchQuery={ searchQuery } setSearchQuery={ setSearchQuery }
                   /> 
                 } 
               />

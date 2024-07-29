@@ -84,7 +84,12 @@ function Search({
 
     useLayoutEffect(() => {
         setCurrentTab('Search')
-        handleSearch()
+        
+
+        return () => {
+            handleSearch()
+            setIsFeedbacksShown(false)
+        }
     }, [])
 
     if (currentTab !== 'Search') {
@@ -134,16 +139,16 @@ function Search({
                 </div>
             }
             <div className="flex flex-col gap-3 h-dvh">
-                <div className="flex flex-col gap-3 p-3 pr-0 pb-20 xl:pb-0">
+                <div className="flex flex-col gap-3 pl-3 pt-3 pb-[4.75rem] xl:pb-0">
                     {/* search */}
-                    <div className="min-h-52 flex xl:grid w-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+                    <div className="min-h-52 -mb-3 flex xl:grid w-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
                             screenSize > 3 &&
                             <div className="col-span-2"></div>
                         }
                         <div className="col-span-11 flex flex-col w-full h-full justify-center items-center rounded-3xl bg-zinc-900">
                             {/* search context */}
-                            <p className="text-zinc-400 text-4xl mt-7 py-1.5 pt-2 overflow-hidden text-ellipsis line-clamp-1 mx-6">
+                            <p className="text-zinc-400 text-xl md:text-3xl xl:text-4xl mt-7 py-1.5 pt-2 overflow-hidden text-ellipsis line-clamp-1 mx-6">
                                 What are you looking up?
                             </p> 
                             {/* search bar */}
@@ -173,7 +178,7 @@ function Search({
                         }  
                     </div>
                     {/* content */}
-                    <div className="flex xl:grid w-full gap-3 h-full" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+                    <div className="flex xl:grid w-full gap-3 h-full xl:mb-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
                             screenSize > 3 &&
                             <div className="col-span-2"></div>

@@ -12,7 +12,7 @@ function SidebarProfile({
     const [isFollowed, setIsFollowed] = useState()
     const [followCount, setFollowCount] = useState(0)
     const [followers, setFollowers] = useState()
-    const [authorBio, setAuthorBio] = useState('')
+    const [authorBio, setAuthorBio] = useState()
     const [authorProfilePicture, setAuthorProfilePicture] = useState()
 
     function handleFollowUser() {
@@ -71,31 +71,34 @@ function SidebarProfile({
                 <div className="flex flex-row p-6 gap-6 items-center text-2xl rounded-3xl bg-zinc-900">
                     <img className="w-28 h-28 aspect-1 rounded-full object-cover" src={ authorProfilePicture || ProfileIcon } alt="" />
                     <div className="grid grid-row-2 w-full gap-3 overflow-hidden">
-                        <div className="flex flex-col w-full gap-3">
-                            <div className="flex items-center">
-                                <p className="px-1 w-full font-semibold line-clamp-1 overflow-hidden">
-                                    { authorName }
-                                </p>
+                        {
+                            followCount !== undefined &&
+                            <div className="flex flex-col w-full gap-3">
+                                <div className="flex items-center">
+                                    <p className="px-1 w-full font-semibold line-clamp-1 overflow-hidden">
+                                        { authorName }
+                                    </p>
+                                    {
+                                        authorName === user.username &&
+                                        <Link to="/settings" className="p-3 rounded-3xl hover:bg-zinc-500">
+                                            <img className="w-8" src={ SettingsIcon } alt="" />
+                                        </Link>
+                                    }
+                                </div>
                                 {
-                                    authorName === user.username &&
-                                    <Link to="/settings" className="p-3 rounded-3xl hover:bg-zinc-500">
-                                        <img className="w-8" src={ SettingsIcon } alt="" />
-                                    </Link>
+                                    isFollowed !== undefined &&
+                                    user.username !== authorName &&
+                                    <button className={`${ isFollowed ? "text-zinc-400 border-2 border-orange-500 hover:border-orange-400" : "bg-orange-500 hover:bg-orange-400" } w-fit h-fit py-1 px-6 rounded-3xl text-lg text-center font-semibold gap-4 overflow-hidden`} onClick={ () => { handleFollowUser() } }>
+                                        {
+                                            isFollowed ?
+                                            "Unfollow"
+                                            :
+                                            "Follow"
+                                        }
+                                    </button>
                                 }
                             </div>
-                            {
-                                isFollowed !== undefined &&
-                                user.username !== authorName &&
-                                <button className={`${ isFollowed ? "text-zinc-400 border-2 border-orange-500 hover:border-orange-400" : "bg-orange-500 hover:bg-orange-400" } w-fit h-fit py-1 px-6 rounded-3xl text-lg text-center font-semibold gap-4 overflow-hidden`} onClick={ () => { handleFollowUser() } }>
-                                    {
-                                        isFollowed ?
-                                        "Unfollow"
-                                        :
-                                        "Follow"
-                                    }
-                                </button>
-                            }
-                        </div>
+                        }
                         {
                             followCount !== undefined &&
                             <p className="px-1 text-lg line-clamp-1">
@@ -104,7 +107,7 @@ function SidebarProfile({
                         }
                         {
                             followCount === undefined &&
-                            <p className="h-7 rounded-3xl bg-zinc-600"></p>
+                            <p className="h-28 rounded-3xl bg-zinc-600"></p>
                         }
                     </div>
                 </div>
@@ -119,7 +122,7 @@ function SidebarProfile({
                     </div>
                 }
                 {
-                    !authorBio &&
+                    authorBio === undefined &&
                     <div className="flex flex-col gap-3 pt-6 pb-3 px-3 rounded-3xl bg-zinc-900">
                         <p className="px-3 text-2xl font-semibold">Bio</p>
                         <p className="h-16 rounded-3xl bg-zinc-600"></p>

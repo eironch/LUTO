@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { debounce } from 'lodash'
 
 import FilterIcon from '../assets/filter-icon.svg'
@@ -42,20 +42,20 @@ function FilterModal({
         setTagChoices(systemTags)
     }
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         handleTagSearch(searchValue)
     }, [searchValue])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         handlePopularTags()
     }, [])
 
     return (
         <div className="absolute inset-0 z-0 grid place-items-center text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-hidden">
-            <div className="inset-0 flex justify-center w-full h-full p-3 py-20 items-center overflow-hidden">
-                <div className="flex w-full h-full py-3 justify-center items-center">
+            <div className="inset-0 flex justify-center w-full h-full p-3 py-[4.75rem] items-center overflow-hidden">
+                <div className="flex w-full h-full justify-center items-center">
                     <div className="flex flex-col h-full w-full md:w-10/12 text-zinc-100 rounded-3xl col-span-2 bg-zinc-900 overflow-hidden pointer-events-auto">
-                        <div className="flex p-6 gap-3 shadow-md shadow-zinc-950 flex-row items-center">
+                        <div className="flex p-6 gap-6 shadow-md shadow-zinc-950 flex-row items-center">
                             <img  className="w-8" src={ FilterIcon } alt="" />
                             <p className="text-2xl font-bold">
                                 Filter

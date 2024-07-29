@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 import PointSection from './PointSection'
@@ -101,7 +101,7 @@ function RecipeOverview({
         setMoreModalShown()
     }
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         setFormattedDate(formatDate(dateCreated))
     }, [])
 
@@ -193,7 +193,11 @@ function RecipeOverview({
                                     <img className="min-w-8 w-8" src={ RemoveIcon } alt="" />
                                 </button>
                                 <p>
-                                    { flagCount } flags
+                                    { flagCount }
+                                    {
+                                        screenSize > 0 &&
+                                        <>&nbsp;pts.</>
+                                    }
                                 </p>
                                 <button className="flex justify-end items-center p-4 rounded-3xl hover:bg-zinc-500" onClick={ () => { handleRecipe() } }>
                                     <img className="min-w-8 w-8" src={ AllowIcon } alt="" />

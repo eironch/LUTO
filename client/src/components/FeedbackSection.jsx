@@ -56,7 +56,7 @@ function FeedbackSection({
     }, [])
 
     return (
-        <div className={`${ currentTab === "Recipe" ? "xl:w-full mb-3" : "xl:w-5/12" } flex flex-col w-full md:w-10/12 rounded-3xl bg-zinc-900 overflow-hidden model-inner`}>
+        <div className={`${ currentTab === "Recipe" ? "xl:w-full" : "md:w-10/12 xl:w-5/12" } flex flex-col w-full mb-3 rounded-3xl bg-zinc-900 overflow-hidden model-inner`}>
             {/* header */}
             <div className="flex items-center p-6 gap-3 shadow-md shadow-zinc-950">
                 <div className="flex gap-6 items-center w-full">

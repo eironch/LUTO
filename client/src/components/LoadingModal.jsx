@@ -2,17 +2,17 @@ import React from 'react'
 
 import RemoveIcon from '../assets/remove-icon.svg'
 
-function LoadingModal(p) {
-    const setShowModal = p.setShowModal
-    const confirmAction = p.confirmAction
-    const title = p.title
-
+function LoadingModal({
+    setShowModal, confirmAction,
+    title, screenSize
+}) {
     return (
         <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-70" 
             onMouseDownCapture={ e => { 
-                // if (screenSize < 4) {
-                //     return
-                // } 
+                    if (screenSize < 4) {
+                        return
+                    }
+
                     const isOutsideModal = !e.target.closest('.model-inner')
 
                     if (isOutsideModal) {

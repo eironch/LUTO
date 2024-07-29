@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useCallback } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { debounce } from 'lodash'
@@ -8,6 +8,7 @@ import RecipeOverview from '../components/RecipeOverview'
 import FeedbackModal from '../components/FeedbackModal'
 import RecipeSuspense from '../components/RecipeSuspense'
 import ConfirmModal from '../components/ConfirmModal'
+import NavbarTop from '../components/NavbarTop'
 
 import LogOutIcon from '../assets/log-out-icon.svg'
 import ProfileIcon from '../assets/profile-icon.svg'
@@ -19,7 +20,8 @@ function Popular({
     handleLogOut, systemTags,
     filters, setFilters,
     filtersRef, handleGiveRecipePoint,
-    screenSize
+    screenSize, searchQuery,
+    setSearchQuery
 }) {
     const [popularRecipes, setPopularRecipes] = useState([])
     const [isFeedbacksShown, setIsFeedbacksShown] = useState(false)
@@ -28,6 +30,10 @@ function Popular({
     const [prevTitle, setPrevTitle] = useState()
     const [prevFeedbackCount, setPrevFeedbackCount] = useState()
     const [moreModalShown, setMoreModalShown] = useState()
+    const [isNavbarTopShown, setIsNavbarTopShown] = useState(true)
+    const [isFilterShown, setIsFilterShown] = useState(false)
+
+    const scrollDivRef = useRef(null)
 
     function fetchPopularRecipes(filters) {
         axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/popular-recipes`, { params: { userId: user.userId, filters } })
@@ -53,16 +59,18 @@ function Popular({
         }, 300), []
     )
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         filtersRef.current = filters
     }, [filters])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         debouncedFetch()
     }, [filters, debouncedFetch])
 
     useLayoutEffect(() => {
         setCurrentTab('Popular')
+
+        return () => setIsFeedbacksShown(false)
     }, [])
     
     if (currentTab !== 'Popular') {
@@ -70,7 +78,7 @@ function Popular({
     }
 
     return (
-        <div className={`${ screenSize > 2 ? "scrollable-div" : "pr-3 hide-scrollbar" } h-screen overflow-y-scroll`}>
+        <div className={`${ screenSize > 3 ? "scrollable-div" : "pr-3 hide-scrollbar" } h-screen overflow-y-scroll`} ref={ scrollDivRef }>
             {/* navbar */}
             {
                 screenSize > 3 &&
@@ -111,33 +119,31 @@ function Popular({
                     /> 
                 </div>
             }
-            <div className="flex flex-col pr-0 gap-3 h-dvh">
-                <div className="flex flex-col p-3 pr-0 pb-20 xl:pb-0">
+            <div className="flex flex-col gap-3 h-dvh">
+                <div className="flex flex-col pl-3 py-[4.75rem] xl:py-0">
                     {/* space for top navbar */}
-                    <div className="flex xl:grid w-full" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
-                        {
-                            screenSize > 3 &&
+                    {
+                        screenSize > 3 &&
+                        <div className="flex xl:grid w-full" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                             <div className="col-span-2"></div>
-                        }
-                        <div className="w-full col-span-11 rounded-3xl bg-zinc-900">
-                            <div className="flex p-6 w-full text-zinc-100 text-3xl xl:text-5xl font-bold rounded-3xl bg-zinc-900">
-                                <p className="px-6 w-full h-full text-center md:text-start">
-                                    Popular Recipes
-                                </p>
+                            <div className="w-full col-span-11 rounded-3xl">
+                                <div className="h-16 my-3 rounded-3xl bg-zinc-900"></div>
+                                <div className="flex p-6 w-full text-zinc-100 text-3xl xl:text-5xl font-bold rounded-3xl bg-zinc-900">
+                                    <p className="px-6 w-full h-full text-center md:text-start">
+                                        Popular Recipes
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        {
-                            screenSize > 3 &&
                             <div className="col-span-2"></div>
-                        }    
-                    </div>
+                        </div>
+                    }
                     {/* content */}
-                    <div className="flex xl:grid w-full gap-3 h-full" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
+                    <div className="flex xl:grid w-full h-full -mt-3 xl:mt-0 gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
                             screenSize > 3 &&
                             <div className="col-span-2"></div>
                         }
-                        <div className="w-full col-span-11 block mb-3">
+                        <div className="w-full col-span-11 block xl:mb-3">
                             {
                                 popularRecipes &&
                                 popularRecipes.length > 0 &&
@@ -147,7 +153,7 @@ function Popular({
                                         <div className="w-full md:max-w-32 md:w-32 mt-3 mb-0 rounded-t-3xl rounded-b-none md:rounded-bl-3xl md:rounded-r-none bg-zinc-900 overflow-hidden">
                                             <p className={`${ index + 1 === 10 ? "md:-ml-8" : "md:ml-1.5" } w-full md:-mt-8 text-center md:text-start text-zinc-100`} style={ { fontSize: screenSize > 1 ? "13rem" : "5rem"} }>{ index + 1 }</p>
                                         </div>
-                                        <div className={`${ index + 1 !== 10 ? "mb-0" : "xl:-mb-3"  } w-full`}>
+                                        <div className={`${ index + 1 !== 10 && "mb-0" } w-full`}>
                                             <RecipeOverview
                                                 key={ recipe.recipeId } user={ user }
                                                 recipeId={ recipe.recipeId } recipeImage={ recipe.recipeImage } 
@@ -182,6 +188,14 @@ function Popular({
                         }
                     </div>
                 </div>
+                {/* navbar top */} 
+                <NavbarTop 
+                    searchQuery={ searchQuery } setSearchQuery={ setSearchQuery } 
+                    scrollDivRef={ scrollDivRef } screenSize={ screenSize }
+                    isFilterShown={ isFilterShown } setIsFilterShown={ setIsFilterShown }
+                    isNavbarTopShown={ isNavbarTopShown } setIsNavbarTopShown={ setIsNavbarTopShown }
+                    currentTab={ currentTab }
+                />
                 {/* feedbacks modal */}
                 {
                     isFeedbacksShown &&

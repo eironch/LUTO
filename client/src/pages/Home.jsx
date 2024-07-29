@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useLayoutEffect, useEffect } from 'react'
+import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { debounce } from 'lodash'
@@ -28,7 +28,6 @@ function Home({
     handleAllowRecipe, screenSize
 }) {
     const [feedRecipes, setFeedRecipes] = useState([])
-    const [isNavbarTopShown, setIsNavbarTopShown] = useState(true)
     const [isFeedbacksShown, setIsFeedbacksShown] = useState(false)
     const [confirmationShown, setConfirmationShown] = useState()
     const [prevRecipeId, setPrevRecipeId] = useState()
@@ -38,6 +37,7 @@ function Home({
     const [fetchedRecipeIds, setFetchedRecipeIds] = useState([])
     const [isFetching, setIsFetching] = useState(false)
     const [isFetchedAll, setIsFetchedAll] = useState(false)
+    const [isNavbarTopShown, setIsNavbarTopShown] = useState(true)
     const [isFilterShown, setIsFilterShown] = useState(false)
 
     const scrollDivRef = useRef(null)
@@ -113,40 +113,47 @@ function Home({
     }, [isNavbarTopShown, isFeedbacksShown])
 
     useEffect(() => {
-        setCurrentTab('Home')
+        const ref = scrollDivRef.current
 
-        return () => {
-            setIsFeedbacksShown(false)
+        if (!ref) {
+            return
         }
-    }, [])
-
-    useEffect(() => {
-        const scrollDiv = scrollDivRef.current
-        
-        if (!scrollDiv) return
 
         function handleScroll() {
-            if (isFetching || isFetchedAll) return
-            const { scrollTop, scrollHeight, clientHeight } = scrollDiv
+            if (isFetching || isFetchedAll) {
+                return
+            }
+            const { scrollTop, scrollHeight, clientHeight } = ref
 
             if (scrollTop + clientHeight >= scrollHeight - (scrollHeight * 0.05)) {
                 fetchFeedRecipes(filters)
             }
         }
             
-        scrollDiv.addEventListener('scroll', handleScroll)
+        ref.addEventListener('scroll', handleScroll)
 
         return () => {
-            scrollDiv.removeEventListener('scroll', handleScroll)
+            if (!ref) {
+                return
+            }
+            console.log(ref)
+
+            ref.removeEventListener('scroll', handleScroll)
         }
     })
+
+    useLayoutEffect(() => {
+        setCurrentTab('Home')
+
+        return () => setIsFeedbacksShown(false)
+    }, [])
     
     if (currentTab !== 'Home') {
         return
     }
 
     return (
-        <div className={`${ screenSize > 2 ? "scrollable-div" : "pr-3 hide-scrollbar" } w-screen h-screen overflow-y-scroll`} ref={ scrollDivRef }>
+        <div className={`${ screenSize > 3 ? "scrollable-div" : "pr-3 hide-scrollbar" } w-screen h-screen overflow-y-scroll`} ref={ scrollDivRef }>
             {/* navbar */}
             {
                 screenSize > 3 &&
@@ -187,27 +194,24 @@ function Home({
                     /> 
                 </div>
             }
-            <div className="flex flex-col h-screen pr-0">
-                <div className="flex flex-col gap-0 xl:gap-3 p-3 pt-0 pr-0 pb-20 xl:pb-0">
+            <div className="flex flex-col h-screen">
+                <div className="flex flex-col gap-0 xl:gap-3 p-3 pr-0 py-[4.75rem] xl:py-0">
                     {/* space for top navbar */}
-                    <div className="flex xl:grid w-full gap-3 min-h-20 pt-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
-                        {
-                            screenSize > 3 &&
+                    {
+                        screenSize > 3 &&
+                        <div className="flex xl:grid w-full gap-3 min-h-16 h-16 mt-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                             <div className="col-span-2"></div>
-                        }
-                        <div className="col-span-11 w-full rounded-3xl bg-transparent xl:bg-zinc-900"></div>
-                        {
-                            screenSize > 3 &&
+                            <div className="col-span-11 w-full rounded-3xl bg-transparent xl:bg-zinc-900"></div>
                             <div className="col-span-2"></div>
-                        }  
-                    </div>
+                        </div>
+                    }  
                     {/* content */}
                     <div className="flex xl:grid w-full gap-3 h-full" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
                             screenSize > 3 &&
                             <div className="col-span-2"></div>
                         }
-                        <div className="col-span-11 w-full mb-3 xl:-mt-3">
+                        <div className="col-span-11 w-full xl:mb-3 -mt-3">
                             { 
                                 feedRecipes &&
                                 feedRecipes.length > 0 &&
@@ -232,7 +236,7 @@ function Home({
                                 )
                             }
                             {
-                                (isFetching || !isFetchedAll && (feedRecipes.length > 10 || feedRecipes.length === 0)) &&
+                                (isFetching || (!isFetchedAll && (feedRecipes.length > 10 || feedRecipes.length === 0))) &&
                                 <>
                                     <RecipeSuspense screenSize={ screenSize } />
                                     <RecipeSuspense screenSize={ screenSize } />
@@ -246,15 +250,16 @@ function Home({
                         }
                     </div>
                 </div>
-                {/* search */} 
+            </div>
+            <div className="absolute inset-0 z-30 h-screen pointer-events-none">
+                {/* navbar top */} 
                 <NavbarTop 
                     searchQuery={ searchQuery } setSearchQuery={ setSearchQuery } 
                     scrollDivRef={ scrollDivRef } screenSize={ screenSize }
                     isFilterShown={ isFilterShown } setIsFilterShown={ setIsFilterShown }
                     isNavbarTopShown={ isNavbarTopShown } setIsNavbarTopShown={ setIsNavbarTopShown }
+                    currentTab={ currentTab }
                 />
-            </div>
-            <div className="absolute inset-0 z-30 h-screen pointer-events-none">
                 {/* filter modal */}
                 {
                     isFilterShown &&
