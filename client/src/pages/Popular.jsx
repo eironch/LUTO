@@ -9,6 +9,7 @@ import FeedbackModal from '../components/FeedbackModal'
 import RecipeSuspense from '../components/RecipeSuspense'
 import ConfirmModal from '../components/ConfirmModal'
 import NavbarTop from '../components/NavbarTop'
+import FilterModal from '../components/FilterModal'
 
 import LogOutIcon from '../assets/log-out-icon.svg'
 import ProfileIcon from '../assets/profile-icon.svg'
@@ -196,6 +197,15 @@ function Popular({
                     isNavbarTopShown={ isNavbarTopShown } setIsNavbarTopShown={ setIsNavbarTopShown }
                     currentTab={ currentTab }
                 />
+                {/* filter modal */}
+                {
+                    isFilterShown &&
+                    screenSize < 4 &&
+                    <FilterModal 
+                        filters={ filters } setFilters={ setFilters }
+                        systemTags={ systemTags } setIsFilterShown={ setIsFilterShown }
+                    />
+                }
                 {/* feedbacks modal */}
                 {
                     isFeedbacksShown &&

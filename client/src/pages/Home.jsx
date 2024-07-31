@@ -136,7 +136,6 @@ function Home({
             if (!ref) {
                 return
             }
-            console.log(ref)
 
             ref.removeEventListener('scroll', handleScroll)
         }

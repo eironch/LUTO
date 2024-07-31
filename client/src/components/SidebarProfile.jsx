@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 import ProfileIcon from '../assets/profile-icon.svg'
 import SettingsIcon from '../assets/settings-icon.svg'
 
 function SidebarProfile({
     user, authorName,
-    screenSize
+    userFound, setUserFound
 }) {
     const [isFollowed, setIsFollowed] = useState()
     const [followCount, setFollowCount] = useState(0)
@@ -47,8 +47,14 @@ function SidebarProfile({
                 setFollowers(res.data.payload.followers)
                 setAuthorProfilePicture(res.data.payload.profilePicture)
                 setAuthorBio(res.data.payload.bio)
+                
+                setUserFound(true)
             })
             .catch(err => {
+                if (err.response.status === 400) {
+                    setUserFound(false)
+                }
+
                 console.log(err)
                 console.log('Error Status:', err.response.status)
                 console.log('Error Data:', err.response.data)
@@ -56,6 +62,7 @@ function SidebarProfile({
     }
 
     useEffect(() => {
+        setUserFound()
         setIsFollowed()
         setFollowCount()
         setFollowers()
@@ -65,6 +72,7 @@ function SidebarProfile({
     }, [authorName])
 
     return (
+        userFound !== false ?
         <div className="xl:grid pl-3 pt-3 xl:pt-0 pb-0 pr-0 w-full xl:h-full overflow-hidden" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
             <div className="flex flex-col gap-3 text-zinc-100 col-span-4 pointer-events-auto overflow-y-hidden xl:overflow-y-scroll overflow-x-hidden scrollable-div">
                 {/* user */}
@@ -155,6 +163,8 @@ function SidebarProfile({
                 }
             </div>
         </div>
+        :
+        <div></div>
     )
 }
 

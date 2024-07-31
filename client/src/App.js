@@ -14,7 +14,6 @@ import Create from './pages/Create'
 import Saved from './pages/Saved'
 import Popular from './pages/Popular'
 
-import Modal from './components/Modal'
 import NavbarBot from './components/NavbarBot'
 
 function App() {
@@ -25,7 +24,7 @@ function App() {
   const [modalMessage, setModalMessage] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [currentTab, setCurrentTab] = useState('Home')
-  const [filters, setFilters] = useState()
+  const [filters, setFilters] = useState([])
   const filtersRef = useRef(filters)
   const [searchQuery, setSearchQuery] = useState("")
   const [screenSize, setScreenSize] = useState(getScreenSize())
@@ -424,13 +423,10 @@ function App() {
         :
         <Auth 
           isAuthenticated={ isAuthenticated } setIsAuthenticated={ setIsAuthenticated } 
-          user={ user } setUser={ setUser }    
+          user={ user } setUser={ setUser }
+          screenSize={ screenSize }
         />
       }
-      <Modal 
-        showModal={ showModal } setShowModal={ setShowModal } 
-        modalMessage={ modalMessage } setModalMessage={ setModalMessage } 
-      />
     </>
   )
 }

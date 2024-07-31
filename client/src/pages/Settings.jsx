@@ -50,16 +50,17 @@ function Settings({
 
     function handleFileChange(e) {
         const file = e.target.files[0]
-        const maxSizeInBytes = 5 * 1024 * 1024
+        const maxSizeInBytes = 1 * 1024 * 1024
 
         if (file && file.size > maxSizeInBytes) {
-            // placeholder
-            return alert('File size exceeds the maximum allowed limit (5MB). Please Select a smaller file.')
+            // log
+            return alert('File size exceeds the maximum allowed limit (1MB). Please Select a smaller file.')
+            
         } else if (!file) {
             return
         }
         
-        setUser({...user, profilePicture: URL.createObjectURL(file)})
+        setUser({ ...user, profilePicture: URL.createObjectURL(file) })
 
         const formData = new FormData()
 
@@ -107,7 +108,7 @@ function Settings({
     }
 
     return (
-        <div className="h-screen overflow-y-scroll xl:overflow-y-hidden scrollable-div">
+        <div className={`${ screenSize > 3 ? "scrollable-div" : "xl:pr-3 hide-scrollbar" } h-screen overflow-y-scroll xl:overflow-y-hidden scrollable-div`}>
             {/* navbar */}
             {
                 screenSize > 3 &&
@@ -138,8 +139,8 @@ function Settings({
                     <SidebarTab currentTab={ currentTab } /> 
                 </div>
             }
-            <div className="h-dvh">
-                <div className={`${ isChangingPassword ? "xl:h-full" : "md:h-full" } flex flex-col gap-3 p-3 pr-3 xl:pr-0 bg-zinc-950`}>
+            <div className="w-screen h-dvh">
+                <div className={`${ isChangingPassword ? "xl:h-full" : "md:h-full" } flex flex-col gap-3 p-3 pr-3 bg-zinc-950`}>
                     {/* space for top navbar */}
                     {
                         screenSize > 3 &&
@@ -233,22 +234,24 @@ function Settings({
                         </div>
                         {
                             screenSize <= 3 &&
-                            <button className="flex flex-row w-full gap-3 p-6 mb-20 xl:mb-0 items-center overflow-hidden rounded-3xl bg-zinc-900 hover:bg-zinc-500 hover:shadow-md hover:shadow-zinc-950" onClick={ () => { setConfirmationShown('log out') } }>
+                            <button className="flex flex-row w-full gap-3 p-6 mb-16 xl:mb-0 items-center overflow-hidden rounded-3xl bg-zinc-900 hover:bg-zinc-500 hover:shadow-md hover:shadow-zinc-950" onClick={ () => { setConfirmationShown('log out') } }>
                                 <p className="w-full text-start text-red-500 text-lg font-semibold">Log Out</p>
                                 <img className="w-8" src={ LogOutIcon } alt="" />
                             </button>
                         }
                     </div>
-                    {/* confirm modal */}
-                    {
-                        confirmationShown === "log out" &&
-                        <ConfirmModal 
-                            setShowModal={ setConfirmationShown } confirmAction={ handleLogOut }
-                            headerText={ "Confirm Log Out" } bodyText={ "Are you sure you want to log out?" }
-                            icon={ LogOutIcon } isDanger={ true } screenSize={ screenSize }
-                        />
-                    }
                 </div>
+            </div>
+            <div className="absolute inset-0 z-30 h-screen pointer-events-none">
+                {/* confirm modal */}
+                {
+                    confirmationShown === "log out" &&
+                    <ConfirmModal 
+                        setShowModal={ setConfirmationShown } confirmAction={ handleLogOut }
+                        headerText={ "Confirm Log Out" } bodyText={ "Are you sure you want to log out?" }
+                        icon={ LogOutIcon } isDanger={ true } screenSize={ screenSize }
+                    />
+                }
             </div>
         </div>
     )

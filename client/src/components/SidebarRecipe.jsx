@@ -57,14 +57,17 @@ function SidebarRecipe({
         <div className="pl-3 flex xl:grid w-full h-dvh overflow-hidden" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
             <div className={`${ screenSize > 3 ? "scrollable-div" : "pr-3 hide-scrollbar" } flex flex-col w-full h-full py-[4.75rem] xl:py-0 text-zinc-100 col-span-4 pointer-events-auto overflow-x-hidden overflow-y-scroll`} ref={ localRef }>
                 {/* recipe image */}
-                <div className="rounded-3xl bg-zinc-900">
+                <div className="flex flex-col rounded-3xl bg-zinc-900">
                     {
-                        screenSize < 4 &&
+                        screenSize < 4 && title ?
                         <div className="flex flex-col items-center w-full p-6 rounded-3xl bg-zinc-900">
                             <p className="text-2xl md:3xl xl:text-4xl font-bold w-full text-center">
                                 { title }
                             </p>
                         </div>
+                        :
+                        <span className="m-3 h-20 rounded-3xl bg-zinc-600"></span>
+                        
                     }
                     <div className="p-2 rounded-3xl bg-gradient-to-tr from-orange-500 to-orange-400">
                         <div className="relative w-full h-auto aspect-w-2 aspect-h-2 rounded-3xl">
@@ -102,7 +105,7 @@ function SidebarRecipe({
                             Summary
                         </p>
                     </div>
-                    <p className="text-justify p-6 text-lg">
+                    <p className="p-6 text-lg">
                         { summary }
                     </p>        
                 </div>

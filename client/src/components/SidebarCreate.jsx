@@ -27,7 +27,8 @@ function SidebarCreate({
     const [searchValue, setSearchValue] = useState('')
     const [tagChoices, setTagChoices] = useState([])
     const [lastRef, setLastRef] = useState(null)
-    const refs = useRef([React.createRef()])
+
+    const refs = useRef(ingredients.map(_ => React.createRef()))
 
     function addTag(e) {
         const index = e.target.id
@@ -58,11 +59,11 @@ function SidebarCreate({
 
     function handleFileChange(e) {
         const file = e.target.files[0]
-        const maxSizeInBytes = 5 * 1024 * 1024
+        const maxSizeInBytes = 1 * 1024 * 1024
 
         if (file && file.size > maxSizeInBytes) {
             // log
-            return alert('File size exceeds the maximum allowed limit (25MB). Please Select a smaller file.')
+            return alert('File size exceeds the maximum allowed limit (1MB). Please Select a smaller file.')
         }
 
         setPreRecipeImage(file)
@@ -126,14 +127,14 @@ function SidebarCreate({
 
     useEffect(() => {
         if (lastRef) {
-            lastRef.current.focus()       
+            lastRef.current.focus()
         }
     }, [lastRef])
 
     useEffect(() => {
         handlePopularTags()
     }, [])
-    
+
     return (
         <div className="pl-3 flex xl:grid w-full h-full overflow-hidden" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
             <div className={`${ screenSize > 3 ? "scrollable-div" : "pr-3 hide-scrollbar" } flex h-full py-[4.75rem] xl:py-0 flex-col text-zinc-100 col-span-4 pointer-events-auto overflow-x-hidden overflow-y-scroll`}>
@@ -196,7 +197,7 @@ function SidebarCreate({
                     </div>
                     <div className="flex flex-col p-3">
                         <Textarea 
-                            attribute={`${summary ?  "bg-transparent" : "pt-2.5 bg-zinc-600 border border-red-600"} text-justify text-lg focus:bg-zinc-600`} 
+                            attribute={`${summary ?  "bg-transparent" : "pt-2.5 bg-zinc-600 border border-red-600"} text-lg focus:bg-zinc-600`} 
                             maxLength={ 300 } value={ summary || "" } setValue={ setSummary }
                             placeholder="What would you describe your dish?"
                         />
@@ -313,14 +314,16 @@ function IngredientForm({
     refs, handleKeyDown,
     value
 }) {
-    const [ingredientValue, setIngredientValue] = useState('')
+    const [ingredientValue, setIngredientValue] = useState(ingredients[index].value)
 
-    useEffect(() => {
+    function changeIngredient(value) {
+        setIngredientValue(value)
+
         const newIngredients = [...ingredients]
-        newIngredients[index].value = ingredientValue
+        newIngredients[index].value = value
         
         setIngredients(newIngredients)
-    }, [ingredientValue])
+    }
 
     return (
         <li className="flex rounded-3xl text-center items-center">
@@ -328,7 +331,7 @@ function IngredientForm({
                 •
             </p>
             <input className={`${ value === "" ? !ingredients.some(ingredient => ingredient.value !== "") ? "bg-zinc-600 border border-red-600" : "bg-zinc-600" : "bg-zinc-900" } p-3 w-full rounded-3xl focus:bg-zinc-600 hover:bg-zinc-600`} 
-                value={ ingredientValue } onChange={ e => e.target.value.length <= 30 && setIngredientValue(e.target.value) } 
+                value={ ingredientValue } onChange={ e => e.target.value.length <= 30 && changeIngredient(e.target.value) } 
                 placeholder="What Ingredient?" onKeyDown={ e => handleKeyDown(e, index, refIndex) }
                 ref={ refs.current[refIndex] }
             />

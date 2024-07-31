@@ -30,6 +30,7 @@ function FeedbackSection({
                 setFeedbackCount(res.data.payload.feedbackCount.feedbackCount)
             })
             .catch(err => {
+                console.log(err)
                 console.log('Error Status:', err.response.status)
                 console.log('Error Data:', err.response.data)
             })

@@ -7,7 +7,7 @@ function ConfirmModal({
     isDanger, screenSize
 }) {
     return (
-        <div className="absolute inset-0 flex xl:grid place-items-center h-screen p-3 text-zinc-100 bg-zinc-950 bg-opacity-70 pointer-events-auto" 
+        <div className="absolute inset-0 flex xl:grid place-items-center h-screen justify-center p-3 text-zinc-100 bg-zinc-950 bg-opacity-70 pointer-events-auto" 
             onMouseDownCapture={ e => { 
                     if (screenSize < 4) {
                         return

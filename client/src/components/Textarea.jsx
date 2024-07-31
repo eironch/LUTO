@@ -1,19 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react'
 
-function Textarea(p) {
+function Textarea({
+    value, setValue,
+    placeholder, maxLength,
+    attribute
+}) {
     const textareaRef = useRef(null)
     const [isFocused, setIsFocused] = useState(false)
-    const value = p.value
-    const setValue = p.setValue
-    const placeholder = p.placeholder
-    const maxLength = p.maxLength
-    const attribute = p.attribute
 
     function autoResize() {
         const textarea = textareaRef.current
+        
         if (textarea) {
             textarea.style.height = 'auto'
-            textarea.style.height = `${textarea.scrollHeight}px`
+            textarea.style.height = `${ textarea.scrollHeight }px`
         }
     }
 
@@ -29,7 +29,7 @@ function Textarea(p) {
         return () => {
             window.removeEventListener('resize', handleResize)
         }
-    }, [ p.value ])
+    }, [value])
 
     return (
         <textarea 

@@ -23,6 +23,7 @@ import Follow from './models/follow.js'
 import Verification from './models/verification.js'
 
 let config
+
 try {
     config = await import('./secrets.js')
 } catch (error) {
@@ -117,7 +118,7 @@ app.get('/sign-in', async (req, res) => {
         const user = await User.findOne({ username })
 
         if(!user) {
-            return res.status(202).json({ message: 'User not found.' })
+            return res.status(400).json({ message: 'User not found.' })
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password)
@@ -125,23 +126,22 @@ app.get('/sign-in', async (req, res) => {
         if (!isPasswordValid) {
             return res.status(202).json({ message: 'Incorrect username or password.'})
         }
-        // placeholder
         res.cookie(
             'accessToken',
             generateAccessToken(user._id, user.username), 
             {
-                httpOnly: false,
-                secure: false,
+                httpOnly: config.IS_SECURED,
+                secure: config.IS_SECURED,
                 maxAge: 3600000,
             }
         )
-        // placeholder
+
         res.cookie(
             'refreshToken',
             generateRefreshToken(user._id, user.username), 
             {
-                httpOnly: false,
-                secure: false,
+                httpOnly: config.IS_SECURED,
+                secure: config.IS_SECURED,
                 maxAge: 2592000000,
             }
         )
@@ -193,13 +193,13 @@ app.get('/check-auth', async (req, res) => {
     
         if (refreshToken && decodedRefreshToken) {
             const user = await User.findById(decodedRefreshToken.userId)
-            // placeholder
+
             res.cookie(
                 'accessToken',
                 generateAccessToken(decodedRefreshToken.userId, decodedRefreshToken.username), 
                 {
-                    httpOnly: false,
-                    secure: false,
+                    httpOnly: config.IS_SECURED,
+                    secure: config.IS_SECURED,
                     maxAge: 3600000,
                 }
             )
@@ -215,16 +215,8 @@ app.get('/check-auth', async (req, res) => {
 })
 
 app.post('/publish-recipe', upload.any(), async (req, res) => {
-    const { 
-        userId,
-        categories,
-        tags,
-        title,
-        summary,
-    } = req.body
-
+    const { userId, categories, tags, title, summary } = req.body
     const recipeFiles = req.files
-
     const ingredients = JSON.parse(req.body.ingredients)
     const recipeElements = JSON.parse(req.body.recipeElements).filter(element => !!element)
 
@@ -428,6 +420,7 @@ app.get('/feed-recipes', async (req, res) => {
         aggregatedResults = await RecipeOverview.aggregate(pipeline)
 
         results = aggregatedResults.map(result => new RecipeOverview(result))
+
         recipes = await RecipeOverview.populate(
             results, [
                 { path: 'userId', select: 'username' },
@@ -502,7 +495,9 @@ app.get('/search-recipes', async (req, res) => {
         pipeline.push({ $limit: 10 })
 
         aggregatedResults = await RecipeOverview.aggregate(pipeline)
+        
         results = aggregatedResults.map(result => new RecipeOverview(result))
+        
         recipes = await RecipeOverview.populate(
             results, [
                 { path: 'userId', select: 'username' },
@@ -718,16 +713,21 @@ app.get('/user-recipes', async (req, res) => {
 
 app.get('/get-recipe', async (req, res) => {
     const { recipeId, userId } = req.query
+    let recipe
 
     try {
-        const recipe = await Recipe.findById( recipeId )
+        recipe = await Recipe.findById(recipeId)
             .populate({
                 path: 'userId',
                 model: 'User',
                 select: ['username', 'profilePicture']
             })
             .lean()
-        
+    } catch {
+        return res.status(400).json({ message: 'No such recipe found.' })
+    }
+    
+    try {
         if (!recipe) {
             return res.status(400).json({ message: 'No such recipe found.' })
         }
@@ -772,26 +772,35 @@ app.post('/submit-feedback', async (req, res) => {
 
 app.get('/get-feedbacks', async (req, res) => {
     const { recipeId } = req.query
-
-    const pipeline = [
-        { 
-            $match: { recipeId: new Types.ObjectId(recipeId) }
-        },
-        {
-            $sort: { createdAt: -1 }
-        }
-    ]
+    let pipeline 
+    
+    try {
+        pipeline = [
+            { 
+                $match: { recipeId: new Types.ObjectId(recipeId) }
+            },
+            {
+                $sort: { createdAt: -1 }
+            }
+        ]
+    } catch (err) {
+        return res.status(400).json({ message: 'No such recipe found.' })
+    }
 
     try {
         const aggregatedResults = await Feedback.aggregate(pipeline)
+        
+        if (aggregatedResults.length === 0) {
+            return res.status(400).json({ message: 'No such recipe found.' })
+        }
 
         const feedbacks = await User.populate(aggregatedResults, {
             path: 'userId',
             select: ['username', 'profilePicture']
         })
-  
+        
         const feedbackCount = await Recipe.findById(recipeId).select('feedbackCount')
-
+   
         return res.status(200).json({ payload: { feedbacks, feedbackCount } })
     } catch (err) {
         console.log(err)
@@ -930,7 +939,7 @@ app.get('/get-author-info', async (req, res) => {
         const user = await User.findOne({ username: authorName })
         
         if (!user) {
-            return res.status(202).json({ message: 'User not found.' })
+            return res.status(400).json({ message: 'User not found.' })
         }
 
         const isFollowed = await Follow.findOne({ userId, followedId: user._id }) !== null
@@ -962,7 +971,7 @@ app.post('/follow-user', async (req, res) => {
         const user = await User.findOne({ username: authorName })
         
         if (!user) {
-            return res.status(202).json({ message: 'User not found.' })
+            return res.status(400).json({ message: 'User not found.' })
         }
 
         const isFollowed = await Follow.findOne({ userId, followedId: user._id }) !== null
@@ -1024,7 +1033,7 @@ app.post('/get-followers', async (req, res) => {
         const user = await User.findOne({ username: authorName })
         
         if (!user) {
-            return res.status(202).json({ message: 'User not found.' })
+            return res.status(400).json({ message: 'User not found.' })
         }
 
         const followers = await Follow.find({ followedId: user._id })
@@ -1044,7 +1053,7 @@ app.post('/change-password', async (req, res) => {
         const user = await User.findById(userId)
         
         if (!user) {
-            return res.status(202).json({ message: 'User not found.' })
+            return res.status(400).json({ message: 'User not found.' })
         }
 
         user.password = password
@@ -1067,7 +1076,7 @@ app.post('/change-profile-picture', upload.any(), async (req, res) => {
         const user = await User.findById(userId)
 
         if (!user) {
-            return res.status(202).json({ message: 'User not found.' })
+            return res.status(400).json({ message: 'User not found.' })
         }
 
         const profilePictureLink = await uploadFileToStorage(profilePicture[0])
@@ -1091,7 +1100,7 @@ app.post('/change-bio', async (req, res) => {
         const user = await User.findById(userId)
         
         if (!user) {
-            return res.status(202).json({ message: 'User not found.' })
+            return res.status(400).json({ message: 'User not found.' })
         }
 
         user.bio = bio

@@ -1,16 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react'
+
 import RemoveIcon from '../assets/remove-icon.svg'
 
-function CustomTextarea(p) {
+function CustomTextarea({
+    keyIndex, values,
+    setValues, placeholder,
+    maxLength, attribute
+}) {
     const textareaRef = useRef(null)
     const [isFocused, setIsFocused] = useState(false)
-
-    const keyIndex = p.keyIndex
-    const values = p.values
-    const setValues = p.setValues
-    const placeholder = p.placeholder
-    const maxLength = p.maxLength
-    const attribute = p.attribute
 
     function autoResize() {
         const textarea = textareaRef.current
@@ -57,12 +55,10 @@ function CustomTextarea(p) {
     )
 }
 
-function SectionHeader(p) {
-    const keyIndex = p.keyIndex
-    const values = p.values
-    const setValues = p.setValues
-    const removeElement = p.removeElement
-
+function SectionHeader({
+    keyIndex, values,
+    setValues, removeElement
+}) {
     return (
         <div className="py-6 px-3 flex flex-col justify-center items-center gap-3 mb-3 rounded-3xl bg-zinc-900">
             <CustomTextarea attribute={`${ !values.some(value => value.key === keyIndex) && "bg-zinc-600" } px-3 text-3xl font-semibold w-full focus:bg-zinc-600 bg-transparent`} 
@@ -76,12 +72,10 @@ function SectionHeader(p) {
     )
 }
 
-function DescriptionText(p) {
-    const keyIndex = p.keyIndex
-    const values = p.values
-    const setValues = p.setValues
-    const removeElement = p.removeElement
-
+function DescriptionText({
+    keyIndex, values,
+    setValues, removeElement
+}) {
     return (
         <div className="py-6 px-3 flex flex-col justify-center items-center gap-6 mb-3 rounded-3xl bg-zinc-900">
             <CustomTextarea attribute={`${ !values.some(value => value.key === keyIndex) && "bg-zinc-600" } px-3 text-xl w-full focus:bg-zinc-600 bg-transparent`} 
@@ -95,12 +89,10 @@ function DescriptionText(p) {
     )
 }
 
-function ImageCarousel(p) {
-    const keyIndex = p.keyIndex
-    const values = p.values
-    const setValues = p.setValues
-    const removeElement = p.removeElement
-
+function ImageCarousel({
+    keyIndex, values,
+    setValues, removeElement
+}) {
     const divRef = useRef()
     const [isNewAdded, setIsNewAdded] = useState(false)
     const elementFiles = values.find(element => element.key === keyIndex)
@@ -116,11 +108,11 @@ function ImageCarousel(p) {
         const id = e.target.name
         const key = keyIndex
         const file = e.target.files[0]
-        const maxSizeInBytes = 5 * 1024 * 1024
+        const maxSizeInBytes = 1 * 1024 * 1024
 
         if (file && file.size > maxSizeInBytes) {
-            // placeholder
-            return alert('File size exceeds the maximum allowed limit (5MB). Please Select a smaller file.')
+            // log
+            return alert('File size exceeds the maximum allowed limit (1MB). Please Select a smaller file.')
         } else if (!file) {
             return
         }
@@ -169,17 +161,13 @@ function ImageCarousel(p) {
     )
 }
 
-function RecipeElement(p) {
-    const keyIndex = p.keyIndex
-    const contentType = p.contentType
-    const addElement = p.addElement
-    const elementTexts = p.elementTexts
-    const setElementTexts = p.setElementTexts
-    const elementFiles = p.elementFiles
-    const setElementFiles = p.setElementFiles
-    const recipeElements = p.recipeElements
-    const setRecipeElements = p.setRecipeElements
-
+function RecipeElement({
+    keyIndex, contentType,
+    addElement, elementTexts,
+    setElementTexts, elementFiles,
+    setElementFiles, recipeElements,
+    setRecipeElements
+}) {
     function removeElement() {
         setElementTexts(elementTexts.filter(element => element.key !== keyIndex))
         setElementFiles(elementFiles.filter(element => element.key !== keyIndex))

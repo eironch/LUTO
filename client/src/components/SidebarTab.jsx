@@ -92,79 +92,76 @@ function SidebarTab({
             </div>
             <div className="col-span-11"></div>
             {/* filters */}
-            {
-                currentTab !== "Settings" &&
-                <div className="bg-zinc-900 flex flex-col text-zinc-100 rounded-3xl col-span-2 overflow-hidden pointer-events-auto">
-                    <div className="flex p-6 gap-3 shadow-md shadow-zinc-950 flex-row items-center">
-                        <img  className="w-8" src={ FilterIcon } alt="" />
-                        <p className="text-2xl font-bold">
-                            Filter
-                        </p>
-                    </div>
-                    {/* selected tags */}
-                    {
-                        filters &&
-                        <div className="flex flex-col pt-3 gap-3 scrollable-div overflow-y-scroll overflow-x-hidden">
-                            <div className="font-semibold pl-2 gap-3">
-                                {
-                                    filters.map((tag, index) => 
-                                        <button className="m-1 px-3 py-1 w-fit bg-zinc-600 rounded-3xl hover:bg-zinc-500" key={ index } id={ index } onClick={ e => { removeTag(e) } }>
-                                            { tag }
-                                        </button>
-                                    )
-                                }
-                            </div>
-                            <div className="pl-3 pr-0.5">
-                                {
-                                    filters.length > 0 &&
-                                    <button className="w-full px-3 py-2 mb-3 text-red-500 font-semibold rounded-3xl shadow-md shadow-zinc-950 bg-zinc-600 hover:bg-zinc-500" onClick={ () => setFilters([]) }>
-                                        Clear filters
+            <div className="bg-zinc-900 flex flex-col text-zinc-100 rounded-3xl col-span-2 overflow-hidden pointer-events-auto">
+                <div className="flex p-6 gap-3 shadow-md shadow-zinc-950 flex-row items-center">
+                    <img  className="w-8" src={ FilterIcon } alt="" />
+                    <p className="text-2xl font-bold">
+                        Filter
+                    </p>
+                </div>
+                {/* selected tags */}
+                {
+                    filters &&
+                    <div className="flex flex-col pt-3 gap-3 scrollable-div overflow-y-scroll overflow-x-hidden">
+                        <div className="font-semibold pl-2 gap-3">
+                            {
+                                filters.map((tag, index) => 
+                                    <button className="m-1 px-3 py-1 w-fit bg-zinc-600 rounded-3xl hover:bg-zinc-500" key={ index } id={ index } onClick={ e => { removeTag(e) } }>
+                                        { tag }
                                     </button>
-                                }
-                                {/* search input */}
-                                <div className="relative z-30 flex w-full items-center justify-center shadow-md shadow-zinc-950 rounded-3xl bg-zinc-600">
-                                    <div className="absolute flex ml-4 left-0 right-0 items-start justify-left pointer-events-none">
-                                        <img className="w-6" src={ SearchIcon } alt="" />
-                                    </div>
-                                    <input className="w-full px-14 h-10 rounded-3xl bg-transparent text-zinc-100 text-start"
-                                        value={ searchValue } onChange={ e => setSearchValue(e.target.value) } type="text" placeholder="Search tags"
-                                    />
-                                    {
-                                        searchValue &&
-                                        <div className="absolute flex mr-4 pr-2 w-full justify-end pointer-events-none">
-                                            <button className="p-2 rounded-3xl hover:bg-zinc-500 pointer-events-auto" onClick={ () => setSearchValue('') }>
-                                                <img className="w-4" src={ RemoveIcon } alt=""/>
-                                            </button>
-                                        </div>
-                                    }
+                                )
+                            }
+                        </div>
+                        <div className="pl-3 pr-0.5">
+                            {
+                                filters.length > 0 &&
+                                <button className="w-full px-3 py-2 mb-3 text-red-500 font-semibold rounded-3xl shadow-md shadow-zinc-950 bg-zinc-600 hover:bg-zinc-500" onClick={ () => setFilters([]) }>
+                                    Clear filters
+                                </button>
+                            }
+                            {/* search input */}
+                            <div className="relative z-30 flex w-full items-center justify-center shadow-md shadow-zinc-950 rounded-3xl bg-zinc-600">
+                                <div className="absolute flex ml-4 left-0 right-0 items-start justify-left pointer-events-none">
+                                    <img className="w-6" src={ SearchIcon } alt="" />
                                 </div>
-                            </div>
-                            {/* tags */}
-                            <div className="font-semibold pl-2 mb-3 gap-3">
+                                <input className="w-full px-14 h-10 rounded-3xl bg-transparent text-zinc-100 text-start"
+                                    value={ searchValue } onChange={ e => setSearchValue(e.target.value) } type="text" placeholder="Search tags"
+                                />
                                 {
-                                    tagChoices.map((tag, index) => {
-                                        let isAdded
-
-                                        if (filters) {
-                                        isAdded = filters.find(recipeTag => recipeTag === tag)
-                                        } else {
-                                            isAdded = false
-                                        }
-                                        
-                                        return (
-                                            <button className={`${ isAdded ? "bg-zinc-800" : "bg-zinc-600 hover:bg-zinc-500" } m-1 px-3 py-1 w-fit rounded-3xl`} 
-                                                disabled={ isAdded } key={ index } id={ index } onClick={ e => { addTag(e) } }
-                                            >
-                                                { tag }
-                                            </button>
-                                        )
-                                    })
+                                    searchValue &&
+                                    <div className="absolute flex mr-4 pr-2 w-full justify-end pointer-events-none">
+                                        <button className="p-2 rounded-3xl hover:bg-zinc-500 pointer-events-auto" onClick={ () => setSearchValue('') }>
+                                            <img className="w-4" src={ RemoveIcon } alt=""/>
+                                        </button>
+                                    </div>
                                 }
                             </div>
                         </div>
-                    }
-                </div>   
-            }  
+                        {/* tags */}
+                        <div className="font-semibold pl-2 mb-3 gap-3">
+                            {
+                                tagChoices.map((tag, index) => {
+                                    let isAdded
+
+                                    if (filters) {
+                                    isAdded = filters.find(recipeTag => recipeTag === tag)
+                                    } else {
+                                        isAdded = false
+                                    }
+                                    
+                                    return (
+                                        <button className={`${ isAdded ? "bg-zinc-800" : "bg-zinc-600 hover:bg-zinc-500" } m-1 px-3 py-1 w-fit rounded-3xl`} 
+                                            disabled={ isAdded } key={ index } id={ index } onClick={ e => { addTag(e) } }
+                                        >
+                                            { tag }
+                                        </button>
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>
+                }
+            </div>   
         </div>
     )
 }

@@ -20,7 +20,6 @@ function Profile({
     handleRemoveRecipe, handleAllowRecipe,
     screenSize
 }) {
-    
     const { authorName } = useParams()
     const [userRecipes, setUserRecipes] = useState([])
     const [isFeedbacksShown, setIsFeedbacksShown] = useState(false)
@@ -32,6 +31,8 @@ function Profile({
     const [fetchedRecipeIds, setFetchedRecipeIds] = useState([])
     const [isFetching, setIsFetching] = useState(false)
     const [isFetchedAll, setIsFetchedAll] = useState(false)
+    const [userFound, setUserFound] = useState()
+
     const scrollDivRef = useRef(null)
     const fetchedRecipeIdsRef = useRef(fetchedRecipeIds)
 
@@ -147,12 +148,7 @@ function Profile({
        <div className={`${ screenSize > 3 ? "scrollable-div" : "pr-3 hide-scrollbar" } h-screen overflow-y-scroll`} ref={ scrollDivRef }>
             {/* navbar */}
             {
-                screenSize <= 3 ?
-                <SidebarProfile 
-                    user={ user } authorName={ authorName }
-                    screenSize={ screenSize }
-                />
-                :
+                screenSize > 3 &&
                 <div className="fixed flex gap-3 flex-col w-full h-dvh pointer-events-none">
                     <div className="p-3 pb-0">
                         <div className="grid gap-3 w-full min-h-16 pointer-events-none" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
@@ -160,93 +156,113 @@ function Profile({
                                 <img className="px-4 w-48" src={ LogoGradient }alt="" />
                             </Link>
                             <div className="col-span-2 pointer-events-auto">
-                                <Link to="/create" className="flex items-center p-4 gap-4 w-full h-full rounded-3xl bg-orange-500 hover:bg-orange-400 overflow-hidden">
-                                    <p className="flex text-zinc-100 text-lg w-full font-semibold">
-                                        Create
-                                    </p>
-                                    <img className="w-8" src={ CreateIcon } alt="" />
-                                </Link>
+                                {
+                                    userFound !== false &&
+                                    <Link to="/create" className="flex items-center p-4 gap-4 w-full h-full rounded-3xl bg-orange-500 hover:bg-orange-400 overflow-hidden">
+                                        <p className="flex text-zinc-100 text-lg w-full font-semibold">
+                                            Create
+                                        </p>
+                                        <img className="w-8" src={ CreateIcon } alt="" />
+                                    </Link>
+                                }
                             </div>
                         </div>
                     </div>
                     <SidebarProfile 
                         user={ user } authorName={ authorName }
+                        userFound={ userFound } setUserFound={ setUserFound }
                     />
                 </div>
             }
-            <div className="flex flex-col p-3 pb-0 pt-0 pr-0 bg-zinc-950">
-                {/* content */}
-                <div className="flex xl:grid w-full h-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
-                    {
-                        screenSize > 3 &&
-                        <div className="col-span-4"></div>
-                    }
-                    <div className="pb-[4.75rem] xl:pb-3 w-full xl:col-span-11">
-                        { 
-                            userRecipes &&
-                            userRecipes.length > 0 &&
-                            userRecipes.map((recipe, index) => 
-                                recipe &&
-                                <RecipeOverview 
-                                    key={ index } user={ user } 
-                                    recipeId={ recipe.recipeId } recipeImage={ recipe.recipeImage } 
-                                    title={ recipe.title } summary={ recipe.summary } 
-                                    authorName={ authorName } pointStatus={ recipe.pointStatus } 
-                                    points={ recipe.points } recipes={ userRecipes } 
-                                    setRecipes={ setUserRecipes } dateCreated={ recipe.createdAt }
-                                    handleGiveRecipePoint={ handleGiveRecipePoint } formatDate={ formatDate }
-                                    feedbackCount={ recipe.feedbackCount } setPrevRecipeId={ setPrevRecipeId }
-                                    setPrevTitle={ setPrevTitle } setIsFeedbacksShown={ setIsFeedbacksShown }
-                                    prevRecipeId={ prevRecipeId } prevFeedbackCount={ prevFeedbackCount } 
-                                    moreModalShown={ moreModalShown } setMoreModalShown={ setMoreModalShown }
-                                    handleFlagRecipe={ handleFlagRecipe } flagCount={ recipe.flagCount }
-                                    setConfirmationShown={ setConfirmationShown } currentTab={ currentTab }
-                                    screenSize={ screenSize }
-                                />
-                            )
-                        }
+            {
+                screenSize < 4 &&
+                <SidebarProfile 
+                    user={ user } authorName={ authorName } 
+                    userFound={ userFound } setUserFound={ setUserFound }
+                />
+            }
+            {
+                userFound !== false &&
+                <div className="flex flex-col p-3 pb-0 pt-0 pr-0 bg-zinc-950">
+                    {/* content */}
+                    <div className="flex xl:grid w-full h-full gap-3" style={ { gridTemplateColumns: "repeat(15, minmax(0, 1fr))" } }>
                         {
-                            userRecipes &&
-                            (isFetching || (!isFetchedAll && (userRecipes.length > 10 || userRecipes.length === 0))) &&
-                            <>
-                                <RecipeSuspense screenSize={ screenSize } />
-                                <RecipeSuspense screenSize={ screenSize } />
-                                <RecipeSuspense screenSize={ screenSize } />
-                            </>
+                            screenSize > 3 &&
+                            <div className="col-span-4"></div>
                         }
-                    </div>
-                </div> 
-                {/* feedbacks modal */}
-                {
-                    isFeedbacksShown &&
-                    <FeedbackModal 
-                        user={ user } recipeId={ prevRecipeId }
-                        title={ prevTitle } feedbackCount={ prevFeedbackCount } 
-                        setFeedbackCount={ setPrevFeedbackCount } setShowModal={ setIsFeedbacksShown } 
-                        formatDate={ formatDate } setFeedRecipes={ setUserRecipes }
-                        currentTab={ currentTab }
-                    />
-                }
-                {/* confirm modal */}
-                {
-                    confirmationShown === "remove" &&
-                    <ConfirmModal 
-                        setShowModal={ setConfirmationShown } confirmAction={ removeRecipe }
-                        title={ prevTitle } headerText={ "Confirm Removal" }
-                        bodyText={ "Make sure to thoroughly check whether it goes against our content policy. By removing this, your user ID will be saved as the remover." }
-                        icon={ RemoveIcon } isDanger={ true } screenSize={ screenSize }
-                    />
-                }
-                {
-                    confirmationShown === "allow" &&
-                    <ConfirmModal 
-                        setShowModal={ setConfirmationShown } confirmAction={ allowRecipe }
-                        title={ prevTitle } headerText={ "Confirm Clearance" } 
-                        bodyText={ "Make sure to thoroughly check whether it is in adherance with our content policy." }
-                        icon={ AllowIcon } isDanger={ false } screenSize={ screenSize }
-                    />
-                }
-            </div>
+                        <div className="pb-[4.75rem] xl:pb-3 w-full xl:col-span-11">
+                            { 
+                                userRecipes &&
+                                userRecipes.length > 0 &&
+                                userRecipes.map((recipe, index) => 
+                                    recipe &&
+                                    <RecipeOverview 
+                                        key={ index } user={ user } 
+                                        recipeId={ recipe.recipeId } recipeImage={ recipe.recipeImage } 
+                                        title={ recipe.title } summary={ recipe.summary } 
+                                        authorName={ authorName } pointStatus={ recipe.pointStatus } 
+                                        points={ recipe.points } recipes={ userRecipes } 
+                                        setRecipes={ setUserRecipes } dateCreated={ recipe.createdAt }
+                                        handleGiveRecipePoint={ handleGiveRecipePoint } formatDate={ formatDate }
+                                        feedbackCount={ recipe.feedbackCount } setPrevRecipeId={ setPrevRecipeId }
+                                        setPrevTitle={ setPrevTitle } setIsFeedbacksShown={ setIsFeedbacksShown }
+                                        prevRecipeId={ prevRecipeId } prevFeedbackCount={ prevFeedbackCount } 
+                                        moreModalShown={ moreModalShown } setMoreModalShown={ setMoreModalShown }
+                                        handleFlagRecipe={ handleFlagRecipe } flagCount={ recipe.flagCount }
+                                        setConfirmationShown={ setConfirmationShown } currentTab={ currentTab }
+                                        screenSize={ screenSize }
+                                    />
+                                )
+                            }
+                            {
+                                userRecipes &&
+                                (isFetching || (!isFetchedAll && (userRecipes.length > 10 || userRecipes.length === 0))) &&
+                                <>
+                                    <RecipeSuspense screenSize={ screenSize } />
+                                    <RecipeSuspense screenSize={ screenSize } />
+                                    <RecipeSuspense screenSize={ screenSize } />
+                                </>
+                            }
+                        </div>
+                    </div> 
+                    {/* feedbacks modal */}
+                    {
+                        isFeedbacksShown &&
+                        <FeedbackModal 
+                            user={ user } recipeId={ prevRecipeId }
+                            title={ prevTitle } feedbackCount={ prevFeedbackCount } 
+                            setFeedbackCount={ setPrevFeedbackCount } setShowModal={ setIsFeedbacksShown } 
+                            formatDate={ formatDate } setFeedRecipes={ setUserRecipes }
+                            currentTab={ currentTab }
+                        />
+                    }
+                    {/* confirm modal */}
+                    {
+                        confirmationShown === "remove" &&
+                        <ConfirmModal 
+                            setShowModal={ setConfirmationShown } confirmAction={ removeRecipe }
+                            title={ prevTitle } headerText={ "Confirm Removal" }
+                            bodyText={ "Make sure to thoroughly check whether it goes against our content policy. By removing this, your user ID will be saved as the remover." }
+                            icon={ RemoveIcon } isDanger={ true } screenSize={ screenSize }
+                        />
+                    }
+                    {
+                        confirmationShown === "allow" &&
+                        <ConfirmModal 
+                            setShowModal={ setConfirmationShown } confirmAction={ allowRecipe }
+                            title={ prevTitle } headerText={ "Confirm Clearance" } 
+                            bodyText={ "Make sure to thoroughly check whether it is in adherance with our content policy." }
+                            icon={ AllowIcon } isDanger={ false } screenSize={ screenSize }
+                        />
+                    }
+                </div>
+            }
+            {
+                userFound === false &&
+                <div className="absolute flex w-screen h-screen justify-center items-center text-zinc-100 text-lg md:text-2xl font-bold pointer-events-none">
+                    Sorry, no such user found.
+                </div>
+            }
        </div>
     )
 }

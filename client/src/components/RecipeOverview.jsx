@@ -123,16 +123,9 @@ function RecipeOverview({
             <div className={`${ currentTab === "Popular" ? "rounded-t-none rounded-b-3xl xl:rounded-3xl" : "rounded-3xl mt-3" } block md:hidden bg-zinc-900`}>
                 <div className="flex flex-col w-full gap-3 p-6 pb-3">
                     <div className="flex gap-3 items-center">
-                        {
-                            screenSize > 3 ?
-                            <Link to={`/recipe/${ recipeId }`} className="pb-1 w-full text-zinc-100 text-2xl xl:text-3xl font-bold line-clamp-2 hover:underline">
-                                { title }
-                            </Link>
-                            :
-                            <p className="pb-1 w-full text-zinc-100 text-2xl xl:text-3xl font-bold line-clamp-2">
-                                { title }
-                            </p>
-                        }
+                        <Link to={`/recipe/${ recipeId }`} className="pb-1 w-full text-zinc-100 text-2xl xl:text-3xl font-bold line-clamp-2 hover:underline">
+                            { title }
+                        </Link>
                         <div className="relative flex h-full justify-center items-center text-zinc-100">
                             <button className="w-10 h-10 text-lg rounded-3xl hover:bg-zinc-500" onClick={ () => handleShowMoreModal() } ref={ mobileButtonRef }>
                                 •••

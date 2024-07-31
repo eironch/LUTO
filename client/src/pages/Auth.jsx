@@ -4,18 +4,18 @@ import axios from 'axios'
 
 import LogoWhite from '../assets/luto-white-logo.svg'
 import AllowIcon from '../assets/allow-icon.svg'
+import RemoveIcon from '../assets/remove-icon.svg'
 
-function Auth(p) {
-    const user = p.user
-    const setUser = p.setUser
-    const setIsAuthenticated = p.setIsAuthenticated
-
+function Auth({
+    user, setUser,
+    setIsAuthenticated, screenSize
+}) {
     const [action, setAction] = useState('Sign In')
     const [credsCorrection, setCredsCorrection] = useState({ message: '', affected: [] })
     const [verification, setVerification] = useState({ message: '', status: false })
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [passwordAgain, setPasswordAgain] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
     const [isEmailVerifying, setIsEmailVerifying] = useState(false)
     const [verifyInput0, setVerifyInput0] = useState('')
     const [verifyInput1, setVerifyInput1] = useState('')
@@ -191,10 +191,10 @@ function Auth(p) {
     }
 
     function handleSignUp() {
-        if (!user.username || !password || !passwordAgain) {
+        if (!user.username || !password || !confirmPassword) {
             setCredsCorrection({ 
                 message: 'Please provide all required details to create an account.', 
-                affected: [!user.username && 'username', !email && 'email', (!password || !passwordAgain) && 'password'] 
+                affected: [!user.username && 'username', !email && 'email', (!password || !confirmPassword) && 'password'] 
             })
 
             return
@@ -209,7 +209,7 @@ function Auth(p) {
             return
         }
 
-        if (password !== passwordAgain) {
+        if (password !== confirmPassword) {
             setCredsCorrection({ 
                 message: 'Passwords do not match. Please re-enter your password.', 
                 affected: ['password'] 
@@ -225,7 +225,7 @@ function Auth(p) {
         if (!user.username || !password) {
             setCredsCorrection({ 
                 message: 'Please enter both username and password to log in.', 
-                affected: [!user.username && 'username', (!password || !passwordAgain) && 'password'] 
+                affected: [!user.username && 'username', (!password || !confirmPassword) && 'password'] 
             })
 
             return
@@ -244,7 +244,7 @@ function Auth(p) {
         setUser({ username: '', userId: '' })
         setEmail('')
         setPassword('')
-        setPasswordAgain('')
+        setConfirmPassword('')
         setCredsCorrection({ message: '', affected: [] })
         setAction(action) 
     }
@@ -359,23 +359,31 @@ function Auth(p) {
 
     useEffect(() => {
         if (verifyInput5) {
-            console.log(verifyInput5)
             verifyCode()
         }
     },[verifyInput5])
 
     return (
-        <div className="grid grid-cols-2 p-3 h-dvh bg-gradient-to-b from-orange-500 to-orange-400 gap-3 overflow-hidden">
-            <div className="flex flex-col items-center justify-center">
-                <img className="" src={ LogoWhite }alt=""/>
-                <p className="mt-3 text-zinc-100 text-4xl overflow-hidden text-ellipsis line-clamp-1">Community with a Recipe.</p>
-            </div>
-            <div className="flex flex-col shadow-md shadow-zinc-950 bg-zinc-900 rounded-3xl justify-center py-5">
-                <div className="flex flex-col items-center">
+        <div className="flex flex-col xl:grid grid-cols-2 p-3 w-screen h-screen justify-center items-center bg-gradient-to-b from-orange-500 to-orange-400 gap-3 overflow-hidden">
+            {
+                screenSize > 3 &&
+                <div className="flex flex-col mb-3 xl:mb-0 items-center justify-center overflow-hidden">
+                    <img className="w-full" src={ LogoWhite }alt=""/>
+                    <p className="xl:mt-3 text-zinc-100 text-xl md:text-3xl xl:text-4xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Community with a Recipe.</p>
+                </div>
+            }
+            {
+                screenSize < 4 && 
+                <div className="absolute  inset-0 flex flex-col mt-3 justify-start items-center overflow-hidden">
+                    <img className="w-52" src={ LogoWhite }alt=""/>
+                </div>
+            }
+            <div className="relative z-10 flex flex-col w-full md:w-10/12 xl:w-full xl:h-full shadow-md shadow-zinc-950 bg-zinc-900 rounded-3xl justify-center py-5">
+                <div className="flex flex-col mt-5 items-center">
                     <h1 className="text-zinc-100 text-5xl font-bold">{ action }</h1>
                 </div>
-                <div className="flex flex-col mt-10 gap-3 items-center">
-                    <div className="flex w-10/12 -mt-6 -mb-3 justify-center text-center text-red-500">
+                <div className="flex flex-col mt-10 items-center">
+                    <div className="flex w-10/12 -mt-6 justify-center text-center text-red-500">
                         { credsCorrection.message || <>&nbsp;</> }
                     </div>
                     <input 
@@ -417,8 +425,8 @@ function Auth(p) {
                                 ${credsCorrection.affected.includes('password') ? "border-red-600" : "border-zinc-600" } 
                                 bg-transparent text-center border-2 rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 mb-3
                             `} 
-                            value={ passwordAgain } onChange={ (e) => { setPasswordAgain(e.target.value) } } 
-                            type="password" placeholder="Password Again"
+                            value={ confirmPassword } onChange={ (e) => { setConfirmPassword(e.target.value) } } 
+                            type="password" placeholder="Confirm Password"
                             onKeyDown={ e => { handleEnterKey(e) } } ref={ passswordAgainRef }
                         />
                     }
@@ -438,17 +446,17 @@ function Auth(p) {
                         }
                     </div>
                 </div>
-                <div className="flex flex-col items-center mt-5"> 
+                <div className="flex flex-col items-center xl:mt-5 mb-5"> 
                     {
                         action === "Sign In" ? 
-                        <div className="grid grid-cols-3 gap-6 text-zinc-100 w-10/12">
+                        <div className="xl:grid grid-cols-3 gap-6 text-zinc-100 w-10/12">
                             <p className="text-xl py-4 text-center overflow-hidden text-ellipsis line-clamp-2">Don't have an account?</p> 
                             <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 hover:border-zinc-500 col-span-2 text-xl font-semibold rounded-3xl text-zinc-100 bg-transparent border-2 border-zinc-600 p-3 w-full" onClick={ () => { handleActionChange("Sign Up") } }> 
                                 Sign Up
                             </button>
                         </div> 
                         :
-                        <div className="grid grid-cols-3 gap-6 text-zinc-100 w-10/12">
+                        <div className="xl:grid grid-cols-3 gap-6 text-zinc-100 w-10/12">
                             <p className="text-xl py-4 text-center overflow-hidden text-ellipsis line-clamp-2">Already have an account?</p> 
                             <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 hover:border-zinc-500 col-span-2 text-xl font-semibold rounded-3xl text-center text-zinc-100 bg-transparent border-2 border-zinc-600 p-3 w-full" onClick={ () => { handleActionChange("Sign In") } }> 
                                 Sign In
@@ -459,11 +467,12 @@ function Auth(p) {
             </div>
             {
                     isEmailVerifying &&
-                    <div className="absolute inset-0 grid place-items-center h-screen pt-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-hidden"
+                    <div className="absolute inset-0 grid place-items-center h-screen px-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-hidden"
                             onMouseDownCapture={ e => { 
-                                // if (screenSize < 4) {
-                                //     return
-                                // } 
+                                if (screenSize < 4) {
+                                    return
+                                }
+
                                 const isOutsideModal = !e.target.closest('.model-inner')
                                 
                                 if (isOutsideModal && verification.status) {
@@ -472,29 +481,35 @@ function Auth(p) {
                             } 
                         }
                     >
-                        <div className={`${ verification.status ? "w-5/12" : "w-5/12 min-w-fit" } flex flex-col gap-3 justify-center items-center overflow-hidden model-inner`}>
-                            <div className="flex flex-col w-full py-20 mx-9 gap-9 items-center rounded-3xl bg-zinc-900 overflow-hidden">
+                        <div className={`${ verification.status ? "w-full md:w-10/12 xl:w-5/12" : "w-full md:w-10/12 xl:w-5/12 min-w-fit" } flex flex-col gap-3 justify-center items-center overflow-hidden model-inner`}>
+                            <div className="flex flex-col w-full py-14 xl:py-20 mx-6 xl:mx-9 gap-9 justify-center items-center rounded-3xl bg-zinc-900 overflow-hidden">
+                              
                                 {
                                     verification.status ?
                                     <>
+                                        <div className="flex w-full px-6 justify-end">
+                                            <button className="p-3 rounded-3xl hover:bg-zinc-600" onClick={ () => setIsEmailVerifying(false) }>
+                                                <img className="min-w-4 w-4" src={ RemoveIcon } alt=""/>
+                                            </button>
+                                        </div>
                                         <p className="text-2xl mb-3 font-bold line-clamp-1">
-                                           Account created!
+                                            Account created!
                                         </p>
                                         <img className="w-24" src={ AllowIcon } alt="" />
                                     </>
                                     :
                                     <>
-                                        <p className="text-2xl mb-3 font-bold">
+                                        <p className="text-xl md:text-2xl mb-3 font-bold">
                                             Verify Email Address
                                         </p>
                                         <div className="flex w-10/12 -mt-6 -mb-3 justify-center text-center text-red-500">
                                             { verification.message || <>&nbsp;</> }
                                         </div>
-                                        <div className="flex gap-2 hover:cursor-text" onClick={ () => { focusVerifyInput() }}>
+                                        <div className="flex gap-1 md:gap-2 justify-center hover:cursor-text" onClick={ () => { focusVerifyInput() }}>
                                             {
                                                 verifyInputUses.map((use, index, arr) =>
                                                     <input 
-                                                        className="bg-transparent text-center border-2 border-zinc-600 rounded-3xl p-3 w-20 h-24 caret-zinc-100 text-3xl font-bold text-zinc-100 pointer-events-none" 
+                                                        className="bg-transparent text-center border-2 border-zinc-600 rounded-xl md:rounded-3xl w-1/12 md:w-20 h-16 md:h-24 caret-zinc-100 md:text-2xl xl:text-3xl font-bold text-zinc-100 pointer-events-none" 
                                                         type="text" maxLength="1" ref={ use.ref }
                                                         value={ use.state[0] } onChange={ e => { handleVerifyInputChange(e, use.state[1], index !== 5 && arr[index + 1].ref) } }
                                                         onKeyDown={ e => { handleVerifyInputKeyDown(e, index !== 0 && arr[index - 1].ref)  } } key={ index }
@@ -505,7 +520,7 @@ function Auth(p) {
                                         </div>
                                         {
                                             !verification.status &&
-                                            <div className="flex">
+                                            <div className="flex flex-col md:flex-row text-sm md:text-base">
                                                 <p className="text-zinc-400">
                                                     Resend verification code?&nbsp;
                                                 </p>
@@ -522,12 +537,15 @@ function Auth(p) {
                                                 </button>
                                             </div>
                                         }
-                                        <div className="flex">
+                                        <div className="flex w-fit flex-col md:flex-row justify-center items-center text-sm md:text-base overflow-hidden">
                                             <p className="text-zinc-400">
-                                                The verification code was sent to&nbsp;
+                                                The verification code 
                                             </p>
-                                            <p className="font-semibold text-zinc-300">
-                                                { email }&nbsp;
+                                            <div className="flex text-zinc-400">
+                                                &nbsp;was sent to
+                                            </div>
+                                            <p className="font-semibold mx-3 text-zinc-300">
+                                                { email }
                                             </p>
                                             <button className="text-blue-400 hover:underline" onClick={ () => { 
                                                     setIsEmailVerifying(false) 

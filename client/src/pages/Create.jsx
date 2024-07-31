@@ -36,7 +36,6 @@ function Create({
     const [recipeTabShown, setRecipeTabShown] = useState('Overview')
     
     const navigate = useNavigate()
-
     const keys = [uuidv4(), uuidv4()]
 
     const [elementTexts, setElementTexts] = useState([
@@ -172,23 +171,23 @@ function Create({
                     </div>
                     <SidebarCreate
                         user={ user }    
-                        setRecipeImage={ setRecipeImage || null }
-                        summary={ summary || null } setSummary={ setSummary || null }
-                        ingredients={ ingredients || null } setIngredients={ setIngredients || null }
-                        tags={ tags || null } setTags={ setTags || null }
+                        setRecipeImage={ setRecipeImage }
+                        summary={ summary } setSummary={ setSummary }
+                        ingredients={ ingredients } setIngredients={ setIngredients }
+                        tags={ tags } setTags={ setTags }
                         currentTab={ currentTab } setCurrentTab={ setCurrentTab } 
                         systemTags={ systemTags }
-                    />   
+                    />
                 </div>
             }
             {
                 recipeTabShown === "Overview" && screenSize < 3 &&
                 <SidebarCreate
                     user={ user }    
-                    setRecipeImage={ setRecipeImage || null }
-                    summary={ summary || null } setSummary={ setSummary || null }
-                    ingredients={ ingredients || null } setIngredients={ setIngredients || null }
-                    tags={ tags || null } setTags={ setTags || null }
+                    setRecipeImage={ setRecipeImage }
+                    summary={ summary } setSummary={ setSummary }
+                    ingredients={ ingredients } setIngredients={ setIngredients }
+                    tags={ tags } setTags={ setTags }
                     currentTab={ currentTab } setCurrentTab={ setCurrentTab } 
                     systemTags={ systemTags } title={ title }
                     setTitle={ setTitle } screenSize={ screenSize }
@@ -306,6 +305,17 @@ function Create({
                     </div>
                 </div>
             }
+            {/* publish button */}
+            <div className="absolute z-[9999] inset-0 flex w-screen h-screen pb-[4.75rem] pr-3 justify-end items-end pointer-events-none">
+                    <button className={`
+                            ${ (title && recipeImage.size && summary && ingredients.some(ingredient => ingredient.value !== "")) && "bg-orange-500 hover:bg-orange-400" } 
+                            rounded-3xl flex items-center p-4 gap-4 w-14 h-14 disabled:bg-zinc-800 disabled:cursor-not-allowed
+                        `} 
+                        onClick={ () => { publishRecipe() } } disabled={ !(title && recipeImage.size && summary && ingredients.some(ingredient => ingredient.value !== "")) }
+                    >
+                    <img className="w-8" src={ CreateIcon } alt="" />
+                </button>
+            </div>
             {/* confirm modal */}
             {
                 confirmation.shown === "exit" &&
@@ -339,7 +349,7 @@ function ElementsModal({
     screenSize
 }) {
     return (
-        <div className="absolute z-30 flex xl:grid place-items-center w-screen h-screen px-3 py-16 xl:py-0 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-hidden" 
+        <div className="absolute z-30 flex xl:grid place-items-center w-screen h-screen justify-center px-3 py-16 xl:py-0 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-hidden" 
             onMouseDownCapture={ e => { 
                     if (screenSize < 4) {
                         return
@@ -353,7 +363,7 @@ function ElementsModal({
                 } 
             }
         >
-            <div className="flex flex-col gap-3 w-full xl:w-5/12 justify-center items-center overflow-hidden model-inner">
+            <div className="flex flex-col gap-3 w-full md:w-10/12 xl:w-5/12 justify-center items-center overflow-hidden model-inner">
                 <div className="flex flex-col w-full h-full rounded-3xl bg-zinc-900 overflow-hidden">
                     <div className="flex flex-row items-center p-6 gap-3 shadow-md shadow-zinc-950">
                         <img className="w-8 mr-3" src={ AddIcon } alt="" />

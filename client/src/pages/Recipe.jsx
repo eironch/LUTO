@@ -26,8 +26,8 @@ function Recipe({
     const [feedbackCount, setFeedbackCount] = useState()
     const [isRecipeSaved, setIsRecipeSaved] = useState()
     const [pointStatus, setPointStatus] = useState()
-    const [isNavbarRecipeShown, setIsNavbarRecipeShown] = useState(true)
     const [recipeTabShown, setRecipeTabShown] = useState('Overview')
+    const [recipeFound, setRecipeFound] = useState()
     
     const scrollDivRef = useRef(null) 
 
@@ -54,6 +54,8 @@ function Recipe({
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
                 
+                setRecipeFound(true)
+                
                 setAuthorName(res.data.payload.userInfo.username)
                 setProfilePicture(res.data.payload.userInfo.profilePicture)
                 setRecipeImage(res.data.payload.recipeContents.recipeImage)
@@ -68,6 +70,9 @@ function Recipe({
                 setIsRecipeSaved(res.data.payload.recipeStatus.isSaved)
             })
             .catch(err => {
+                if (err.response.status === 400) {
+                    setRecipeFound(false)
+                }
                 console.log('Error Status:', err.response.status)
                 console.log('Error Data:', err.response.data)
             })
@@ -93,45 +98,65 @@ function Recipe({
                             <Link to="/home" className="col-span-2 items-center gap-4 bg-zinc-900 pointer-events-auto flex flex-row justify-center w-full h-full rounded-3xl overflow-hidden hover:bg-zinc-500">
                                 <img className="px-4 w-48 " src={ LogoGradient }alt="" />
                             </Link>
-                            <div className="col-span-2 pointer-events-auto">
-                                <button className={`${ isRecipeSaved ? "bg-zinc-900 hover:bg-zinc-500" : "bg-orange-500 disabled:cursor-not-allowed disabled:bg-zinc-900 hover:bg-orange-400"} flex items-center p-4 gap-4 w-full h-full rounded-3xl overflow-hidden`} 
-                                    onClick={ () => handleSaveRecipe() } disabled={ !title }
-                                >
-                                    <p className="flex text-zinc-100 text-lg w-full font-semibold">
-                                        { isRecipeSaved ? "Unsave" :"Save" }
-                                    </p>
-                                    <img className="w-8" src={ SaveIcon } alt="" />
-                                </button>
-                            </div>
+                            {
+                                recipeFound !== false &&
+                                <div className="col-span-2 pointer-events-auto">
+                                    <button className={`${ isRecipeSaved ? "bg-zinc-900 hover:bg-zinc-500" : "bg-orange-500 disabled:cursor-not-allowed disabled:bg-zinc-800 hover:bg-orange-400"} flex items-center p-4 gap-4 w-full h-full rounded-3xl overflow-hidden`} 
+                                        onClick={ () => handleSaveRecipe() } disabled={ !recipeFound }
+                                    >
+                                        {
+                                            recipeFound &&
+                                            <>
+                                                <p className="flex text-zinc-100 text-lg w-full font-semibold">
+                                                    { isRecipeSaved ? "Unsave" :"Save" }
+                                                </p>
+                                                <img className="w-8" src={ SaveIcon } alt="" />
+                                            </>
+                                        }
+                                    </button>
+                                </div>
+                            }
                         </div>
                     </div>
-                    <SidebarRecipe
-                        user={ user } recipeId={ recipeId || null }
-                        summary={ summary || null } recipeImage={ recipeImage || null }
-                        ingredients={ ingredients || null } tags={ tags || null }
-                        authorName={ authorName || null } points={ points } 
-                        setPoints={ setPoints } feedbackCount={ feedbackCount } 
-                        setFeedbackCount={ setFeedbackCount } currentTab={ currentTab } 
-                        pointStatus={ pointStatus || null } setPointStatus={ setPointStatus || null }
-                        formatDate={ formatDate || null } handleGiveRecipePoint={ handleGiveRecipePoint }
-                        profilePicture={ profilePicture } screenSize={ screenSize }
-                    />      
+                    {
+                        recipeFound !== false ?
+                        <SidebarRecipe
+                            user={ user } recipeId={ recipeId }
+                            summary={ summary } recipeImage={ recipeImage }
+                            ingredients={ ingredients } tags={ tags }
+                            authorName={ authorName } points={ points } 
+                            setPoints={ setPoints } feedbackCount={ feedbackCount } 
+                            setFeedbackCount={ setFeedbackCount } currentTab={ currentTab } 
+                            pointStatus={ pointStatus } setPointStatus={ setPointStatus }
+                            formatDate={ formatDate } handleGiveRecipePoint={ handleGiveRecipePoint }
+                            profilePicture={ profilePicture } screenSize={ screenSize }
+                        />     
+                        :
+                        <div className="absolute flex w-screen h-screen justify-center items-center text-zinc-100 text-4xl font-bold">Sorry, no sssuch recipe found.</div>
+                    } 
                 </div>
             }
             {
                 recipeTabShown === "Overview" && screenSize < 4 &&
+                recipeFound !== false &&
                 <SidebarRecipe
-                    user={ user } recipeId={ recipeId || null }
-                    summary={ summary || null } recipeImage={ recipeImage || null }
-                    ingredients={ ingredients || null } tags={ tags || null }
-                    authorName={ authorName || null } points={ points } 
+                    user={ user } recipeId={ recipeId }
+                    summary={ summary } recipeImage={ recipeImage }
+                    ingredients={ ingredients } tags={ tags }
+                    authorName={ authorName } points={ points } 
                     setPoints={ setPoints } feedbackCount={ feedbackCount } 
                     setFeedbackCount={ setFeedbackCount } currentTab={ currentTab } 
-                    pointStatus={ pointStatus || null } setPointStatus={ setPointStatus || null }
-                    formatDate={ formatDate || null } handleGiveRecipePoint={ handleGiveRecipePoint }
+                    pointStatus={ pointStatus } setPointStatus={ setPointStatus }
+                    formatDate={ formatDate } handleGiveRecipePoint={ handleGiveRecipePoint }
                     profilePicture={ profilePicture } scrollDivRef={ scrollDivRef }
                     screenSize={ screenSize } title={ title }
-                />   
+                />
+            }
+            {
+                screenSize < 4 && recipeFound === false &&
+                <div className="absolute flex w-screen h-screen justify-center items-center text-zinc-100 text-lg md:text-2xl font-bold pointer-events-none">
+                    Sorry, no such recipe found.
+                </div>
             }
             {
                 (recipeTabShown === "Instructions" || screenSize > 3) &&
@@ -142,7 +167,7 @@ function Recipe({
                             <div className="col-span-4"></div>
                         }
                         <div className="xl:col-span-11 flex flex-col w-full xl:mb-3 -mt-3 xl:mt-0 rounded-3xl text-zinc-100">
-                        {
+                            {
                                 title &&
                                 screenSize > 3 &&
                                 <div className="flex flex-col items-center w-full mt-3 p-6 rounded-3xl bg-zinc-900">
@@ -196,9 +221,17 @@ function Recipe({
                     </div>
                 </div>
             }
-            {/* NavBar */} 
+            {/* save button */}
+            <div className="absolute z-[9999] inset-0 flex w-screen h-screen pb-[4.75rem] pr-3 justify-end items-end pointer-events-none">
+                <button className={`${ isRecipeSaved ? "bg-zinc-600 hover:bg-zinc-500" : "bg-orange-500 disabled:cursor-not-allowed disabled:bg-zinc-800 hover:bg-orange-400"} flex bottom-0 right-0 items-center p-4 gap-4 w-14 h-14 rounded-3xl overflow-hidden pointer-events-auto`} 
+                    onClick={ () => handleSaveRecipe() } disabled={ !recipeFound }
+                >
+                    <img className="w-8" src={ SaveIcon } alt="" />
+                </button>
+            </div>
+            {/* nav bar */} 
             {
-                screenSize < 4 &&
+                screenSize < 4 && recipeFound !== false &&
                 <NavbarRecipe recipeTabShown={ recipeTabShown } setRecipeTabShown={ setRecipeTabShown }/>
             }
         </div>
