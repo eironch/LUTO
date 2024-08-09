@@ -117,7 +117,7 @@ function Create({
 
         setPublishState('publishing')
 
-        axios.post(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/publish-recipe`, formData, { 
+        axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/publish-recipe`, formData, { 
                 headers: { 'Content-Type': 'multipart/form-data' } 
             })
             .then(response => {

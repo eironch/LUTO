@@ -31,7 +31,7 @@ function Settings({
     }
 
     function handleChangePassword() {
-        axios.post(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/change-password`, { userId: user.userId, password })
+        axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/change-password`, { userId: user.userId, password })
             .then(response => {
                 console.log('Status Code:' , response.status)
                 console.log('Data:', response.data)
@@ -67,7 +67,7 @@ function Settings({
         formData.append('userId', user.userId)
         formData.append('file-profile', file)
 
-        axios.post(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/change-profile-picture`, formData, { 
+        axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/change-profile-picture`, formData, { 
                 headers: { 'Content-Type': 'multipart/form-data' } 
             })
             .then(response => {
@@ -84,7 +84,7 @@ function Settings({
     }
 
     function handleChangeBio() {
-        axios.post(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/change-bio`, { userId: user.userId, bio })
+        axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/change-bio`, { userId: user.userId, bio })
             .then(response => {
                 console.log('Status Code:' , response.status)
                 console.log('Data:', response.data)

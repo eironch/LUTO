@@ -58,7 +58,7 @@ function Search({
         setIsFetchingRecipes(true)
         setSearchedRecipes([])
 
-        axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/search-recipes`, { params: { userId: user.userId, searchQuery, filters, sort: user.accountType === "user" ? { createdAt: -1 } : { flagCount: 1 } } })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/search-recipes`, { params: { userId: user.userId, searchQuery, filters, sort: user.accountType === "user" ? { createdAt: -1 } : { flagCount: 1 } } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)

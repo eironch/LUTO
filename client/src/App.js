@@ -109,7 +109,7 @@ function App() {
   ]
 
   async function handleGiveRecipePoint(userId, recipeId, pointStatus) {
-    return await axios.post(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/give-point`, { userId, recipeId, pointStatus })
+    return await axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/give-point`, { userId, recipeId, pointStatus })
       .then(res => {
         console.log('Status Code:', res.status)
         console.log('Data:', res.data)
@@ -123,7 +123,7 @@ function App() {
   }
 
   function handleFlagRecipe(userId, recipeId) {
-    axios.post(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/flag-recipe`, { userId, recipeId })
+    axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/flag-recipe`, { userId, recipeId })
       .then(res => {
         console.log('Status Code:' , res.status)
         console.log('Data:', res.data)
@@ -135,7 +135,7 @@ function App() {
   }
 
   function handleRemoveRecipe(removerUserId, recipeId) {
-    axios.post(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/remove-recipe`, { removerUserId, recipeId })
+    axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/remove-recipe`, { removerUserId, recipeId })
       .then(res => {
         console.log('Status Code:' , res.status)
         console.log('Data:', res.data)
@@ -147,7 +147,7 @@ function App() {
   }
 
   function handleAllowRecipe(recipeId) {
-    axios.post(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/allow-recipe`, { recipeId })
+    axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/allow-recipe`, { recipeId })
       .then(res => {
         console.log('Status Code:' , res.status)
         console.log('Data:', res.data)
@@ -159,7 +159,7 @@ function App() {
   }
 
   function handleLogOut() {
-    axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/log-out`, { withCredentials: true })
+    axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/log-out`, { withCredentials: true })
       .then(res => {
         console.log('Status Code:' , res.status)
         console.log('Data:', res.data)
@@ -174,7 +174,7 @@ function App() {
   }
 
   function handleSaveFilters(user) {
-    axios.post(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/save-filters`, { userId: user.userId , filters })
+    axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/save-filters`, { userId: user.userId , filters })
       .then(res => {
         console.log('Status Code:' , res.status)
         console.log('Data:', res.data)
@@ -186,7 +186,7 @@ function App() {
   }
 
   function handleGetPreferences(userId) {
-    axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/get-preferences`, { params: { userId } })
+    axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/get-preferences`, { params: { userId } })
       .then(res => {
         console.log('Status Code:' , res.status)
         console.log('Data:', res.data)
@@ -200,7 +200,7 @@ function App() {
   }
 
   useEffect(() => {
-    axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/check-auth`, { withCredentials: true })
+    axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/check-auth`, { withCredentials: true })
       .then(res => {
         console.log('Status Code:' , res.status)
         console.log('Data:', res.data)

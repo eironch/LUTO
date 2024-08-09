@@ -47,6 +47,20 @@ app.use(cors({
 
 app.use(cookieParser())
 
+const accessTokenOptions = {
+    httpOnly: config.IS_SECURE,
+    secure: config.IS_SECURE,
+    sameSite: 'Lax',
+    maxAge: 3600000,
+}
+
+const refreshTokenOptions = {
+    httpOnly: config.IS_SECURE,
+    secure: config.IS_SECURE,
+    sameSite: 'Lax',
+    maxAge: 2592000000,
+}
+
 function generateAccessToken(userId, username) {
     return jwt.sign({ userId, username }, config.SECRET_KEY, { expiresIn: '1h' })
 }
@@ -126,25 +140,11 @@ app.get('/sign-in', async (req, res) => {
         if (!isPasswordValid) {
             return res.status(202).json({ message: 'Incorrect username or password.'})
         }
-        res.cookie(
-            'accessToken',
-            generateAccessToken(user._id, user.username), 
-            {
-                httpOnly: config.IS_SECURE,
-                secure: config.IS_SECURE,
-                maxAge: 3600000,
-            }
-        )
 
-        res.cookie(
-            'refreshToken',
-            generateRefreshToken(user._id, user.username), 
-            {
-                httpOnly: config.IS_SECURE,
-                secure: config.IS_SECURE,
-                maxAge: 2592000000,
-            }
-        )
+        res.setHeader('Set-Cookie', [
+            `accessToken=${generateAccessToken(user._id, user.username)}; ${Object.entries(accessTokenOptions).map(([key, value]) => `${key}=${value}`).join('; ')}`,
+            `refreshToken=${generateRefreshToken(user._id, user.username)}; ${Object.entries(refreshTokenOptions).map(([key, value]) => `${key}=${value}`).join('; ')}`,
+        ])
         
         return res.status(200).json({ payload: { username: user.username, userId: user._id, accountType: user.accountType, profilePicture: user.profilePicture, bio: user.bio }, message: 'User signed in.' })
     } catch (err) {
@@ -194,14 +194,8 @@ app.get('/check-auth', async (req, res) => {
         if (refreshToken && decodedRefreshToken) {
             const user = await User.findById(decodedRefreshToken.userId)
 
-            res.cookie(
-                'accessToken',
-                generateAccessToken(decodedRefreshToken.userId, decodedRefreshToken.username), 
-                {
-                    httpOnly: config.IS_SECURE,
-                    secure: config.IS_SECURE,
-                    maxAge: 3600000,
-                }
+            res.setHeader('Set-Cookie',
+                `accessToken=${generateAccessToken(user._id, user.username)}; ${Object.entries(accessTokenOptions).map(([key, value]) => `${key}=${value}`).join('; ')}`
             )
     
             return res.status(200).json({ isAuthenticated: true, payload: { username: user.username, userId: user._id, accountType: user.accountType, profilePicture: user.profilePicture, bio: user.bio }})

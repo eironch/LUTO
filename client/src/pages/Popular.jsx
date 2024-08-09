@@ -37,7 +37,7 @@ function Popular({
     const scrollDivRef = useRef(null)
 
     function fetchPopularRecipes(filters) {
-        axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/popular-recipes`, { params: { userId: user.userId, filters } })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/popular-recipes`, { params: { userId: user.userId, filters } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)

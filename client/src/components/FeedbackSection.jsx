@@ -20,7 +20,7 @@ function FeedbackSection({
     function getFeedbacks() {
         setFeedbackCount(0)
 
-        axios.get(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/get-feedbacks`, { params: { recipeId } })
+        axios.get(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/get-feedbacks`, { params: { recipeId } })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
@@ -39,7 +39,7 @@ function FeedbackSection({
     function submitFeedback() {
         setUserFeedback('')
 
-        axios.post(`${ process.env.REACT_APP_API_URL || 'http://172.20.10.3:8080' }/submit-feedback`, { userId: user.userId, recipeId, text: userFeedback })
+        axios.post(`${ process.env.REACT_APP_API_URL || 'http://localhost:8080' }/submit-feedback`, { userId: user.userId, recipeId, text: userFeedback })
             .then(res => {
                 console.log('Status Code:' , res.status)
                 console.log('Data:', res.data)
