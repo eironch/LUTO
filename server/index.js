@@ -39,18 +39,11 @@ const upload = multer({ storage: multer.memoryStorage() })
 const oAuth2Client = new google.auth.OAuth2(config.CLIENT_ID, config.CLIENT_SECRET, config.REDIRECT_URI)
 oAuth2Client.setCredentials({ refresh_token: config.REFRESH_TOKEN })
 
-app.use(express.json())
-app.use(cors({
-    origin: config.ORIGIN,
-    credentials: true
-}))
-
-app.use(cookieParser())
-
 const accessTokenOptions = {
     httpOnly: config.IS_SECURE,
     secure: config.IS_SECURE,
     sameSite: 'Lax',
+    path: '/',
     maxAge: 3600000,
 }
 
@@ -58,8 +51,22 @@ const refreshTokenOptions = {
     httpOnly: config.IS_SECURE,
     secure: config.IS_SECURE,
     sameSite: 'Lax',
+    path: '/',
     maxAge: 2592000000,
 }
+
+if (config.ORIGIN !== 'http://localhost:3000') {
+    accessTokenOptions.domain = config.ORIGIN
+    refreshTokenOptions.domain = config.ORIGIN
+}
+
+app.use(express.json())
+app.use(cors({
+    origin: config.ORIGIN,
+    credentials: true
+}))
+
+app.use(cookieParser())
 
 function generateAccessToken(userId, username) {
     return jwt.sign({ userId, username }, config.SECRET_KEY, { expiresIn: '1h' })
@@ -141,10 +148,9 @@ app.get('/sign-in', async (req, res) => {
             return res.status(202).json({ message: 'Incorrect username or password.'})
         }
 
-        res.setHeader('Set-Cookie', [
-            `accessToken=${generateAccessToken(user._id, user.username)}; ${Object.entries(accessTokenOptions).map(([key, value]) => `${key}=${value}`).join('; ')}`,
-            `refreshToken=${generateRefreshToken(user._id, user.username)}; ${Object.entries(refreshTokenOptions).map(([key, value]) => `${key}=${value}`).join('; ')}`,
-        ])
+        res.cookie('accessToken', generateAccessToken(user._id, user.username), accessTokenOptions)
+
+        res.cookie('refreshToken', generateRefreshToken(user._id, user.username), refreshTokenOptions)
         
         return res.status(200).json({ payload: { username: user.username, userId: user._id, accountType: user.accountType, profilePicture: user.profilePicture, bio: user.bio }, message: 'User signed in.' })
     } catch (err) {
@@ -194,9 +200,7 @@ app.get('/check-auth', async (req, res) => {
         if (refreshToken && decodedRefreshToken) {
             const user = await User.findById(decodedRefreshToken.userId)
 
-            res.setHeader('Set-Cookie',
-                `accessToken=${generateAccessToken(user._id, user.username)}; ${Object.entries(accessTokenOptions).map(([key, value]) => `${key}=${value}`).join('; ')}`
-            )
+            res.cookie('accessToken', generateAccessToken(user._id, user.username), accessTokenOptions)
     
             return res.status(200).json({ isAuthenticated: true, payload: { username: user.username, userId: user._id, accountType: user.accountType, profilePicture: user.profilePicture, bio: user.bio }})
         }
