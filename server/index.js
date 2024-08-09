@@ -42,7 +42,7 @@ oAuth2Client.setCredentials({ refresh_token: config.REFRESH_TOKEN })
 const accessTokenOptions = {
     httpOnly: config.IS_SECURE,
     secure: config.IS_SECURE,
-    sameSite: 'Lax',
+    sameSite: 'None',
     path: '/',
     maxAge: 3600000,
 }
@@ -50,7 +50,7 @@ const accessTokenOptions = {
 const refreshTokenOptions = {
     httpOnly: config.IS_SECURE,
     secure: config.IS_SECURE,
-    sameSite: 'Lax',
+    sameSite: 'None',
     path: '/',
     maxAge: 2592000000,
 }
