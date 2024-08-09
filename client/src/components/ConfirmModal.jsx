@@ -7,7 +7,7 @@ function ConfirmModal({
     isDanger, screenSize
 }) {
     return (
-        <div className="absolute inset-0 flex xl:grid place-items-center h-screen justify-center p-3 text-zinc-100 bg-zinc-950 bg-opacity-70 pointer-events-auto" 
+        <div className="absolute inset-0 flex place-items-center w-full h-screen justify-center p-3 text-zinc-100 bg-zinc-950 bg-opacity-70 pointer-events-auto" 
             onMouseDownCapture={ e => { 
                     if (screenSize < 4) {
                         return
@@ -21,12 +21,13 @@ function ConfirmModal({
                 } 
             }
         >
-            <div className="flex flex-col gap-3 justify-center items-center w-full md:w-10/12 xl:w-5/12 overflow-hidden model-inner">
+            {/* <div className="flex justify-center min-w-0 w-full h-full xl:-mr-3 py-[4.75rem] xl:py-0 items-center"></div> */}
+            <div className="flex flex-col gap-3 justify-center items-center w-full md:w-10/12 xl:w-5/12 h-full model-inner">
                 {
                     title &&
                     <p className="px-6 text-2xl font-semibold text-ellipsis line-clamp-1">{ title }</p>
                 }
-                <div className="flex flex-col w-full rounded-3xl bg-zinc-900 overflow-hidden">
+                <div className="flex flex-col w-full rounded-3xl bg-zinc-900 overflow-hidden box-sizing border-box">
                     <div className="flex flex-row items-center p-6 gap-6 shadow-md shadow-zinc-950">
                         <img className="w-8" src={ icon } alt="" />
                         <p className="text-2xl font-semibold">

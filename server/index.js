@@ -130,8 +130,8 @@ app.get('/sign-in', async (req, res) => {
             'accessToken',
             generateAccessToken(user._id, user.username), 
             {
-                httpOnly: config.IS_SECURED,
-                secure: config.IS_SECURED,
+                httpOnly: config.IS_SECURE,
+                secure: config.IS_SECURE,
                 maxAge: 3600000,
             }
         )
@@ -140,8 +140,8 @@ app.get('/sign-in', async (req, res) => {
             'refreshToken',
             generateRefreshToken(user._id, user.username), 
             {
-                httpOnly: config.IS_SECURED,
-                secure: config.IS_SECURED,
+                httpOnly: config.IS_SECURE,
+                secure: config.IS_SECURE,
                 maxAge: 2592000000,
             }
         )
@@ -198,8 +198,8 @@ app.get('/check-auth', async (req, res) => {
                 'accessToken',
                 generateAccessToken(decodedRefreshToken.userId, decodedRefreshToken.username), 
                 {
-                    httpOnly: config.IS_SECURED,
-                    secure: config.IS_SECURED,
+                    httpOnly: config.IS_SECURE,
+                    secure: config.IS_SECURE,
                     maxAge: 3600000,
                 }
             )

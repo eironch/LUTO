@@ -369,7 +369,9 @@ function Auth({
                 screenSize > 3 &&
                 <div className="flex flex-col mb-3 xl:mb-0 items-center justify-center overflow-hidden">
                     <img className="w-full" src={ LogoWhite }alt=""/>
-                    <p className="xl:mt-3 text-zinc-100 text-xl md:text-3xl xl:text-4xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Community with a Recipe.</p>
+                    <p className="py-1 xl:mt-3 text-zinc-100 text-xl md:text-3xl xl:text-4xl font-semibold overflow-hidden text-ellipsis line-clamp-1">
+                        Community with a Recipe
+                    </p>
                 </div>
             }
             {
@@ -378,18 +380,18 @@ function Auth({
                     <img className="w-52" src={ LogoWhite }alt=""/>
                 </div>
             }
-            <div className="relative z-10 flex flex-col w-full md:w-10/12 xl:w-full xl:h-full shadow-md shadow-zinc-950 bg-zinc-900 rounded-3xl justify-center py-5">
-                <div className="flex flex-col mt-5 items-center">
-                    <h1 className="text-zinc-100 text-5xl font-bold">{ action }</h1>
+            <div className="relative z-10 flex flex-col w-full md:w-10/12 xl:w-full xl:h-full shadow-md shadow-zinc-950 bg-zinc-900 rounded-3xl justify-center py-5 mt-10 xl:mt-0">
+                <div className="flex flex-col mt-3 items-center">
+                    <h1 className="text-zinc-100 text-3xl md:text-5xl font-bold">{ action }</h1>
                 </div>
                 <div className="flex flex-col mt-10 items-center">
-                    <div className="flex w-10/12 -mt-6 justify-center text-center text-red-500">
+                    <div className="flex w-10/12 -mt-6 justify-center text-xs md:text-base text-center text-red-500">
                         { credsCorrection.message || <>&nbsp;</> }
                     </div>
                     <input 
                         className={`
                             ${credsCorrection.affected.includes('username') ? "border-red-600" : "border-zinc-600" } 
-                            bg-transparent text-center border-2 rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 my-3
+                            bg-transparent text-center border-2 rounded-3xl px-3 py-2 xl:py-3 w-10/12 caret-zinc-100 text-base md:text-xl text-zinc-100 my-3
                         `} 
                         value={ user.username } onChange={ e => { setUser({ username: e.target.value}) } } 
                         type="text" placeholder="Username"
@@ -400,7 +402,7 @@ function Auth({
                         <input 
                             className={`
                                 ${credsCorrection.affected.includes('email') ? "border-red-600" : "border-zinc-600" } 
-                                bg-transparent text-center border-2 rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 mb-3
+                                bg-transparent text-center border-2 rounded-3xl px-3 py-2 xl:py-3 w-10/12 caret-zinc-100 text-base md:text-xl text-zinc-100 mb-3
                             `} 
                             value={ email } onChange={ (e) => { setEmail(e.target.value) } } 
                             type="email" placeholder="Email Address"
@@ -411,7 +413,7 @@ function Auth({
                     <input 
                         className={`
                             ${credsCorrection.affected.includes('password') ? "border-red-600" : "border-zinc-600" } 
-                            bg-transparent text-center border-2 rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 mb-3
+                            bg-transparent text-center border-2 rounded-3xl px-3 py-2 xl:py-3 w-10/12 caret-zinc-100 text-base md:text-xl text-zinc-100 mb-3
                         `} 
                         value={ password } onChange={ (e) => { setPassword(e.target.value) } } 
                         type="password" placeholder="Password"
@@ -423,7 +425,7 @@ function Auth({
                         <input 
                             className={`
                                 ${credsCorrection.affected.includes('password') ? "border-red-600" : "border-zinc-600" } 
-                                bg-transparent text-center border-2 rounded-3xl p-3 w-10/12 caret-zinc-100 text-xl text-zinc-100 mb-3
+                                bg-transparent text-center border-2 rounded-3xl px-3 py-2 xl:py-3 w-10/12 caret-zinc-100 text-base md:text-xl text-zinc-100 mb-3
                             `} 
                             value={ confirmPassword } onChange={ (e) => { setConfirmPassword(e.target.value) } } 
                             type="password" placeholder="Confirm Password"
@@ -436,11 +438,11 @@ function Auth({
                     <div className="grid items-center w-10/12 gap-3">
                         {
                             action === "Sign In"? 
-                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 text-xl font-semibold rounded-3xl text-zinc-100 bg-zinc-600 p-3 w-full" onClick={ () => { handleSignIn() } }> 
+                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 text-base md:text-xl font-semibold rounded-3xl text-zinc-100 bg-zinc-600 p-2 w-full" onClick={ () => { handleSignIn() } }> 
                                 Log In
                             </button>
                             : 
-                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 text-xl font-semibold rounded-3xl text-center text-zinc-100 bg-zinc-600 p-3 w-full" onClick={ () => { handleSignUp() }}> 
+                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 text-base md:text-xl font-semibold rounded-3xl text-center text-zinc-100 bg-zinc-600 p-2 w-full" onClick={ () => { handleSignUp() }}> 
                                 Create Account
                             </button>
                         }
@@ -450,15 +452,15 @@ function Auth({
                     {
                         action === "Sign In" ? 
                         <div className="xl:grid grid-cols-3 gap-6 text-zinc-100 w-10/12">
-                            <p className="text-xl py-4 text-center overflow-hidden text-ellipsis line-clamp-2">Don't have an account?</p> 
-                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 hover:border-zinc-500 col-span-2 text-xl font-semibold rounded-3xl text-zinc-100 bg-transparent border-2 border-zinc-600 p-3 w-full" onClick={ () => { handleActionChange("Sign Up") } }> 
+                            <p className="text-base md:text-xl py-4 text-center overflow-hidden text-ellipsis line-clamp-2">Don't have an account?</p> 
+                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 hover:border-zinc-500 col-span-2 text-base md:text-xl font-semibold rounded-3xl text-zinc-100 bg-transparent border-2 border-zinc-600 p-2 w-full" onClick={ () => { handleActionChange("Sign Up") } }> 
                                 Sign Up
                             </button>
                         </div> 
                         :
                         <div className="xl:grid grid-cols-3 gap-6 text-zinc-100 w-10/12">
-                            <p className="text-xl py-4 text-center overflow-hidden text-ellipsis line-clamp-2">Already have an account?</p> 
-                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 hover:border-zinc-500 col-span-2 text-xl font-semibold rounded-3xl text-center text-zinc-100 bg-transparent border-2 border-zinc-600 p-3 w-full" onClick={ () => { handleActionChange("Sign In") } }> 
+                            <p className="text-base md:text-xl py-4 text-center overflow-hidden text-ellipsis line-clamp-2">Already have an account?</p> 
+                            <button className="shadow-md shadow-zinc-950 hover:bg-zinc-500 hover:border-zinc-500 col-span-2 text-base md:text-xl font-semibold rounded-3xl text-center text-zinc-100 bg-transparent border-2 border-zinc-600 p-2 w-full" onClick={ () => { handleActionChange("Sign In") } }> 
                                 Sign In
                             </button>
                         </div>
@@ -467,7 +469,7 @@ function Auth({
             </div>
             {
                     isEmailVerifying &&
-                    <div className="absolute inset-0 grid place-items-center h-screen px-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-hidden"
+                    <div className="absolute inset-0 z-[9999] grid place-items-center h-screen px-3 text-zinc-100 bg-zinc-950 bg-opacity-70 overflow-hidden"
                             onMouseDownCapture={ e => { 
                                 if (screenSize < 4) {
                                     return
@@ -482,7 +484,7 @@ function Auth({
                         }
                     >
                         <div className={`${ verification.status ? "w-full md:w-10/12 xl:w-5/12" : "w-full md:w-10/12 xl:w-5/12 min-w-fit" } flex flex-col gap-3 justify-center items-center overflow-hidden model-inner`}>
-                            <div className="flex flex-col w-full py-14 xl:py-20 mx-6 xl:mx-9 gap-9 justify-center items-center rounded-3xl bg-zinc-900 overflow-hidden">
+                            <div className="flex flex-col w-full py-14 xl:py-20 xl:py-3 mx-6 xl:mx-9 gap-9 justify-center items-center rounded-3xl bg-zinc-900 overflow-hidden">
                               
                                 {
                                     verification.status ?
@@ -509,7 +511,7 @@ function Auth({
                                             {
                                                 verifyInputUses.map((use, index, arr) =>
                                                     <input 
-                                                        className="bg-transparent text-center border-2 border-zinc-600 rounded-xl md:rounded-3xl w-1/12 md:w-20 h-16 md:h-24 caret-zinc-100 md:text-2xl xl:text-3xl font-bold text-zinc-100 pointer-events-none" 
+                                                        className="bg-transparent text-center border-2 border-zinc-600 rounded-xl md:rounded-3xl w-[11%] md:w-20 h-16 md:h-24 caret-zinc-100 md:text-2xl xl:text-3xl font-bold text-zinc-100 pointer-events-none" 
                                                         type="text" maxLength="1" ref={ use.ref }
                                                         value={ use.state[0] } onChange={ e => { handleVerifyInputChange(e, use.state[1], index !== 5 && arr[index + 1].ref) } }
                                                         onKeyDown={ e => { handleVerifyInputKeyDown(e, index !== 0 && arr[index - 1].ref)  } } key={ index }
@@ -533,18 +535,15 @@ function Auth({
                                                         sendVerificationCode()
                                                     }}
                                                 >
-                                                    send again
+                                                    Send again
                                                 </button>
                                             </div>
                                         }
                                         <div className="flex w-fit flex-col md:flex-row justify-center items-center text-sm md:text-base overflow-hidden">
                                             <p className="text-zinc-400">
-                                                The verification code 
+                                                The verification code was sent to
                                             </p>
-                                            <div className="flex text-zinc-400">
-                                                &nbsp;was sent to
-                                            </div>
-                                            <p className="font-semibold mx-3 text-zinc-300">
+                                            <p className="font-semibold mx-1 text-zinc-300">
                                                 { email }
                                             </p>
                                             <button className="text-blue-400 hover:underline" onClick={ () => { 
@@ -552,7 +551,7 @@ function Auth({
                                                     emailRef.current.focus()
                                                 }}
                                             >
-                                                change
+                                                Change
                                             </button>
                                         </div>
                                     </>
