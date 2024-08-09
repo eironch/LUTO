@@ -55,11 +55,6 @@ const refreshTokenOptions = {
     maxAge: 2592000000,
 }
 
-if (config.ORIGIN !== 'http://localhost:3000') {
-    accessTokenOptions.domain = config.ORIGIN
-    refreshTokenOptions.domain = config.ORIGIN
-}
-
 app.use(express.json())
 app.use(cors({
     origin: config.ORIGIN,
